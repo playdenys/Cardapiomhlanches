@@ -1,18 +1,25 @@
 {
   "config": {
-    "nomeLoja": "Minha Lanchonete",
-    "corPrincipal": "#e11d48",
+    "nomeLoja": "MH Lanches",
+    "corPrincipal": "#dca8a8",
     "corFundo": "#121212",
-    "linkLogo": "https://via.placeholder.com/150",
-    "whatsapp": "5511999999999"
+    "linkLogo": "https://ibb.co/7xwhDvHs",
+    "whatsapp": "81985770055"
   },
   "items": [
     {
-      "id": 1,
-      "nome": "Hambúrguer Clássico",
-      "preco": 25.90,
-      "categoria": "lanches",
-      "imagem": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"
+      "id": 1775412732906,
+      "nome": "burguer",
+      "preco": 12,
+      "imagem": "https://ibb.co/QjnzkTyB",
+      "categoria": "lanches"
+    },
+    {
+      "id": 1775412763738,
+      "nome": "burguer",
+      "preco": 12,
+      "imagem": "https://ibb.co/QjnzkTyB",
+      "categoria": "lanches"
     }
   ]
-]
+}
