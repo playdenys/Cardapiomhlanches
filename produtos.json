@@ -1,10 +1,10 @@
 {
   "config": {
-    "nomeLoja": "Sua Lanchonete Pro",
+    "nomeLoja": "MH Lanches",
     "corPrincipal": "#ef4444",
-    "whatsapp": "5511999999999",
+    "whatsapp": "81985770055",
     "linkLogo": "https://via.placeholder.com/150",
-    "taxaEntrega": 5.00,
+    "taxaEntrega": 2,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
@@ -18,7 +18,7 @@
     {
       "id": 1,
       "nome": "Produto Exemplo",
-      "preco": 20.00,
+      "preco": 20,
       "descricao": "Clique no Admin para editar este item.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "lanches"
