@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Pro - Gestão de Delivery</title>
+    <title>Admin Pro - Gestão de Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
         .tab-active { border-bottom: 3px solid #3b82f6; color: #1d4ed8; font-weight: bold; }
         .tab-inactive { color: #6b7280; font-weight: 500; }
-        .modal-enter { animation: fadeIn 0.2s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="text-slate-800 pb-20">
 
     <div id="setup" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
-            <i class="fa-solid fa-screwdriver-wrench text-4xl text-blue-600 mb-4"></i>
+            <i class="fa-solid fa-gears text-4xl text-blue-600 mb-4"></i>
             <h1 class="text-2xl font-bold mb-6">Painel Administrativo</h1>
             <div class="space-y-4 text-left">
                 <div><label class="text-xs font-bold text-slate-500 uppercase">Token GitHub</label><input type="password" id="gh-token" class="w-full border-2 border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500"></div>
-                <div><label class="text-xs font-bold text-slate-500 uppercase">Repositório (user/repo)</label><input type="text" id="gh-repo" class="w-full border-2 border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500"></div>
+                <div><label class="text-xs font-bold text-slate-500 uppercase">Repositório (usuario/repo)</label><input type="text" id="gh-repo" class="w-full border-2 border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500"></div>
                 <button onclick="carregarDados()" id="btn-login" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold shadow-lg transition">Conectar Sistema</button>
             </div>
         </div>
@@ -36,12 +34,12 @@
                     <img id="header-logo" src="" class="w-8 h-8 rounded-full object-cover border">
                     <h2 id="header-nome" class="font-bold">Admin</h2>
                 </div>
-                <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Site
+                <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow flex items-center gap-2 text-sm transition hover:bg-emerald-700">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Alterações
                 </button>
             </div>
             <div class="max-w-6xl mx-auto px-4 flex gap-6 mt-2">
-                <button onclick="mudarAba('aba-loja')" id="nav-loja" class="pb-3 px-2 tab-active transition">Loja</button>
+                <button onclick="mudarAba('aba-loja')" id="nav-loja" class="pb-3 px-2 tab-active transition">Configurações</button>
                 <button onclick="mudarAba('aba-categorias')" id="nav-categorias" class="pb-3 px-2 tab-inactive transition">Categorias</button>
                 <button onclick="mudarAba('aba-produtos')" id="nav-produtos" class="pb-3 px-2 tab-inactive transition">Produtos</button>
             </div>
@@ -50,26 +48,23 @@
         <main class="max-w-6xl mx-auto p-4 py-8">
             <section id="aba-loja" class="space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-blue-600"><i class="fa-solid fa-sliders"></i> Configurações Gerais</h3>
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-blue-600"><i class="fa-solid fa-store"></i> Identidade & Funcionamento</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="text-xs font-bold text-slate-500 uppercase">Nome</label><input type="text" id="cfg-nome" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Nome da Loja</label><input type="text" id="cfg-nome" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
                         <div><label class="text-xs font-bold text-slate-500 uppercase">URL da Logo</label><input type="text" id="cfg-logo" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
-                        <div><label class="text-xs font-bold text-slate-500 uppercase">WhatsApp</label><input type="text" id="cfg-zap" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">WhatsApp (DDI+DDD+Num)</label><input type="text" id="cfg-zap" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
                         <div><label class="text-xs font-bold text-slate-500 uppercase">Taxa de Entrega (R$)</label><input type="number" id="cfg-taxa" step="0.01" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none font-bold text-emerald-600"></div>
-                        <div><label class="text-xs font-bold text-slate-500 uppercase">Cor do Site</label><input type="color" id="cfg-cor" class="w-full h-12 border-none rounded-xl mt-1 cursor-pointer"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Cor Principal do Site</label><input type="color" id="cfg-cor" class="w-full h-12 border-none rounded-xl mt-1 cursor-pointer"></div>
                         <div class="flex items-center gap-4 pt-4">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Abre</label><input type="time" id="cfg-abre" class="bg-slate-50 border p-2 rounded-lg">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Fecha</label><input type="time" id="cfg-fecha" class="bg-slate-50 border p-2 rounded-lg">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Abre</label><input type="time" id="cfg-abre" class="bg-slate-50 border p-2 rounded-lg"><label class="text-xs font-bold text-slate-500 uppercase">Fecha</label><input type="time" id="cfg-fecha" class="bg-slate-50 border p-2 rounded-lg">
                         </div>
                         <div class="col-span-1 md:col-span-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Texto do Rodapé (Slogan/Infos)</label>
-                            <textarea id="cfg-footer" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none h-20 resize-none" placeholder="Ex: Lanchonete desde 2021 realizando desejos..."></textarea>
+                            <label class="text-xs font-bold text-slate-500 uppercase">Rodapé (Slogan ou Infos Extras)</label>
+                            <textarea id="cfg-footer" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none h-20 resize-none" placeholder="Ex: Servindo os melhores lanches desde 2021."></textarea>
                         </div>
-                        <div class="col-span-1 md:col-span-2 p-3 bg-red-50 rounded-xl border border-red-100">
-                             <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" id="cfg-manual" class="w-5 h-5 accent-red-600">
-                                <span class="font-bold text-red-700">Fechar Loja Imediatamente (Emergência)</span>
-                             </label>
+                        <div class="col-span-1 md:col-span-2 p-4 bg-red-50 rounded-xl border border-red-100 flex items-center gap-3">
+                            <input type="checkbox" id="cfg-manual" class="w-6 h-6 accent-red-600">
+                            <div><span class="font-bold text-red-700 block">FORÇAR FECHAMENTO</span><span class="text-[10px] text-red-400">Ative para pausar as vendas imediatamente.</span></div>
                         </div>
                     </div>
                 </div>
@@ -77,55 +72,55 @@
 
             <section id="aba-categorias" class="hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border max-w-md">
-                    <h3 class="text-lg font-bold mb-4">Ordem das Categorias</h3>
-                    <div class="flex gap-2 mb-6">
-                        <input type="text" id="nova-cat" placeholder="Nova cat..." class="flex-1 bg-slate-50 border p-3 rounded-xl outline-none">
-                        <button onclick="addCategoria()" class="bg-slate-800 text-white px-4 rounded-xl font-bold">Add</button>
-                    </div>
+                    <h3 class="text-lg font-bold mb-4">Gerenciar Categorias</h3>
+                    <div class="flex gap-2 mb-6"><input type="text" id="nova-cat" placeholder="Ex: Lanches, Bebidas..." class="flex-1 bg-slate-50 border p-3 rounded-xl outline-none"><button onclick="addCategoria()" class="bg-slate-800 text-white px-4 rounded-xl font-bold">Add</button></div>
                     <div id="lista-categorias" class="space-y-2"></div>
                 </div>
             </section>
 
             <section id="aba-produtos" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold">Estoque de Produtos</h3>
-                    <button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">Novo Produto</button>
-                </div>
+                <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold italic">Itens do Cardápio</h3><button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">+ Novo Produto</button></div>
                 <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </section>
         </main>
     </div>
 
     <div id="modal-produto" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl modal-enter flex flex-col max-h-[90vh]">
-            <div class="p-5 border-b flex justify-between items-center">
-                <h3 id="modal-titulo" class="font-bold">Editar Item</h3>
-                <button onclick="fecharModalProduto()"><i class="fa-solid fa-xmark text-slate-400"></i></button>
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50">
+                <h3 id="modal-titulo" class="font-bold text-slate-700 uppercase tracking-widest text-sm">Editar Detalhes do Produto</h3>
+                <button onclick="fecharModalProduto()" class="w-8 h-8 rounded-full hover:bg-slate-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-5 overflow-y-auto flex-1 space-y-4">
-                <div class="bg-slate-50 p-3 rounded-xl flex justify-between items-center border">
-                    <span class="text-xs font-bold uppercase text-slate-500">Disponível em Estoque</span>
-                    <input type="checkbox" id="prod-ativo" class="w-6 h-6 accent-emerald-500">
+            <div class="p-6 overflow-y-auto flex-1 space-y-5">
+                <div class="flex items-center justify-between p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <span class="text-xs font-bold text-emerald-700 uppercase">Item Ativo no Cardápio?</span>
+                    <input type="checkbox" id="prod-ativo" class="w-6 h-6 accent-emerald-600">
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Nome</label><input type="text" id="prod-nome" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Preço</label><input type="number" step="0.01" id="prod-preco" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none font-bold text-emerald-600"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Categoria</label><select id="prod-cat" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none capitalize"></select></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Link Imagem</label><input type="text" id="prod-img" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none"></div>
+                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">Nome do Produto</label><input type="text" id="prod-nome" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
+                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">Preço Base (R$)</label><input type="number" step="0.01" id="prod-preco" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none font-bold text-emerald-600"></div>
+                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">Categoria</label><select id="prod-cat" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none capitalize"></select></div>
+                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">Link da Imagem</label><input type="text" id="prod-img" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none"></div>
                 </div>
-                <div><label class="text-xs font-bold text-slate-500 uppercase">Descrição</label><textarea id="prod-desc" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 h-20 outline-none resize-none"></textarea></div>
+                <div><label class="text-[10px] font-bold text-slate-400 uppercase">Descrição/Ingredientes</label><textarea id="prod-desc" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 h-20 outline-none resize-none"></textarea></div>
                 
-                <div class="border-t pt-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold uppercase text-slate-500">Adicionais</span>
-                        <button onclick="adicionarLinhaAdicional()" class="text-[10px] bg-slate-100 px-3 py-1.5 rounded-lg font-bold">+ NOVO ADICIONAL</button>
+                <div class="border-t pt-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold uppercase text-slate-500">Adicionais</span>
+                            <div class="bg-amber-100 px-3 py-1 rounded-full flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-amber-700 uppercase">Limite:</span>
+                                <input type="number" id="prod-limite-ads" class="w-8 bg-transparent text-xs font-bold text-amber-700 outline-none" value="0">
+                            </div>
+                        </div>
+                        <button onclick="adicionarLinhaAdicional()" class="text-[10px] bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">+ ADICIONAR ITEM</button>
                     </div>
-                    <div id="lista-adicionais-modal" class="space-y-2"></div>
+                    <div id="lista-adicionais-modal" class="space-y-3"></div>
                 </div>
             </div>
-            <div class="p-5 border-t bg-slate-50 rounded-b-2xl flex justify-end gap-3">
-                <button onclick="fecharModalProduto()" class="px-5 font-bold text-slate-500">Cancelar</button>
-                <button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold shadow">Salvar Item</button>
+            <div class="p-6 border-t bg-slate-50 flex justify-end gap-3">
+                <button onclick="fecharModalProduto()" class="px-6 font-bold text-slate-400 hover:text-slate-600">Cancelar</button>
+                <button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700">Gravar Alterações</button>
             </div>
         </div>
     </div>
@@ -142,7 +137,7 @@
                 if(!res.ok) throw new Error();
                 const d = await res.json(); SHA = d.sha; DATA = JSON.parse(atob(d.content));
                 
-                // Preencher campos Loja
+                // Preencher campos
                 document.getElementById('cfg-nome').value = DATA.config.nomeLoja || "";
                 document.getElementById('cfg-logo').value = DATA.config.linkLogo || "";
                 document.getElementById('cfg-cor').value = DATA.config.corPrincipal || "#ef4444";
@@ -159,7 +154,7 @@
                 renderCategorias(); renderProdutosGrid();
                 document.getElementById('setup').classList.add('hidden');
                 document.getElementById('editor').classList.remove('hidden');
-            } catch(e) { alert("Erro de conexão!"); }
+            } catch(e) { alert("Credenciais incorretas ou erro de rede."); }
         }
 
         function mudarAba(aba) {
@@ -173,21 +168,20 @@
             const container = document.getElementById('lista-categorias');
             container.innerHTML = (DATA.config.categorias || []).map((cat, i) => `
                 <div class="bg-white border p-3 rounded-xl flex items-center justify-between shadow-sm">
-                    <span class="font-bold capitalize">${cat}</span>
+                    <span class="font-bold capitalize text-sm">${cat}</span>
                     <div class="flex gap-1">
-                        <button onclick="moverCat(${i}, -1)" class="w-7 h-7 bg-slate-50 rounded text-slate-400"><i class="fa-solid fa-arrow-up"></i></button>
-                        <button onclick="moverCat(${i}, 1)" class="w-7 h-7 bg-slate-50 rounded text-slate-400"><i class="fa-solid fa-arrow-down"></i></button>
-                        <button onclick="removerCategoria(${i})" class="w-7 h-7 bg-red-50 rounded text-red-500 ml-2"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="moverCat(${i}, -1)" class="w-8 h-8 bg-slate-50 rounded-lg text-slate-400 hover:text-slate-600"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+                        <button onclick="moverCat(${i}, 1)" class="w-8 h-8 bg-slate-50 rounded-lg text-slate-400 hover:text-slate-600"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+                        <button onclick="removerCategoria(${i})" class="w-8 h-8 bg-red-50 rounded-lg text-red-500 ml-2"><i class="fa-solid fa-trash text-xs"></i></button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
             document.getElementById('prod-cat').innerHTML = (DATA.config.categorias || []).map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
         function moverCat(i, dir) {
             const arr = DATA.config.categorias;
-            if (dir === -1 && i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
-            else if (dir === 1 && i < arr.length - 1) [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+            if (dir === -1 && i > 0) [arr[i-1], arr[i]] = [arr[i], arr[i-1]];
+            else if (dir === 1 && i < arr.length-1) [arr[i+1], arr[i]] = [arr[i], arr[i+1]];
             renderCategorias();
         }
 
@@ -196,26 +190,25 @@
             if(val && !DATA.config.categorias.includes(val)) { DATA.config.categorias.push(val); document.getElementById('nova-cat').value = ""; renderCategorias(); }
         }
 
-        function removerCategoria(i) { if(confirm("Excluir?")) { DATA.config.categorias.splice(i,1); renderCategorias(); } }
+        function removerCategoria(i) { if(confirm("Deseja mesmo excluir?")) { DATA.config.categorias.splice(i,1); renderCategorias(); } }
 
         function renderProdutosGrid() {
             document.getElementById('grid-produtos').innerHTML = DATA.items.map(p => `
-                <div class="bg-white border rounded-2xl p-4 shadow-sm relative ${p.ativo === false ? 'opacity-60 bg-slate-100' : ''}">
+                <div class="bg-white border rounded-3xl p-5 shadow-sm relative transition hover:shadow-md ${p.ativo === false ? 'opacity-60 bg-slate-50 grayscale' : ''}">
                     <div class="flex gap-4">
-                        <img src="${p.imagem}" class="w-16 h-16 object-cover rounded-xl border">
-                        <div>
-                            <h4 class="font-bold text-sm">${p.nome}</h4>
-                            <p class="text-emerald-600 font-bold text-xs">R$ ${p.preco.toFixed(2)}</p>
-                            <span class="text-[9px] uppercase font-black text-slate-400">${p.categoria}</span>
+                        <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-2xl border shadow-sm">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 leading-tight">${p.nome}</h4>
+                            <p class="text-emerald-600 font-black text-sm mt-1 italic">R$ ${p.preco.toFixed(2)}</p>
+                            <span class="text-[9px] uppercase font-bold text-slate-400 mt-2 block">${p.categoria}</span>
                         </div>
                     </div>
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="abrirModalProduto(${p.id})" class="flex-1 bg-slate-800 text-white py-2 rounded-lg text-xs font-bold">EDITAR</button>
-                        <button onclick="excluirProduto(${p.id})" class="bg-red-50 text-red-500 px-3 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-2 mt-5">
+                        <button onclick="abrirModalProduto(${p.id})" class="flex-1 bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase">Gerenciar</button>
+                        <button onclick="excluirProduto(${p.id})" class="bg-red-50 text-red-500 px-4 rounded-xl transition hover:bg-red-100"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-                    ${p.ativo === false ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded">PAUSADO</div>' : ''}
-                </div>
-            `).join('');
+                    ${p.ativo === false ? '<div class="absolute top-4 right-4 bg-red-600 text-white text-[8px] font-black px-3 py-1 rounded-full shadow-lg">PAUSADO</div>' : ''}
+                </div>`).join('');
         }
 
         function abrirModalProduto(id = null) {
@@ -225,11 +218,14 @@
                 document.getElementById('prod-nome').value = p.nome; document.getElementById('prod-preco').value = p.preco;
                 document.getElementById('prod-desc').value = p.descricao || ""; document.getElementById('prod-img').value = p.imagem;
                 document.getElementById('prod-cat').value = p.categoria; document.getElementById('prod-ativo').checked = p.ativo !== false;
+                document.getElementById('prod-limite-ads').value = p.limiteAdicionais || 0;
                 adicionaisTemp = JSON.parse(JSON.stringify(p.adicionais || []));
             } else {
                 document.getElementById('prod-nome').value = ""; document.getElementById('prod-preco').value = "";
                 document.getElementById('prod-desc').value = ""; document.getElementById('prod-img').value = "";
-                document.getElementById('prod-ativo').checked = true; adicionaisTemp = [];
+                document.getElementById('prod-cat').value = DATA.config.categorias[0] || "";
+                document.getElementById('prod-ativo').checked = true; document.getElementById('prod-limite-ads').value = 0;
+                adicionaisTemp = [];
             }
             renderAdicionaisModal();
             document.getElementById('modal-produto').classList.remove('hidden');
@@ -237,20 +233,29 @@
 
         function renderAdicionaisModal() {
             document.getElementById('lista-adicionais-modal').innerHTML = adicionaisTemp.map((a, i) => `
-                <div class="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border">
-                    <input type="text" value="${a.nome}" onchange="adicionaisTemp[${i}].nome=this.value" placeholder="Nome" class="flex-1 border p-2 rounded-lg text-xs">
-                    <input type="number" step="0.01" value="${a.preco}" onchange="adicionaisTemp[${i}].preco=parseFloat(this.value)||0" class="w-20 border p-2 rounded-lg text-xs font-bold">
-                    <button onclick="adicionaisTemp.splice(${i},1); renderAdicionaisModal()" class="text-red-400 px-2"><i class="fa-solid fa-xmark"></i></button>
+                <div class="bg-slate-50 p-3 rounded-2xl border space-y-2 relative">
+                    <div class="flex gap-2">
+                        <input type="text" value="${a.nome}" onchange="adicionaisTemp[${i}].nome=this.value" placeholder="Ex: Bacon Extra" class="flex-1 border p-2 rounded-xl text-xs font-bold">
+                        <input type="number" step="0.01" value="${a.preco}" onchange="adicionaisTemp[${i}].preco=parseFloat(this.value)||0" placeholder="R$" class="w-20 border p-2 rounded-xl text-xs font-black text-emerald-600">
+                        <button onclick="adicionaisTemp.splice(${i},1); renderAdicionaisModal()" class="text-red-400 hover:text-red-600 px-1"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <input type="text" value="${a.desc || ''}" onchange="adicionaisTemp[${i}].desc=this.value" placeholder="Pequena descrição (Ex: 3 fatias)" class="w-full border p-2 rounded-xl text-[10px] text-slate-500 bg-white">
                 </div>`).join('');
         }
-        function adicionarLinhaAdicional() { adicionaisTemp.push({ nome: "", preco: 0 }); renderAdicionaisModal(); }
+
+        function adicionarLinhaAdicional() { adicionaisTemp.push({ nome: "", preco: 0, desc: "" }); renderAdicionaisModal(); }
 
         function salvarProdutoModal() {
             const dados = {
-                id: produtoEditandoID || Date.now(), nome: document.getElementById('prod-nome').value,
-                preco: parseFloat(document.getElementById('prod-preco').value) || 0, categoria: document.getElementById('prod-cat').value,
-                descricao: document.getElementById('prod-desc').value, imagem: document.getElementById('prod-img').value || "https://via.placeholder.com/150",
-                ativo: document.getElementById('prod-ativo').checked, adicionais: adicionaisTemp.filter(a => a.nome.trim() !== "")
+                id: produtoEditandoID || Date.now(),
+                nome: document.getElementById('prod-nome').value,
+                preco: parseFloat(document.getElementById('prod-preco').value) || 0,
+                categoria: document.getElementById('prod-cat').value,
+                descricao: document.getElementById('prod-desc').value,
+                imagem: document.getElementById('prod-img').value || "https://via.placeholder.com/300",
+                ativo: document.getElementById('prod-ativo').checked,
+                limiteAdicionais: parseInt(document.getElementById('prod-limite-ads').value) || 0,
+                adicionais: adicionaisTemp.filter(a => a.nome.trim() !== "")
             };
             if(produtoEditandoID) DATA.items[DATA.items.findIndex(i => i.id === produtoEditandoID)] = dados;
             else DATA.items.unshift(dados);
@@ -258,12 +263,12 @@
         }
 
         function fecharModalProduto() { document.getElementById('modal-produto').classList.add('hidden'); }
-        function excluirProduto(id) { if(confirm("Excluir?")) { DATA.items = DATA.items.filter(i => i.id !== id); renderProdutosGrid(); } }
+        function excluirProduto(id) { if(confirm("Deseja apagar este item permanentemente?")) { DATA.items = DATA.items.filter(i => i.id !== id); renderProdutosGrid(); } }
 
         async function salvarNoGithub() {
-            const btn = document.getElementById('btn-salvar'); btn.innerHTML = "Publicando..."; btn.disabled = true;
+            const btn = document.getElementById('btn-salvar'); btn.innerHTML = "Processando..."; btn.disabled = true;
             
-            // Atualizar Configs
+            // Atualizar Configurações Gerais
             DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
             DATA.config.linkLogo = document.getElementById('cfg-logo').value;
             DATA.config.corPrincipal = document.getElementById('cfg-cor').value;
@@ -281,9 +286,9 @@
                     method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: "Update Admin", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: SHA })
                 });
-                if(res.ok) { SHA = (await res.json()).content.sha; alert("✅ Site Atualizado!"); }
-            } catch(e) { alert("Erro ao salvar!"); }
-            btn.innerHTML = "Publicar Site"; btn.disabled = false;
+                if(res.ok) { SHA = (await res.json()).content.sha; alert("✅ Cardápio Atualizado com Sucesso!"); }
+            } catch(e) { alert("Erro ao salvar. Verifique o token e a conexão."); }
+            btn.innerHTML = "<i class='fa-solid fa-cloud-arrow-up'></i> Publicar Alterações"; btn.disabled = false;
         }
     </script>
 </body>
