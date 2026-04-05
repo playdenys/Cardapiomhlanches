@@ -1,235 +1,43 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio Digital Profissional</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .category-pill:hover { background-color: var(--brand-color); color: white; }
-        .modal-animate { animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        :root { --brand-color: #ef4444; }
-    </style>
-</head>
-<body class="pb-24">
+// Variável global para controlar a quantidade no modal
+let qtdModal = 1;
 
-    <header class="bg-white shadow-sm sticky top-0 z-30 p-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <img id="ui-logo" src="" class="w-10 h-10 rounded-full hidden border shadow-sm">
-            <h1 id="ui-nome" class="font-bold text-slate-800 text-lg italic">Carregando...</h1>
-        </div>
-        <div class="text-green-600 font-bold text-xs bg-green-50 px-2 py-1 rounded-full border border-green-100">
-            Aberto
-        </div>
-    </header>
-
-    <nav id="category-nav" class="flex gap-2 overflow-x-auto p-4 bg-white sticky top-[60px] z-20 hide-scrollbar shadow-sm border-b border-slate-100">
-        </nav>
-
-    <main id="menu-container" class="max-w-2xl mx-auto p-4 space-y-8">
-        <div class="animate-pulse space-y-4">
-            <div class="h-24 bg-slate-200 rounded-2xl"></div>
-            <div class="h-24 bg-slate-200 rounded-2xl"></div>
-        </div>
-    </main>
-
-    <div id="modal-produto" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
-        <div class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-3xl overflow-hidden modal-animate relative">
-            <button onclick="fecharModal()" class="absolute top-4 right-4 bg-black/20 text-white w-8 h-8 rounded-full z-10">✕</button>
-            <div id="detalhe-conteudo"></div>
-        </div>
-    </div>
-
-    <div id="modal-carrinho" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end justify-center p-0">
-        <div class="bg-white w-full max-w-lg rounded-t-3xl p-6 modal-animate overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold">Finalizar Pedido</h2>
-                <button onclick="toggleCarrinho()" class="text-slate-400">Fechar</button>
+function abrirDetalhes(id) {
+    const p = DATA.items.find(item => item.id === id);
+    qtdModal = 1; // Reseta para 1 toda vez que abre
+    
+    const conteudo = document.getElementById('detalhe-conteudo');
+    conteudo.innerHTML = `
+        <img src="${p.imagem}" class="w-full h-64 object-cover">
+        <div class="p-6 space-y-4">
+            <div class="flex justify-between items-start">
+                <h2 class="text-2xl font-bold text-slate-800">${p.nome}</h2>
+                <span class="text-xl font-bold text-slate-900">R$ ${p.preco.toFixed(2)}</span>
             </div>
+            <p class="text-slate-500 leading-relaxed">${p.descricao || 'Sem descrição.'}</p>
             
-            <div id="itens-carrinho" class="space-y-4 mb-6 border-b pb-6"></div>
+            <div class="flex items-center justify-between pt-6 border-t">
+                <div class="flex items-center border-2 border-slate-100 rounded-xl p-1">
+                    <button onclick="alterarQtdModal(-1)" class="w-10 h-10 rounded-lg bg-slate-50 text-xl font-bold">-</button>
+                    <span id="display-qtd-modal" class="w-12 text-center font-bold text-lg">1</span>
+                    <button onclick="alterarQtdModal(1)" class="w-10 h-10 rounded-lg bg-slate-50 text-xl font-bold text-red-500">+</button>
+                </div>
 
-            <form id="form-checkout" class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-slate-400 uppercase">Seu Nome</label>
-                    <input type="text" id="cli-nome" required class="w-full border-2 p-3 rounded-xl focus:border-red-500 outline-none">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-slate-400 uppercase">Endereço de Entrega</label>
-                    <input type="text" id="cli-end" required placeholder="Rua, número, bairro..." class="w-full border-2 p-3 rounded-xl focus:border-red-500 outline-none">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-slate-400 uppercase">Forma de Pagamento</label>
-                    <select id="cli-pag" class="w-full border-2 p-3 rounded-xl bg-white focus:border-red-500 outline-none">
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão de Crédito/Débito">Cartão (Maquininha)</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                    </select>
-                </div>
-                <div id="troco-area" class="hidden">
-                    <input type="number" id="cli-troco" placeholder="Troco para quanto?" class="w-full border-2 p-3 rounded-xl">
-                </div>
-                
-                <button type="submit" class="w-full py-4 rounded-2xl font-bold text-lg shadow-lg transition text-white" id="btn-finalizar" style="background-color: var(--brand-color);">
-                    Enviar Pedido via WhatsApp
+                <button onclick="adicionar('${p.nome}', ${p.preco}, qtdModal); fecharModal()" 
+                        class="flex-1 ml-4 py-3 rounded-xl font-bold text-white shadow-lg transition active:scale-95" 
+                        style="background-color: var(--brand-color);">
+                    Adicionar • R$ <span id="subtotal-modal">${p.preco.toFixed(2)}</span>
                 </button>
-            </form>
+            </div>
         </div>
-    </div>
+    `;
+    document.getElementById('modal-produto').classList.remove('hidden');
+}
 
-    <div id="bar-carrinho" class="fixed bottom-6 left-4 right-4 bg-white shadow-2xl border border-slate-100 rounded-2xl p-4 hidden z-40">
-        <button onclick="toggleCarrinho()" class="w-full py-3 rounded-xl font-bold flex justify-between px-6 text-white" style="background-color: var(--brand-color);">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Ver Sacola</span>
-            <span id="cart-total">R$ 0,00</span>
-        </button>
-    </div>
-
-    <script>
-        let DATA = {};
-        let carrinho = [];
-
-        async function init() {
-            try {
-                const res = await fetch('produtos.json', { cache: 'no-store' });
-                DATA = await res.json();
-                
-                // Aplicar Cores e Logo
-                document.documentElement.style.setProperty('--brand-color', DATA.config.corPrincipal);
-                document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
-                if(DATA.config.linkLogo) {
-                    const img = document.getElementById('ui-logo');
-                    img.src = DATA.config.linkLogo;
-                    img.classList.remove('hidden');
-                }
-
-                renderMenu();
-                renderNav();
-            } catch (e) { console.error("Erro ao carregar dados."); }
-        }
-
-        function renderNav() {
-            const nav = document.getElementById('category-nav');
-            nav.innerHTML = DATA.config.categorias.map(cat => `
-                <a href="#cat-${cat}" class="category-pill whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 text-slate-600 font-bold text-sm transition capitalize">
-                    ${cat}
-                </a>
-            `).join('');
-        }
-
-        function renderMenu() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = DATA.config.categorias.map(cat => {
-                const itens = DATA.items.filter(i => i.categoria === cat);
-                if(itens.length === 0) return '';
-                
-                return `
-                    <section id="cat-${cat}">
-                        <h2 class="text-xl font-bold text-slate-800 mb-4 capitalize">${cat}</h2>
-                        <div class="grid gap-3">
-                            ${itens.map(p => `
-                                <div onclick="abrirDetalhes(${p.id})" class="bg-white p-3 rounded-2xl flex gap-4 border border-slate-100 shadow-sm active:scale-95 transition cursor-pointer">
-                                    <div class="flex-1 space-y-1">
-                                        <h3 class="font-bold text-slate-800">${p.nome}</h3>
-                                        <p class="text-xs text-slate-400 line-clamp-2">${p.descricao || ''}</p>
-                                        <p class="font-bold text-slate-900 mt-2">R$ ${p.preco.toFixed(2)}</p>
-                                    </div>
-                                    <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-xl shadow-inner">
-                                </div>
-                            `).join('')}
-                        </div>
-                    </section>
-                `;
-            }).join('');
-        }
-
-        function abrirDetalhes(id) {
-            const p = DATA.items.find(item => item.id === id);
-            const conteudo = document.getElementById('detalhe-conteudo');
-            conteudo.innerHTML = `
-                <img src="${p.imagem}" class="w-full h-64 object-cover">
-                <div class="p-6 space-y-4">
-                    <h2 class="text-2xl font-bold text-slate-800">${p.nome}</h2>
-                    <p class="text-slate-500 leading-relaxed">${p.descricao || 'Sem descrição disponível.'}</p>
-                    <div class="flex items-center justify-between pt-4">
-                        <span class="text-2xl font-bold text-slate-900">R$ ${p.preco.toFixed(2)}</span>
-                        <button onclick="adicionar('${p.nome}', ${p.preco}); fecharModal()" class="bg-red-500 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-red-100 transition active:scale-95" style="background-color: var(--brand-color);">
-                            Adicionar
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('modal-produto').classList.remove('hidden');
-        }
-
-        function fecharModal() { document.getElementById('modal-produto').classList.add('hidden'); }
-
-        function adicionar(nome, preco) {
-            carrinho.push({nome, preco});
-            atualizarCarrinho();
-        }
-
-        function atualizarCarrinho() {
-            const bar = document.getElementById('bar-carrinho');
-            const total = carrinho.reduce((acc, i) => acc + i.preco, 0);
-            
-            if(carrinho.length > 0) {
-                bar.classList.remove('hidden');
-                document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
-            }
-        }
-
-        function toggleCarrinho() {
-            const m = document.getElementById('modal-carrinho');
-            m.classList.toggle('hidden');
-            
-            const itensDiv = document.getElementById('itens-carrinho');
-            itensDiv.innerHTML = carrinho.map((p, i) => `
-                <div class="flex justify-between items-center text-sm">
-                    <span>${p.nome}</span>
-                    <div class="flex items-center gap-4">
-                        <span class="font-bold">R$ ${p.preco.toFixed(2)}</span>
-                        <button onclick="removerItem(${i})" class="text-red-500 font-bold">✕</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function removerItem(i) {
-            carrinho.splice(i, 1);
-            if(carrinho.length === 0) document.getElementById('modal-carrinho').classList.add('hidden'), document.getElementById('bar-carrinho').classList.add('hidden');
-            else toggleCarrinho(), toggleCarrinho(), atualizarCarrinho();
-        }
-
-        document.getElementById('cli-pag').onchange = function() {
-            document.getElementById('troco-area').classList.toggle('hidden', this.value !== 'Dinheiro');
-        };
-
-        document.getElementById('form-checkout').onsubmit = function(e) {
-            e.preventDefault();
-            const nome = document.getElementById('cli-nome').value;
-            const endereco = document.getElementById('cli-end').value;
-            const pag = document.getElementById('cli-pag').value;
-            const troco = document.getElementById('cli-troco').value;
-            
-            let msg = `*NOVO PEDIDO - ${DATA.config.nomeLoja}*\n\n`;
-            msg += `👤 *Cliente:* ${nome}\n`;
-            msg += `📍 *Endereço:* ${endereco}\n`;
-            msg += `💳 *Pagamento:* ${pag}${troco ? ' (Troco para R$ ' + troco + ')' : ''}\n\n`;
-            msg += `*ITENS:*\n`;
-            
-            carrinho.forEach(item => msg += `• ${item.nome} - R$ ${item.preco.toFixed(2)}\n`);
-            
-            const total = carrinho.reduce((acc, i) => acc + i.preco, 0);
-            msg += `\n*TOTAL: R$ ${total.toFixed(2)}*`;
-
-            window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
-        };
-
-        init();
-    </script>
-</body>
-</html>
+function alterarQtdModal(valor) {
+    const pPreco = parseFloat(document.getElementById('subtotal-modal').innerText) / qtdModal; // Pega o preço unitário
+    qtdModal += valor;
+    if (qtdModal < 1) qtdModal = 1;
+    
+    document.getElementById('display-qtd-modal').innerText = qtdModal;
+    document.getElementById('subtotal-modal').innerText = (pPreco * qtdModal).toFixed(2);
+}
