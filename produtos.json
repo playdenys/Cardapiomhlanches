@@ -1,32 +1,32 @@
 {
   "config": {
-    "nomeLoja": "Sua Lanchonete Pro",
+    "nomeLoja": "MH Lnaches",
     "corPrincipal": "#ef4444",
-    "whatsapp": "5511999999999",
+    "whatsapp": "81985770055",
     "linkLogo": "https://via.placeholder.com/150",
-    "taxaEntrega": 5.00,
+    "taxaEntrega": 5,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
     "categorias": [
       "lanches",
       "bebidas",
-      "porções"
+      "porÃ§Ãµes"
     ]
   },
   "items": [
     {
       "id": 1612345678901,
       "nome": "X-Burguer Especial",
-      "preco": 28.50,
-      "descricao": "Pão brioche, blend 160g, queijo duplo e maionese da casa.",
+      "preco": 28.5,
+      "descricao": "PÃ£o brioche, blend 160g, queijo duplo e maionese da casa.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "lanches"
     },
     {
       "id": 1612345678902,
       "nome": "Coca-Cola Lata",
-      "preco": 6.00,
+      "preco": 6,
       "descricao": "350ml gelada.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "bebidas"
