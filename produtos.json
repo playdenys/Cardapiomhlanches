@@ -16,7 +16,7 @@
       "id": 1775414459534,
       "nome": "Hamburguer",
       "preco": 12,
-      "descricao": "Breve descrição dos ingredientes...",
+      "descricao": "carne mussarela e tomate",
       "imagem": "",
       "categoria": "hamburgueres"
     },
@@ -25,7 +25,8 @@
       "nome": "burguer",
       "preco": 14,
       "imagem": "https://ibb.co/QjnzkTyB",
-      "categoria": "lanches"
+      "categoria": "lanches",
+      "descricao": "simples"
     },
     {
       "id": 1775412763738,
@@ -39,7 +40,8 @@
       "nome": "test",
       "preco": 8,
       "imagem": "",
-      "categoria": "sobremesas"
+      "categoria": "sobremesas",
+      "descricao": "doces deliciosos"
     }
   ]
 }
