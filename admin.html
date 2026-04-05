@@ -2,36 +2,97 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Gerador de Cardápio</title>
+    <title>Painel de Controle Total</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-xl font-bold mb-4">Adicionar ao Cardápio</h1>
-        <div class="space-y-3">
-            <input type="text" id="nome" placeholder="Nome" class="w-full border p-2">
-            <input type="number" id="preco" placeholder="Preço" class="w-full border p-2">
-            <input type="text" id="img" placeholder="Link da Imagem" class="w-full border p-2">
-            <button onclick="gerarJSON()" class="bg-green-600 text-white px-4 py-2 rounded">Adicionar e Gerar Código</button>
+<body class="bg-gray-100 p-4 md:p-10">
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500">
+            <h1 class="text-2xl font-bold mb-6"><i class="fa-solid fa-sliders text-blue-500"></i> Configurações da Página</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Nome da Loja</label>
+                    <input type="text" id="cfg-nome" class="w-full border p-2 rounded-lg mt-1">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">WhatsApp (com DDD)</label>
+                    <input type="text" id="cfg-zap" class="w-full border p-2 rounded-lg mt-1">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Cor Principal (Botões/Destaques)</label>
+                    <input type="color" id="cfg-cor" class="w-full h-10 border p-1 rounded-lg mt-1">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Link do Logo (URL)</label>
+                    <input type="text" id="cfg-logo" class="w-full border p-2 rounded-lg mt-1">
+                </div>
+            </div>
         </div>
 
-        <h2 class="mt-8 font-bold text-red-600">Copie o conteúdo abaixo e cole no seu arquivo produtos.json no GitHub:</h2>
-        <textarea id="resultado" class="w-full h-64 mt-2 p-2 bg-gray-900 text-green-400 font-mono text-xs rounded"></textarea>
+        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500">
+            <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-plus text-green-500"></i> Adicionar Produto</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="p-nome" placeholder="Nome do Produto" class="border p-2 rounded-lg">
+                <input type="number" id="p-preco" placeholder="Preço (Ex: 29.90)" class="border p-2 rounded-lg">
+                <input type="text" id="p-img" placeholder="Link da Imagem" class="border p-2 rounded-lg">
+                <select id="p-cat" class="border p-2 rounded-lg">
+                    <option value="lanches">Lanches</option>
+                    <option value="bebidas">Bebidas</option>
+                    <option value="porcoes">Porções</option>
+                </select>
+                <button onclick="adicionarProduto()" class="md:col-span-2 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition">Adicionar à Lista</button>
+            </div>
+        </div>
+
+        <div class="bg-zinc-900 p-6 rounded-2xl shadow-2xl text-white">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-yellow-400">Código para o seu GitHub</h2>
+                <button onclick="copiarCodigo()" class="bg-blue-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700">Copiar Tudo</button>
+            </div>
+            <p class="text-xs text-gray-400 mb-4">Copie o conteúdo abaixo e cole no arquivo <b>produtos.json</b> do seu GitHub.</p>
+            <textarea id="output" class="w-full h-64 bg-black p-4 font-mono text-green-400 text-xs rounded-lg border border-zinc-700" readonly></textarea>
+        </div>
     </div>
 
     <script>
-        let lista = [];
+        let dados = {
+            config: { nomeLoja: "", corPrincipal: "#000000", corFundo: "#121212", linkLogo: "", whatsapp: "" },
+            items: []
+        };
 
-        function gerarJSON() {
-            const novo = {
+        function adicionarProduto() {
+            const item = {
                 id: Date.now(),
-                nome: document.getElementById('nome').value,
-                preco: parseFloat(document.getElementById('preco').value),
-                imagem: document.getElementById('img').value,
-                categoria: "lanches"
+                nome: document.getElementById('p-nome').value,
+                preco: parseFloat(document.getElementById('p-preco').value),
+                imagem: document.getElementById('p-img').value,
+                categoria: document.getElementById('p-cat').value
             };
-            lista.push(novo);
-            document.getElementById('resultado').value = JSON.stringify(lista, null, 2);
+            
+            if(!item.nome || !item.preco) return alert("Preencha o nome e preço!");
+            
+            dados.items.push(item);
+            gerarOutput();
+            alert("Produto adicionado à lista abaixo!");
+        }
+
+        function gerarOutput() {
+            dados.config.nomeLoja = document.getElementById('cfg-nome').value;
+            dados.config.corPrincipal = document.getElementById('cfg-cor').value;
+            dados.config.linkLogo = document.getElementById('cfg-logo').value;
+            dados.config.whatsapp = document.getElementById('cfg-zap').value;
+
+            document.getElementById('output').value = JSON.stringify(dados, null, 2);
+        }
+
+        function copiarCodigo() {
+            gerarOutput();
+            const area = document.getElementById('output');
+            area.select();
+            document.execCommand('copy');
+            alert("Copiado! Agora cole no produtos.json do seu GitHub.");
         }
     </script>
 </body>
