@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio Digital - Pedido Online</title>
+    <title>Cardápio Digital - Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,7 +13,6 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         :root { --brand-color: #ef4444; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .category-active { background-color: var(--brand-color) !important; color: white !important; }
     </style>
 </head>
 <body class="pb-32">
@@ -23,13 +22,10 @@
             <img id="ui-logo" src="" class="w-10 h-10 rounded-full hidden border shadow-sm object-cover">
             <h1 id="ui-nome" class="font-bold text-slate-800 text-lg italic tracking-tight">Carregando...</h1>
         </div>
-        <div class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span class="text-green-600 font-bold text-[10px] uppercase">Aberto</span>
-        </div>
+        <div id="status-loja" class="font-bold text-[10px] uppercase px-2 py-1 rounded-full border">---</div>
     </header>
 
-    <nav id="category-nav" class="flex gap-2 overflow-x-auto p-4 bg-white sticky top-[60px] z-20 hide-scrollbar shadow-sm border-b border-slate-100"></nav>
+    <nav id="category-nav" class="flex gap-2 overflow-x-auto p-4 bg-white sticky top-[60px] z-20 hide-scrollbar shadow-sm border-b"></nav>
 
     <main id="menu-container" class="max-w-2xl mx-auto p-4 space-y-8">
         <div class="text-center py-20 text-slate-400">Carregando cardápio...</div>
@@ -37,61 +33,59 @@
 
     <div id="modal-produto" class="fixed inset-0 bg-black/70 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-3xl overflow-hidden modal-animate relative max-h-[95vh] overflow-y-auto">
-            <button onclick="fecharModal()" class="absolute top-4 right-4 bg-black/40 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center">✕</button>
+            <button onclick="fecharModal()" class="absolute top-4 right-4 bg-black/40 text-white w-8 h-8 rounded-full z-10">✕</button>
             <div id="detalhe-conteudo"></div>
         </div>
     </div>
 
     <div id="modal-carrinho" class="fixed inset-0 bg-black/70 z-50 hidden flex items-end justify-center p-0">
         <div class="bg-white w-full max-w-lg rounded-t-3xl p-6 modal-animate overflow-y-auto max-h-[92vh]">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold italic text-slate-800">Sua Sacola</h2>
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-xl font-bold italic text-slate-800">Minha Sacola</h2>
                 <button onclick="toggleCarrinho()" class="text-slate-400 font-bold p-2">Fechar</button>
             </div>
             
-            <div id="itens-carrinho" class="space-y-4 mb-8 border-b border-slate-100 pb-6"></div>
+            <div id="itens-carrinho" class="space-y-4 mb-6"></div>
 
             <form id="form-checkout" class="space-y-4">
-                <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest">Tipo de Entrega</h3>
                 <div class="flex gap-2 p-1 bg-slate-100 rounded-2xl">
-                    <button type="button" onclick="setMetodo('entrega')" id="btn-entrega" class="flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500">🛵 Entrega</button>
+                    <button type="button" onclick="setMetodo('entrega')" id="btn-entrega" class="flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500 border border-slate-200">🛵 Entrega</button>
                     <button type="button" onclick="setMetodo('retirada')" id="btn-retirada" class="flex-1 py-2 rounded-xl font-bold transition text-slate-500">🛍️ Retirada</button>
                 </div>
 
-                <div id="campo-endereco" class="space-y-4">
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase">Endereço Completo</label>
-                        <input type="text" id="cli-end" placeholder="Rua, Número, Bairro e Ref." class="w-full border-2 p-3 rounded-xl focus:border-red-500 outline-none transition">
-                    </div>
+                <div id="area-agendamento" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-2xl">
+                    <p class="text-amber-700 text-xs font-bold mb-2 uppercase">Loja Fechada - Escolha o horário de Agendamento:</p>
+                    <input type="time" id="cli-agendamento" class="w-full p-2 rounded-lg border-2 border-amber-200 outline-none">
+                </div>
+
+                <div id="campo-endereco">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Endereço de Entrega</label>
+                    <input type="text" id="cli-end" placeholder="Rua, Número, Bairro" class="w-full border-2 p-3 rounded-xl focus:border-red-500 outline-none transition">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="col-span-2">
-                        <label class="text-xs font-bold text-slate-400 uppercase">Seu Nome</label>
-                        <input type="text" id="cli-nome" required placeholder="Como te chamamos?" class="w-full border-2 p-3 rounded-xl focus:border-red-500 outline-none transition">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nome</label>
+                        <input type="text" id="cli-nome" required class="w-full border-2 p-3 rounded-xl outline-none">
                     </div>
                     <div class="col-span-2">
-                        <label class="text-xs font-bold text-slate-400 uppercase">Forma de Pagamento</label>
-                        <select id="cli-pag" class="w-full border-2 p-3 rounded-xl bg-white focus:border-red-500 outline-none transition font-semibold">
-                            <option value="Pix">Pix (Rápido)</option>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Pagamento</label>
+                        <select id="cli-pag" class="w-full border-2 p-3 rounded-xl bg-white font-semibold">
+                            <option value="Pix">Pix</option>
                             <option value="Cartão">Cartão na Entrega</option>
                             <option value="Dinheiro">Dinheiro</option>
                         </select>
                     </div>
                 </div>
 
-                <div id="troco-area" class="hidden">
-                    <input type="number" id="cli-troco" placeholder="Troco para quanto?" class="w-full border-2 p-3 rounded-xl">
-                </div>
-
-                <div id="resumo-valores" class="bg-slate-50 p-4 rounded-2xl space-y-2 text-sm border border-slate-100 mt-6">
-                    <div class="flex justify-between text-slate-500"><span>Itens:</span> <span id="res-subtotal">R$ 0,00</span></div>
-                    <div class="flex justify-between text-emerald-600" id="res-taxa-row"><span>Taxa de Entrega:</span> <span id="res-taxa">R$ 0,00</span></div>
-                    <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2 text-slate-800"><span>Total do Pedido:</span> <span id="res-total">R$ 0,00</span></div>
+                <div id="resumo-valores" class="bg-slate-50 p-4 rounded-2xl space-y-1 text-sm border">
+                    <div class="flex justify-between"><span>Itens:</span> <span id="res-subtotal">R$ 0,00</span></div>
+                    <div class="flex justify-between text-emerald-600" id="res-taxa-row"><span>Entrega:</span> <span id="res-taxa">R$ 0,00</span></div>
+                    <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2"><span>Total:</span> <span id="res-total">R$ 0,00</span></div>
                 </div>
                 
-                <button type="submit" class="w-full py-4 rounded-2xl font-bold text-lg shadow-lg text-white mt-4 transition active:scale-95" id="btn-finalizar" style="background-color: var(--brand-color);">
-                    Confirmar e Enviar WhatsApp
+                <button type="submit" class="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg transition active:scale-95" id="btn-finalizar" style="background-color: var(--brand-color);">
+                    Finalizar Pedido
                 </button>
             </form>
         </div>
@@ -99,7 +93,7 @@
 
     <div id="bar-carrinho" class="fixed bottom-6 left-4 right-4 shadow-2xl rounded-2xl p-4 hidden z-40 bg-white border border-slate-100 border-t-4" style="border-top-color: var(--brand-color);">
         <button onclick="toggleCarrinho()" class="w-full py-3 rounded-xl font-bold flex justify-between px-6 text-white transition active:scale-95" style="background-color: var(--brand-color);">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-basket-shopping"></i> Ver Sacola</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sacola</span>
             <span id="cart-total">R$ 0,00</span>
         </button>
     </div>
@@ -114,8 +108,7 @@
             try {
                 const res = await fetch('produtos.json', { cache: 'no-store' });
                 DATA = await res.json();
-                
-                document.documentElement.style.setProperty('--brand-color', DATA.config.corPrincipal || '#ef4444');
+                document.documentElement.style.setProperty('--brand-color', DATA.config.corPrincipal);
                 document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
                 if(DATA.config.linkLogo) {
                     const img = document.getElementById('ui-logo');
@@ -124,16 +117,44 @@
                 }
                 renderNav();
                 renderMenu();
-            } catch (e) { document.getElementById('menu-container').innerHTML = "Erro ao carregar cardápio."; }
+                renderStatus();
+            } catch (e) { console.error(e); }
+        }
+
+        function verificarAberto() {
+            if (DATA.config.fechadoManual) return false;
+            const agora = new Date();
+            const minAtual = agora.getHours() * 60 + agora.getMinutes();
+            const [hA, mA] = DATA.config.horaAbre.split(':').map(Number);
+            const [hF, mF] = DATA.config.horaFecha.split(':').map(Number);
+            const minA = hA * 60 + mA;
+            let minF = hF * 60 + mF;
+            if (minF < minA) minF += 1440; 
+            return minAtual >= minA && minAtual <= minF;
+        }
+
+        function renderStatus() {
+            const label = document.getElementById('status-loja');
+            const estaAberto = verificarAberto();
+            const areaAgendamento = document.getElementById('area-agendamento');
+            const btnFinalizar = document.getElementById('btn-finalizar');
+
+            if(estaAberto) {
+                label.innerText = "Aberto Agora";
+                label.className = "text-green-600 font-bold text-[10px] uppercase px-2 py-1 rounded-full border border-green-100 bg-green-50";
+                areaAgendamento.classList.add('hidden');
+                btnFinalizar.innerText = "Enviar Pedido via WhatsApp";
+            } else {
+                label.innerText = "Fechado (Agendando)";
+                label.className = "text-amber-600 font-bold text-[10px] uppercase px-2 py-1 rounded-full border border-amber-100 bg-amber-50";
+                areaAgendamento.classList.remove('hidden');
+                btnFinalizar.innerText = "Agendar para WhatsApp";
+            }
         }
 
         function renderNav() {
             const nav = document.getElementById('category-nav');
-            nav.innerHTML = (DATA.config.categorias || []).map(cat => `
-                <a href="#cat-${cat}" class="px-5 py-2 rounded-full bg-slate-100 text-slate-600 font-bold text-xs transition capitalize whitespace-nowrap hover:bg-slate-200">
-                    ${cat}
-                </a>
-            `).join('');
+            nav.innerHTML = (DATA.config.categorias || []).map(cat => `<a href="#cat-${cat}" class="px-5 py-2 rounded-full bg-slate-100 text-slate-600 font-bold text-xs capitalize whitespace-nowrap">${cat}</a>`).join('');
         }
 
         function renderMenu() {
@@ -141,188 +162,120 @@
             container.innerHTML = (DATA.config.categorias || []).map(cat => {
                 const itens = DATA.items.filter(i => i.categoria === cat);
                 if(itens.length === 0) return '';
-                return `
-                    <section id="cat-${cat}" class="pt-4">
-                        <h2 class="text-xl font-bold text-slate-800 mb-4 capitalize flex items-center gap-2 italic">
-                            ${cat}
-                        </h2>
-                        <div class="grid gap-3">
-                            ${itens.map(p => `
-                                <div onclick="abrirDetalhes(${p.id})" class="bg-white p-3 rounded-2xl flex gap-4 border border-slate-100 shadow-sm active:scale-95 transition cursor-pointer">
-                                    <div class="flex-1">
-                                        <h3 class="font-bold text-slate-800">${p.nome}</h3>
-                                        <p class="text-xs text-slate-400 line-clamp-2 mt-1">${p.descricao || ''}</p>
-                                        <p class="font-bold text-slate-900 mt-2">R$ ${p.preco.toFixed(2)}</p>
-                                    </div>
-                                    <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-xl shadow-inner bg-slate-50 border">
-                                </div>
-                            `).join('')}
-                        </div>
-                    </section>
-                `;
+                return `<section id="cat-${cat}" class="pt-4"><h2 class="text-xl font-bold text-slate-800 mb-4 capitalize italic">${cat}</h2><div class="grid gap-3">${itens.map(p => `
+                    <div onclick="abrirDetalhes(${p.id})" class="bg-white p-3 rounded-2xl flex gap-4 border shadow-sm active:scale-95 transition cursor-pointer">
+                        <div class="flex-1 font-bold text-slate-800"><h3>${p.nome}</h3><p class="text-[10px] text-slate-400 font-normal line-clamp-2 mt-1">${p.descricao || ''}</p><p class="mt-2">R$ ${p.preco.toFixed(2)}</p></div>
+                        <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-xl border">
+                    </div>`).join('')}</div></section>`;
             }).join('');
         }
 
         function abrirDetalhes(id) {
             const p = DATA.items.find(item => item.id === id);
             qtdModal = 1;
-            const conteudo = document.getElementById('detalhe-conteudo');
-            conteudo.innerHTML = `
+            document.getElementById('detalhe-conteudo').innerHTML = `
                 <img src="${p.imagem}" class="w-full h-72 object-cover">
                 <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h2 class="text-2xl font-bold text-slate-800">${p.nome}</h2>
-                        <span class="text-xl font-bold text-slate-900">R$ ${p.preco.toFixed(2)}</span>
-                    </div>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-10">${p.descricao || 'Nenhuma descrição informada.'}</p>
-                    
-                    <div class="flex items-center justify-between pt-6 border-t border-slate-100 gap-4">
-                        <div class="flex items-center border-2 border-slate-200 rounded-2xl p-1 bg-slate-50">
-                            <button onclick="alterarQtdModal(-1, ${p.preco})" class="w-10 h-10 rounded-xl bg-white text-xl font-bold shadow-sm">-</button>
-                            <span id="display-qtd-modal" class="w-12 text-center font-bold text-lg">1</span>
-                            <button onclick="alterarQtdModal(1, ${p.preco})" class="w-10 h-10 rounded-xl bg-white text-xl font-bold shadow-sm text-red-500">+</button>
+                    <div class="flex justify-between items-start mb-2"><h2 class="text-2xl font-bold">${p.nome}</h2><span class="text-xl font-bold">R$ ${p.preco.toFixed(2)}</span></div>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-10">${p.descricao || ''}</p>
+                    <div class="flex items-center justify-between pt-6 border-t gap-4">
+                        <div class="flex items-center border-2 rounded-2xl p-1 bg-slate-50">
+                            <button onclick="altQtdMod(-1, ${p.preco})" class="w-10 h-10 rounded-xl bg-white text-xl font-bold shadow-sm">-</button>
+                            <span id="disp-qtd-mod" class="w-12 text-center font-bold text-lg">1</span>
+                            <button onclick="altQtdMod(1, ${p.preco})" class="w-10 h-10 rounded-xl bg-white text-xl font-bold shadow-sm text-red-500">+</button>
                         </div>
-                        <button onclick="adicionar('${p.nome}', ${p.preco}, qtdModal); fecharModal()" 
-                                class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg transition active:scale-95" 
-                                style="background-color: var(--brand-color);">
-                            Adicionar • R$ <span id="subtotal-modal">${p.preco.toFixed(2)}</span>
+                        <button onclick="addCar('${p.nome}', ${p.preco}, qtdModal); fecharModal()" class="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg" style="background-color: var(--brand-color);">
+                            Adicionar • R$ <span id="sub-mod">${p.preco.toFixed(2)}</span>
                         </button>
                     </div>
-                </div>
-            `;
+                </div>`;
             document.getElementById('modal-produto').classList.remove('hidden');
         }
 
-        function alterarQtdModal(valor, precoUnit) {
-            qtdModal += valor;
-            if (qtdModal < 1) qtdModal = 1;
-            document.getElementById('display-qtd-modal').innerText = qtdModal;
-            document.getElementById('subtotal-modal').innerText = (precoUnit * qtdModal).toFixed(2);
+        function altQtdMod(v, p) {
+            qtdModal += v; if (qtdModal < 1) qtdModal = 1;
+            document.getElementById('disp-qtd-mod').innerText = qtdModal;
+            document.getElementById('sub-mod').innerText = (p * qtdModal).toFixed(2);
         }
 
         function fecharModal() { document.getElementById('modal-produto').classList.add('hidden'); }
 
-        function adicionar(nome, preco, qtd) {
-            const index = carrinho.findIndex(item => item.nome === nome);
-            if (index !== -1) carrinho[index].qtd += qtd;
-            else carrinho.push({ nome, preco, qtd });
-            renderizarResumo();
+        function addCar(n, p, q) {
+            const idx = carrinho.findIndex(it => it.nome === n);
+            if (idx !== -1) carrinho[idx].qtd += q;
+            else carrinho.push({ nome: n, preco: p, qtd: q });
+            updBar();
+        }
+
+        function updBar() {
+            const sub = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
+            const taxa = metodoEntrega === 'entrega' ? (parseFloat(DATA.config.taxaEntrega) || 0) : 0;
+            const tot = sub + taxa;
+            document.getElementById('cart-total').innerText = `R$ ${tot.toFixed(2)}`;
+            document.getElementById('bar-carrinho').classList.toggle('hidden', carrinho.length === 0);
+        }
+
+        function setMetodo(t) {
+            metodoEntrega = t;
+            document.getElementById('btn-entrega').className = t === 'entrega' ? "flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500 border border-slate-200" : "flex-1 py-2 rounded-xl font-bold transition text-slate-500";
+            document.getElementById('btn-retirada').className = t === 'retirada' ? "flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500 border border-slate-200" : "flex-1 py-2 rounded-xl font-bold transition text-slate-500";
+            document.getElementById('campo-endereco').classList.toggle('hidden', t === 'retirada');
+            updResumo();
         }
 
         function toggleCarrinho() {
             const m = document.getElementById('modal-carrinho');
             m.classList.toggle('hidden');
-            if(!m.classList.contains('hidden')) renderizarItensCarrinho();
-        }
-
-        function setMetodo(tipo) {
-            metodoEntrega = tipo;
-            const btnE = document.getElementById('btn-entrega');
-            const btnR = document.getElementById('btn-retirada');
-            const campoEnd = document.getElementById('campo-endereco');
-            const taxaRow = document.getElementById('res-taxa-row');
-
-            if (tipo === 'entrega') {
-                btnE.className = "flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500 border border-slate-200";
-                btnR.className = "flex-1 py-2 rounded-xl font-bold transition text-slate-500";
-                campoEnd.classList.remove('hidden');
-                taxaRow.classList.remove('hidden');
-            } else {
-                btnR.className = "flex-1 py-2 rounded-xl font-bold transition bg-white shadow-sm text-red-500 border border-slate-200";
-                btnE.className = "flex-1 py-2 rounded-xl font-bold transition text-slate-500";
-                campoEnd.classList.add('hidden');
-                taxaRow.classList.add('hidden');
+            if(!m.classList.contains('hidden')) {
+                const cont = document.getElementById('itens-carrinho');
+                cont.innerHTML = carrinho.map((p, i) => `
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <div><p class="font-bold text-slate-700">${p.nome}</p><div class="flex items-center gap-2 mt-1">
+                            <button onclick="altQtdCar(${i},-1)" class="w-6 h-6 bg-slate-100 rounded">-</button>
+                            <span class="text-xs font-bold">${p.qtd}</span>
+                            <button onclick="altQtdCar(${i},1)" class="w-6 h-6 bg-slate-100 rounded">+</button>
+                        </div></div>
+                        <p class="font-bold">R$ ${(p.preco * p.qtd).toFixed(2)}</p>
+                    </div>`).join('');
+                updResumo();
+                renderStatus();
             }
-            renderizarResumo();
         }
 
-        function renderizarResumo() {
-            const bar = document.getElementById('bar-carrinho');
-            const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
+        function altQtdCar(i, v) {
+            carrinho[i].qtd += v;
+            if(carrinho[i].qtd < 1) carrinho.splice(i, 1);
+            if(carrinho.length === 0) document.getElementById('modal-carrinho').classList.add('hidden');
+            toggleCarrinho(); toggleCarrinho(); updBar();
+        }
+
+        function updResumo() {
+            const sub = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
             const taxa = metodoEntrega === 'entrega' ? (parseFloat(DATA.config.taxaEntrega) || 0) : 0;
-            const total = subtotal + taxa;
-
-            document.getElementById('res-subtotal').innerText = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('res-subtotal').innerText = `R$ ${sub.toFixed(2)}`;
             document.getElementById('res-taxa').innerText = `R$ ${taxa.toFixed(2)}`;
-            document.getElementById('res-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
-
-            if(carrinho.length > 0) bar.classList.remove('hidden');
-            else bar.classList.add('hidden');
+            document.getElementById('res-taxa-row').classList.toggle('hidden', metodoEntrega === 'retirada');
+            document.getElementById('res-total').innerText = `R$ ${(sub + taxa).toFixed(2)}`;
         }
-
-        function renderizarItensCarrinho() {
-            const container = document.getElementById('itens-carrinho');
-            if(carrinho.length === 0) {
-                container.innerHTML = "<div class='py-10 text-center text-slate-400 font-medium'>Sua sacola está vazia ☹️</div>";
-                return;
-            }
-            container.innerHTML = carrinho.map((p, i) => `
-                <div class="flex flex-col border-b border-slate-50 pb-4 last:border-0">
-                    <div class="flex justify-between items-center mb-2 font-bold text-slate-700">
-                        <span>${p.nome}</span>
-                        <span>R$ ${(p.preco * p.qtd).toFixed(2)}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3 bg-slate-100 rounded-xl p-1">
-                            <button onclick="alterarQtdCarrinho(${i}, -1)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold">-</button>
-                            <span class="font-bold text-sm w-4 text-center">${p.qtd}</span>
-                            <button onclick="alterarQtdCarrinho(${i}, 1)" class="w-8 h-8 bg-white rounded-lg shadow-sm font-bold text-red-500">+</button>
-                        </div>
-                        <button onclick="removerItem(${i})" class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter hover:text-red-500">Excluir</button>
-                    </div>
-                </div>
-            `).join('');
-            renderizarResumo();
-        }
-
-        function alterarQtdCarrinho(index, valor) {
-            carrinho[index].qtd += valor;
-            if (carrinho[index].qtd < 1) removerItem(index);
-            else renderizarItensCarrinho();
-        }
-
-        function removerItem(i) {
-            carrinho.splice(i, 1);
-            renderizarItensCarrinho();
-            if(carrinho.length === 0) {
-                document.getElementById('modal-carrinho').classList.add('hidden');
-                renderizarResumo();
-            }
-        }
-
-        document.getElementById('cli-pag').onchange = function() {
-            document.getElementById('troco-area').classList.toggle('hidden', this.value !== 'Dinheiro');
-        };
 
         document.getElementById('form-checkout').onsubmit = function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btn-finalizar');
+            const aberta = verificarAberto();
+            const agendamento = document.getElementById('cli-agendamento').value;
+            if(!aberta && !agendamento) return alert("Escolha um horário de agendamento.");
             
-            const nome = document.getElementById('cli-nome').value;
-            const endereco = document.getElementById('cli-end').value;
-            const pag = document.getElementById('cli-pag').value;
-            const troco = document.getElementById('cli-troco').value;
-            
-            const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
+            const sub = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
             const taxa = metodoEntrega === 'entrega' ? (parseFloat(DATA.config.taxaEntrega) || 0) : 0;
-            const total = subtotal + taxa;
-
-            let msg = `*NOVO PEDIDO - ${DATA.config.nomeLoja}*\n\n`;
-            msg += `🛵 *Tipo:* ${metodoEntrega === 'entrega' ? 'Entrega em Casa' : 'Retirada no Balcão'}\n`;
-            msg += `👤 *Cliente:* ${nome}\n`;
-            if(metodoEntrega === 'entrega') msg += `📍 *Endereço:* ${endereco}\n`;
-            msg += `💳 *Pagamento:* ${pag}${troco ? ' (Troco para R$ ' + troco + ')' : ''}\n\n`;
-            msg += `*ITENS:*\n`;
-            carrinho.forEach(item => msg += `✅ ${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2)}\n`);
             
-            msg += `\n---------------------------\n`;
-            msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}\n`;
-            if(metodoEntrega === 'entrega') msg += `*Taxa de Entrega:* R$ ${taxa.toFixed(2)}\n`;
-            msg += `*TOTAL DO PEDIDO: R$ ${total.toFixed(2)}*`;
-
+            let msg = `*${aberta ? 'NOVO PEDIDO' : 'PEDIDO AGENDADO'}*\n`;
+            if(!aberta) msg += `⏰ *PARA:* ${agendamento}\n`;
+            msg += `🛵 *Tipo:* ${metodoEntrega}\n👤 *Cliente:* ${document.getElementById('cli-nome').value}\n`;
+            if(metodoEntrega==='entrega') msg += `📍 *End:* ${document.getElementById('cli-end').value}\n`;
+            msg += `💳 *Pagam:* ${document.getElementById('cli-pag').value}\n\n*ITENS:*\n`;
+            carrinho.forEach(it => msg += `✅ ${it.qtd}x ${it.nome} - R$ ${(it.preco*it.qtd).toFixed(2)}\n`);
+            msg += `\n*TOTAL: R$ ${(sub+taxa).toFixed(2)}*`;
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
-        };
+        }
 
         init();
     </script>
