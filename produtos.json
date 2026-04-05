@@ -6,12 +6,20 @@
     "linkLogo": "https://ibb.co/7xwhDvHs",
     "whatsapp": "81985770055",
     "categorias": [
-      "lanches",
       "bebidas",
-      "sobremesas"
+      "sobremesas",
+      "hamburgueres"
     ]
   },
   "items": [
+    {
+      "id": 1775414459534,
+      "nome": "Hamburguer",
+      "preco": 12,
+      "descricao": "Breve descrição dos ingredientes...",
+      "imagem": "",
+      "categoria": "hamburgueres"
+    },
     {
       "id": 1775412732906,
       "nome": "burguer",
