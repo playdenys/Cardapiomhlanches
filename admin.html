@@ -3,112 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Gestão Completa</title>
+    <title>Dashboard Pro - Gestão de Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .tab-active { border-bottom: 3px solid #3b82f6; color: #1d4ed8; font-weight: bold; }
+        .tab-inactive { color: #6b7280; font-weight: 500; }
+        .modal-enter { animation: fadeIn 0.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
-<body class="bg-slate-100 pb-20">
+<body class="text-slate-800 pb-20">
+
     <div id="setup" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full">
-            <h1 class="text-2xl font-bold mb-6 text-center">Acesso Admin</h1>
-            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full border p-3 rounded-xl mb-3 outline-none">
-            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border p-3 rounded-xl mb-6 outline-none">
-            <button onclick="carregarDados()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Entrar</button>
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-rocket text-4xl text-blue-600 mb-3"></i>
+                <h1 class="text-2xl font-bold">Acesso ao Painel</h1>
+                <p class="text-slate-500 text-sm">Conecte seu banco de dados</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Token do GitHub</label>
+                    <input type="password" id="gh-token" class="w-full border-2 border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Repositório (usuario/repo)</label>
+                    <input type="text" id="gh-repo" class="w-full border-2 border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 transition">
+                </div>
+                <button onclick="carregarDados()" id="btn-login" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold shadow-lg transition">Conectar Sistema</button>
+            </div>
         </div>
     </div>
 
-    <div id="editor" class="hidden max-w-5xl mx-auto p-4 space-y-6">
-        <header class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border sticky top-0 z-50">
-            <h2 class="font-bold text-xl italic text-red-500">Admin Pro</h2>
-            <button onclick="salvar()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-2 rounded-xl font-bold italic">Publicar Alterações</button>
+    <div id="editor" class="hidden">
+        <header class="bg-white border-b shadow-sm sticky top-0 z-40">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img id="header-logo" src="https://via.placeholder.com/150" class="w-8 h-8 rounded-full object-cover border">
+                    <h2 id="header-nome" class="font-bold text-lg">Painel Admin</h2>
+                </div>
+                <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold shadow transition flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>Publicar Site</span>
+                </button>
+            </div>
+            <div class="max-w-6xl mx-auto px-4 flex gap-6 mt-2">
+                <button onclick="mudarAba('aba-loja')" id="nav-loja" class="pb-3 px-2 tab-active transition"><i class="fa-solid fa-store mr-2"></i>Loja</button>
+                <button onclick="mudarAba('aba-categorias')" id="nav-categorias" class="pb-3 px-2 tab-inactive transition"><i class="fa-solid fa-tags mr-2"></i>Categorias</button>
+                <button onclick="mudarAba('aba-produtos')" id="nav-produtos" class="pb-3 px-2 tab-inactive transition"><i class="fa-solid fa-burger mr-2"></i>Produtos</button>
+            </div>
         </header>
 
-        <section class="bg-white p-6 rounded-2xl border shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
-            <h3 class="col-span-full font-bold border-b pb-2">Configurações Gerais</h3>
-            <div><label class="text-[10px] font-bold text-slate-400">NOME DA LOJA</label><input type="text" id="cfg-nome" class="w-full border p-2 rounded-lg"></div>
-            <div><label class="text-[10px] font-bold text-slate-400">WHATSAPP</label><input type="text" id="cfg-zap" class="w-full border p-2 rounded-lg"></div>
-            <div><label class="text-[10px] font-bold text-slate-400">TAXA ENTREGA (R$)</label><input type="number" id="cfg-taxa" step="0.01" class="w-full border p-2 rounded-lg"></div>
-            <div class="flex gap-2">
-                <div class="flex-1"><label class="text-[10px] font-bold text-slate-400">ABRE</label><input type="time" id="cfg-abre" class="w-full border p-2 rounded-lg"></div>
-                <div class="flex-1"><label class="text-[10px] font-bold text-slate-400">FECHA</label><input type="time" id="cfg-fecha" class="w-full border p-2 rounded-lg"></div>
-            </div>
-            <div class="flex items-center gap-4 bg-red-50 p-3 rounded-xl">
-                <input type="checkbox" id="cfg-manual" class="w-5 h-5 accent-red-600">
-                <label class="font-bold text-red-600 text-xs">FECHAR LOJA AGORA (EMERGÊNCIA)</label>
-            </div>
-        </section>
+        <main class="max-w-6xl mx-auto p-4 py-8">
+            
+            <section id="aba-loja" class="space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-palette text-blue-500"></i> Identidade Visual</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Nome da Loja</label><input type="text" id="cfg-nome" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none focus:border-blue-500"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Link da Logo (URL da Imagem)</label><input type="text" id="cfg-logo" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none focus:border-blue-500"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Cor Principal do Site</label><input type="color" id="cfg-cor" class="w-full h-12 border-none rounded-xl mt-1 cursor-pointer"></div>
+                    </div>
+                </div>
 
-        <section>
-            <div class="flex justify-between items-center mb-4"><h3 class="font-bold">Produtos</h3><button onclick="novoItem()" class="bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Novo</button></div>
-            <div id="lista-produtos" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </section>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-motorcycle text-amber-500"></i> Operação & Delivery</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Número do WhatsApp</label><input type="text" id="cfg-zap" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none focus:border-blue-500" placeholder="Ex: 5511999999999"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Taxa de Entrega (R$)</label><input type="number" id="cfg-taxa" step="0.01" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none font-bold text-emerald-600 focus:border-blue-500"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-clock text-indigo-500"></i> Horário de Funcionamento</h3>
+                        <label class="flex items-center gap-2 cursor-pointer bg-red-50 text-red-600 px-3 py-1.5 rounded-lg border border-red-200">
+                            <input type="checkbox" id="cfg-manual" class="w-4 h-4 accent-red-600">
+                            <span class="text-xs font-bold uppercase">Fechar Loja Agora (Emergência)</span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 max-w-md">
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Abre às:</label><input type="time" id="cfg-abre" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none font-bold"></div>
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Fecha às:</label><input type="time" id="cfg-fecha" class="w-full bg-slate-50 border p-3 rounded-xl mt-1 outline-none font-bold"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="aba-categorias" class="hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-4">Organize seu Cardápio</h3>
+                    <div class="flex gap-2 mb-6 max-w-md">
+                        <input type="text" id="nova-cat" placeholder="Ex: Bebidas, Sobremesas..." class="flex-1 bg-slate-50 border p-3 rounded-xl outline-none focus:border-blue-500">
+                        <button onclick="addCategoria()" class="bg-slate-800 text-white px-6 rounded-xl font-bold hover:bg-slate-900 transition">Adicionar</button>
+                    </div>
+                    <div id="lista-categorias" class="flex flex-wrap gap-3">
+                        </div>
+                </div>
+            </section>
+
+            <section id="aba-produtos" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Seus Produtos</h3>
+                    <button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:bg-blue-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+                <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    </div>
+            </section>
+
+        </main>
     </div>
 
-    <script>
-        let DATA = {}; let SHA = "";
-        async function carregarDados() {
-            const token = document.getElementById('gh-token').value;
-            const repo = document.getElementById('gh-repo').value;
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, { headers: { 'Authorization': `token ${token}` }});
-                const d = await res.json(); SHA = d.sha; DATA = JSON.parse(atob(d.content));
-                document.getElementById('cfg-nome').value = DATA.config.nomeLoja;
-                document.getElementById('cfg-zap').value = DATA.config.whatsapp;
-                document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega;
-                document.getElementById('cfg-abre').value = DATA.config.horaAbre;
-                document.getElementById('cfg-fecha').value = DATA.config.horaFecha;
-                document.getElementById('cfg-manual').checked = DATA.config.fechadoManual;
-                document.getElementById('setup').classList.add('hidden');
-                document.getElementById('editor').classList.remove('hidden');
-                render();
-            } catch(e) { alert("Erro ao carregar!"); }
-        }
-
-        function render() {
-            const cont = document.getElementById('lista-produtos');
-            cont.innerHTML = DATA.items.map((p, i) => `
-                <div class="bg-white p-4 rounded-2xl border shadow-sm space-y-3 relative">
-                    <button onclick="remover(${i})" class="absolute top-2 right-2 text-red-300 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
-                    <div class="flex gap-4">
-                        <img src="${p.imagem}" class="w-16 h-16 rounded-xl object-cover border">
-                        <div class="flex-1 space-y-2">
-                            <input type="text" onchange="edit(${i},'nome',this.value)" value="${p.nome}" class="w-full font-bold text-sm border-b outline-none">
-                            <input type="number" step="0.01" onchange="edit(${i},'preco',this.value)" value="${p.preco}" class="w-24 text-emerald-600 font-bold border rounded p-1 text-xs">
+    <div id="modal-produto" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl modal-enter flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center p-5 border-b">
+                <h3 id="modal-titulo" class="text-lg font-bold">Editar Produto</h3>
+                <button onclick="fecharModalProduto()" class="text-slate-400 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto flex-1 space-y-5">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="col-span-2 space-y-4">
+                        <div><label class="text-xs font-bold text-slate-500 uppercase">Nome do Produto</label><input type="text" id="prod-nome" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none focus:border-blue-500"></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-xs font-bold text-slate-500 uppercase">Preço (R$)</label><input type="number" step="0.01" id="prod-preco" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none text-emerald-600 font-bold focus:border-blue-500"></div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Categoria</label>
+                                <select id="prod-cat" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none capitalize"></select>
+                            </div>
                         </div>
                     </div>
                     <div>
-                        <label class="text-[9px] font-bold text-slate-400">ADICIONAIS (NOME:VALOR, NOME:VALOR)</label>
-                        <textarea onchange="editAdicionais(${i}, this.value)" class="w-full border p-2 rounded-lg text-[10px] h-12 outline-none">${(p.adicionais || []).map(a => `${a.nome}:${a.preco.toFixed(2)}`).join(', ')}</textarea>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Link da Imagem</label>
+                        <input type="text" id="prod-img" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none mb-2 text-xs" placeholder="URL da foto">
+                        <img id="prod-img-preview" src="" class="w-full h-24 object-cover rounded-xl border bg-slate-100">
                     </div>
-                </div>`).join('');
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Descrição do Produto</label>
+                    <textarea id="prod-desc" class="w-full bg-slate-50 border p-2.5 rounded-xl mt-1 outline-none h-20 resize-none focus:border-blue-500" placeholder="Ingredientes, tamanho, detalhes..."></textarea>
+                </div>
+
+                <div class="border-t pt-5">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-xs font-bold text-slate-800 uppercase flex items-center gap-2"><i class="fa-solid fa-puzzle-piece text-blue-500"></i> Adicionais / Complementos</label>
+                        <button onclick="adicionarLinhaAdicional()" class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-200">+ Novo Adicional</button>
+                    </div>
+                    <div id="lista-adicionais-modal" class="space-y-2">
+                        </div>
+                    <p id="aviso-sem-adicional" class="text-xs text-slate-400 italic hidden">Nenhum adicional configurado para este produto.</p>
+                </div>
+            </div>
+
+            <div class="p-5 border-t bg-slate-50 rounded-b-2xl flex justify-end gap-3">
+                <button onclick="fecharModalProduto()" class="px-5 py-2.5 text-slate-600 font-bold hover:bg-slate-200 rounded-xl transition">Cancelar</button>
+                <button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold shadow hover:bg-blue-700 transition">Salvar Produto</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let DATA = { config: { categorias: [] }, items: [] };
+        let SHA = "";
+        let produtoEditandoID = null; // null = criando novo, numero = editando
+        let adicionaisTemp = []; // Guarda adicionais temporários durante a edição
+
+        async function carregarDados() {
+            const btn = document.getElementById('btn-login');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Conectando...';
+            
+            const token = document.getElementById('gh-token').value;
+            const repo = document.getElementById('gh-repo').value;
+            
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, { 
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                
+                if(!res.ok) throw new Error();
+                
+                const d = await res.json(); 
+                SHA = d.sha; 
+                DATA = JSON.parse(atob(d.content));
+                
+                // Preencher Aba Loja
+                document.getElementById('cfg-nome').value = DATA.config.nomeLoja || "";
+                document.getElementById('cfg-logo').value = DATA.config.linkLogo || "";
+                document.getElementById('cfg-cor').value = DATA.config.corPrincipal || "#ef4444";
+                document.getElementById('cfg-zap').value = DATA.config.whatsapp || "";
+                document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega || 0;
+                document.getElementById('cfg-abre').value = DATA.config.horaAbre || "18:00";
+                document.getElementById('cfg-fecha').value = DATA.config.horaFecha || "23:59";
+                document.getElementById('cfg-manual').checked = DATA.config.fechadoManual || false;
+                
+                atualizarHeader();
+                renderCategorias();
+                renderProdutosGrid();
+
+                document.getElementById('setup').classList.add('hidden');
+                document.getElementById('editor').classList.remove('hidden');
+            } catch(e) { 
+                alert("Erro ao conectar! Verifique o Token, Repositório ou sua conexão.");
+                btn.innerHTML = 'Conectar Sistema';
+            }
         }
 
-        function edit(i, c, v) { DATA.items[i][c] = c === 'preco' ? parseFloat(v) : v; }
-        function remover(i) { if(confirm("Remover?")) { DATA.items.splice(i,1); render(); } }
-        function editAdicionais(i, v) {
-            if(!v.trim()) { DATA.items[i].adicionais = []; return; }
-            DATA.items[i].adicionais = v.split(',').map(p => {
-                const [n, val] = p.split(':');
-                return { nome: n.trim(), preco: parseFloat(val) || 0 };
-            });
+        function atualizarHeader() {
+            document.getElementById('header-nome').innerText = document.getElementById('cfg-nome').value || "Sua Loja";
+            document.getElementById('header-logo').src = document.getElementById('cfg-logo').value || "https://via.placeholder.com/150";
         }
-        function novoItem() { DATA.items.unshift({ id: Date.now(), nome: "Novo", preco: 0, imagem: "https://via.placeholder.com/150", categoria: DATA.config.categorias[0], adicionais: [] }); render(); }
-        async function salvar() {
-            const btn = document.getElementById('btn-salvar'); btn.innerHTML = "Salvando...";
+
+        // --- SISTEMA DE ABAS ---
+        function mudarAba(idAba) {
+            ['aba-loja', 'aba-categorias', 'aba-produtos'].forEach(a => document.getElementById(a).classList.add('hidden'));
+            ['nav-loja', 'nav-categorias', 'nav-produtos'].forEach(n => {
+                document.getElementById(n).className = "pb-3 px-2 tab-inactive transition";
+            });
+            
+            document.getElementById(idAba).classList.remove('hidden');
+            document.getElementById(idAba.replace('aba-', 'nav-')).className = "pb-3 px-2 tab-active transition";
+        }
+
+        // --- GESTÃO DE CATEGORIAS ---
+        function renderCategorias() {
+            const container = document.getElementById('lista-categorias');
+            container.innerHTML = (DATA.config.categorias || []).map((cat, i) => `
+                <div class="bg-white border shadow-sm px-4 py-2 rounded-xl flex items-center gap-3 text-sm font-bold capitalize">
+                    ${cat}
+                    <button onclick="removerCategoria(${i})" class="text-slate-300 hover:text-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+            
+            // Atualiza select do modal
+            const select = document.getElementById('prod-cat');
+            select.innerHTML = (DATA.config.categorias || []).map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function addCategoria() {
+            const val = document.getElementById('nova-cat').value.trim().toLowerCase();
+            if(val && !DATA.config.categorias.includes(val)) {
+                DATA.config.categorias.push(val);
+                document.getElementById('nova-cat').value = "";
+                renderCategorias();
+            }
+        }
+
+        function removerCategoria(i) {
+            if(confirm("Excluir categoria?")) {
+                DATA.config.categorias.splice(i, 1);
+                renderCategorias();
+            }
+        }
+
+        // --- GESTÃO DE PRODUTOS E MODAL ---
+        function renderProdutosGrid() {
+            const container = document.getElementById('grid-produtos');
+            container.innerHTML = DATA.items.map(p => `
+                <div class="bg-white border rounded-2xl p-4 shadow-sm hover:shadow-md transition group relative">
+                    <button onclick="excluirProduto(${p.id})" class="absolute top-2 right-2 bg-white/90 text-red-500 w-8 h-8 rounded-lg shadow opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-4 items-start">
+                        <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-xl border">
+                        <div>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-md mb-1 inline-block">${p.categoria}</span>
+                            <h4 class="font-bold text-slate-800 leading-tight">${p.nome}</h4>
+                            <p class="text-emerald-600 font-bold mt-1">R$ ${p.preco.toFixed(2)}</p>
+                            ${(p.adicionais && p.adicionais.length > 0) ? `<p class="text-[10px] text-blue-500 font-bold mt-1"><i class="fa-solid fa-puzzle-piece"></i> ${p.adicionais.length} Adicionais</p>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="abrirModalProduto(${p.id})" class="w-full mt-4 bg-slate-50 text-slate-700 font-bold py-2 rounded-xl border hover:bg-slate-100 transition text-sm">Editar Produto</button>
+                </div>
+            `).join('');
+        }
+
+        function abrirModalProduto(id = null) {
+            produtoEditandoID = id;
+            const titulo = document.getElementById('modal-titulo');
+            
+            if(id) {
+                // Modo Edição
+                titulo.innerText = "Editar Produto";
+                const p = DATA.items.find(i => i.id === id);
+                document.getElementById('prod-nome').value = p.nome;
+                document.getElementById('prod-preco').value = p.preco;
+                document.getElementById('prod-desc').value = p.descricao || "";
+                document.getElementById('prod-img').value = p.imagem;
+                document.getElementById('prod-img-preview').src = p.imagem;
+                document.getElementById('prod-cat').value = p.categoria;
+                adicionaisTemp = JSON.parse(JSON.stringify(p.adicionais || [])); // Clona o array
+            } else {
+                // Modo Novo
+                titulo.innerText = "Novo Produto";
+                document.getElementById('prod-nome').value = "";
+                document.getElementById('prod-preco').value = "";
+                document.getElementById('prod-desc').value = "";
+                document.getElementById('prod-img').value = "";
+                document.getElementById('prod-img-preview').src = "https://via.placeholder.com/150";
+                adicionaisTemp = [];
+            }
+            
+            renderAdicionaisModal();
+            document.getElementById('modal-produto').classList.remove('hidden');
+        }
+
+        function fecharModalProduto() {
+            document.getElementById('modal-produto').classList.add('hidden');
+        }
+
+        // Preview da imagem em tempo real
+        document.getElementById('prod-img').addEventListener('input', function(e) {
+            document.getElementById('prod-img-preview').src = e.target.value || "https://via.placeholder.com/150";
+        });
+
+        // --- SISTEMA INTUITIVO DE ADICIONAIS ---
+        function renderAdicionaisModal() {
+            const container = document.getElementById('lista-adicionais-modal');
+            const aviso = document.getElementById('aviso-sem-adicional');
+            
+            if(adicionaisTemp.length === 0) {
+                container.innerHTML = "";
+                aviso.classList.remove('hidden');
+            } else {
+                aviso.classList.add('hidden');
+                container.innerHTML = adicionaisTemp.map((a, i) => `
+                    <div class="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border">
+                        <input type="text" value="${a.nome}" onchange="atualizarAdicional(${i}, 'nome', this.value)" placeholder="Nome (Ex: Bacon)" class="flex-1 border p-2 rounded-lg text-sm outline-none">
+                        <span class="text-slate-400 text-sm font-bold">R$</span>
+                        <input type="number" step="0.01" value="${a.preco}" onchange="atualizarAdicional(${i}, 'preco', this.value)" placeholder="0.00" class="w-20 border p-2 rounded-lg text-sm font-bold text-emerald-600 outline-none">
+                        <button onclick="removerAdicional(${i})" class="text-slate-300 hover:text-red-500 px-2"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function adicionarLinhaAdicional() {
+            adicionaisTemp.push({ nome: "", preco: 0 });
+            renderAdicionaisModal();
+        }
+
+        function atualizarAdicional(index, campo, valor) {
+            adicionaisTemp[index][campo] = campo === 'preco' ? parseFloat(valor) || 0 : valor;
+        }
+
+        function removerAdicional(index) {
+            adicionaisTemp.splice(index, 1);
+            renderAdicionaisModal();
+        }
+
+        // --- SALVAR PRODUTO ---
+        function salvarProdutoModal() {
+            const nome = document.getElementById('prod-nome').value.trim();
+            const preco = parseFloat(document.getElementById('prod-preco').value) || 0;
+            const cat = document.getElementById('prod-cat').value;
+            
+            if(!nome || !cat) { alert("Preencha o nome e certifique-se de ter uma categoria!"); return; }
+
+            // Limpa adicionais vazios
+            const adicionaisValidos = adicionaisTemp.filter(a => a.nome.trim() !== "");
+
+            const dadosProduto = {
+                id: produtoEditandoID || Date.now(),
+                nome: nome,
+                preco: preco,
+                descricao: document.getElementById('prod-desc').value.trim(),
+                imagem: document.getElementById('prod-img').value.trim() || "https://via.placeholder.com/150",
+                categoria: cat,
+                adicionais: adicionaisValidos
+            };
+
+            if(produtoEditandoID) {
+                const index = DATA.items.findIndex(i => i.id === produtoEditandoID);
+                DATA.items[index] = dadosProduto;
+            } else {
+                DATA.items.unshift(dadosProduto); // Adiciona no início
+            }
+
+            renderProdutosGrid();
+            fecharModalProduto();
+        }
+
+        function excluirProduto(id) {
+            if(confirm("Tem certeza que deseja excluir este produto?")) {
+                DATA.items = DATA.items.filter(i => i.id !== id);
+                renderProdutosGrid();
+            }
+        }
+
+        // --- SALVAR NO GITHUB ---
+        async function salvarNoGithub() {
+            const btn = document.getElementById('btn-salvar');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Publicando...';
+            btn.disabled = true;
+
+            // Pega os dados gerais da tela
             DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
+            DATA.config.linkLogo = document.getElementById('cfg-logo').value;
+            DATA.config.corPrincipal = document.getElementById('cfg-cor').value;
             DATA.config.whatsapp = document.getElementById('cfg-zap').value;
-            DATA.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value);
+            DATA.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value) || 0;
             DATA.config.horaAbre = document.getElementById('cfg-abre').value;
             DATA.config.horaFecha = document.getElementById('cfg-fecha').value;
             DATA.config.fechadoManual = document.getElementById('cfg-manual').checked;
+
+            atualizarHeader();
+
             const token = document.getElementById('gh-token').value;
             const repo = document.getElementById('gh-repo').value;
-            const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
-                method: 'PUT', headers: { 'Authorization': `token ${token}` },
-                body: JSON.stringify({ message: "Update", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: SHA })
-            });
-            if(res.ok) alert("Sucesso!"); else alert("Erro!");
-            btn.innerHTML = "Publicar Alterações";
+            const conteudoDecodificado = JSON.stringify(DATA, null, 2);
+            // Corrige o problema de acentuação no BTOA
+            const conteudoBase64 = btoa(unescape(encodeURIComponent(conteudoDecodificado)));
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: "Atualização Painel Pro",
+                        content: conteudoBase64,
+                        sha: SHA
+                    })
+                });
+
+                if(res.ok) {
+                    const resData = await res.json();
+                    SHA = resData.content.sha;
+                    alert("✅ Site publicado com sucesso!");
+                } else { throw new Error(); }
+            } catch(e) {
+                alert("❌ Erro ao salvar! Verifique as permissões do seu token GitHub.");
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Publicar Site</span>';
+            btn.disabled = false;
         }
     </script>
 </body>
