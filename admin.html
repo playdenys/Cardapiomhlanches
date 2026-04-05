@@ -3,66 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Delivery Pro</title>
+    <title>Painel Administrativo Completo - Delivery Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 pb-20">
+<body class="bg-slate-50 pb-24">
 
     <div id="setup" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
-            <h1 class="text-2xl font-bold mb-6 text-slate-800">Painel de Controle</h1>
-            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full border-2 p-3 rounded-xl mb-3 outline-none">
-            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border-2 p-3 rounded-xl mb-6 outline-none">
-            <button onclick="carregarDadosAtuais()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg">Acessar Painel</button>
+            <h1 class="text-2xl font-bold mb-6 text-slate-800">Acesso ao Painel</h1>
+            <input type="password" id="gh-token" placeholder="GitHub Token (ghp_...)" class="w-full border-2 p-3 rounded-xl mb-3 outline-none focus:border-blue-500 transition">
+            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border-2 p-3 rounded-xl mb-6 outline-none focus:border-blue-500 transition">
+            <button onclick="carregarDadosAtuais()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 shadow-lg">Entrar no Sistema</button>
         </div>
     </div>
 
     <div id="editor" class="hidden">
         <header class="bg-white border-b sticky top-0 z-40 p-4 shadow-sm flex justify-between items-center">
-            <h2 class="font-bold text-slate-800 text-xl italic">Configurações Pro</h2>
-            <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+            <div>
+                <h2 id="display-loja" class="font-bold text-slate-800 text-xl italic">Painel de Controle</h2>
+                <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest">Sistema Conectado</span>
+            </div>
+            <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Alterações
             </button>
         </header>
 
         <main class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
             
-            <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                <h3 class="font-bold text-slate-700 border-b pb-2 italic"><i class="fa-solid fa-clock mr-2 text-blue-500"></i>Funcionamento e Taxas</h3>
+            <section class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <h3 class="font-bold text-slate-700 border-b pb-3 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-gears text-blue-500"></i> Configurações da Loja
+                </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-slate-50 p-4 rounded-xl border border-blue-100">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Horário de Atendimento</label>
-                        <div class="flex items-center gap-3 mt-2">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nome da Loja</label>
+                        <input type="text" id="cfg-nome" class="w-full bg-slate-50 p-3 rounded-xl border mt-1 outline-none focus:border-blue-300">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">WhatsApp (Ex: 55119...)</label>
+                        <input type="text" id="cfg-zap" class="w-full bg-slate-50 p-3 rounded-xl border mt-1 outline-none focus:border-blue-300">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Taxa de Entrega (R$)</label>
+                        <input type="number" id="cfg-taxa" step="0.01" class="w-full bg-slate-50 p-3 rounded-xl border mt-1 font-bold text-emerald-600 outline-none focus:border-emerald-300">
+                    </div>
+
+                    <div class="lg:col-span-2 bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                        <label class="text-[10px] font-bold text-blue-400 uppercase flex items-center gap-1">
+                            <i class="fa-solid fa-clock"></i> Horário de Funcionamento
+                        </label>
+                        <div class="flex items-center gap-4 mt-2">
                             <div class="flex-1">
-                                <span class="text-[10px] text-slate-400 block">Abre às:</span>
+                                <span class="text-[9px] font-bold text-slate-400 block">ABRE ÀS:</span>
                                 <input type="time" id="cfg-abre" class="w-full p-2 rounded-lg border outline-none font-bold">
                             </div>
                             <div class="flex-1">
-                                <span class="text-[10px] text-slate-400 block">Fecha às:</span>
+                                <span class="text-[9px] font-bold text-slate-400 block">FECHA ÀS:</span>
                                 <input type="time" id="cfg-fecha" class="w-full p-2 rounded-lg border outline-none font-bold">
                             </div>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-                            <span class="text-xs font-bold text-red-500 uppercase">Fechar Loja Agora (Emergência):</span>
+                        <div class="mt-4 pt-3 border-t border-blue-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-red-500 uppercase italic">Fechar Loja Agora (Emergência):</span>
                             <input type="checkbox" id="cfg-fechado-manual" class="w-6 h-6 accent-red-600">
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-4 rounded-xl border">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Taxa de Entrega (R$)</label>
-                        <input type="number" id="cfg-taxa" step="0.01" class="w-full bg-white p-3 rounded-xl border mt-2 font-bold text-emerald-600 outline-none text-xl">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nome da Loja</label>
-                        <input type="text" id="cfg-nome" class="w-full bg-slate-50 p-3 rounded-xl border mt-1 outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">WhatsApp</label>
-                        <input type="text" id="cfg-zap" class="w-full bg-slate-50 p-3 rounded-xl border mt-1 outline-none">
-                    </div>
                     <div>
                         <label class="text-[10px] font-bold text-slate-400 uppercase">Cor do Site</label>
                         <input type="color" id="cfg-cor" class="w-full h-12 rounded-xl border-none cursor-pointer mt-1">
@@ -70,13 +81,34 @@
                 </div>
             </section>
 
-            <section id="sessao-produtos">
-                </section>
+            <section class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-tags text-amber-500"></i> Categorias
+                </h3>
+                <div id="lista-categorias" class="flex flex-wrap gap-2 mb-4"></div>
+                <div class="flex gap-2 max-w-sm">
+                    <input type="text" id="nova-cat-nome" placeholder="Nova categoria..." class="flex-1 bg-slate-50 p-2 rounded-xl border outline-none">
+                    <button onclick="adicionarCategoria()" class="bg-slate-800 text-white px-5 rounded-xl font-bold hover:bg-black transition">+</button>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-700 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-rose-500"></i> Cardápio de Produtos
+                    </h3>
+                    <button onclick="novoProduto()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-blue-700 shadow-lg transition">
+                        + Adicionar Produto
+                    </button>
+                </div>
+                <div id="lista-produtos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    </div>
+            </section>
         </main>
     </div>
 
     <script>
-        let dadosAtuais = {};
+        let dadosAtuais = { config: { categorias: [] }, items: [] };
         let shaArquivo = "";
 
         async function carregarDadosAtuais() {
@@ -90,8 +122,9 @@
                 shaArquivo = data.sha;
                 dadosAtuais = JSON.parse(atob(data.content));
 
-                // PREENCHIMENTO SEGURO (SE NÃO EXISTIR, USA PADRÃO)
-                document.getElementById('cfg-nome').value = dadosAtuais.config.nomeLoja || "Minha Loja";
+                // Preencher Configurações
+                document.getElementById('cfg-nome').value = dadosAtuais.config.nomeLoja || "";
+                document.getElementById('display-loja').innerText = dadosAtuais.config.nomeLoja || "Painel Admin";
                 document.getElementById('cfg-zap').value = dadosAtuais.config.whatsapp || "";
                 document.getElementById('cfg-taxa').value = dadosAtuais.config.taxaEntrega || 0;
                 document.getElementById('cfg-abre').value = dadosAtuais.config.horaAbre || "18:00";
@@ -101,14 +134,132 @@
                 
                 document.getElementById('setup').classList.add('hidden');
                 document.getElementById('editor').classList.remove('hidden');
-                
-                // Chame as funções de renderizar o restante aqui...
-            } catch (e) { alert("Erro ao carregar! Verifique os dados."); }
+                atualizarInterface();
+            } catch (e) { alert("Erro ao conectar! Verifique Token e Repositório."); }
+        }
+
+        function atualizarInterface() {
+            renderizarCategorias();
+            renderizarProdutos();
+        }
+
+        function renderizarCategorias() {
+            const container = document.getElementById('lista-categorias');
+            container.innerHTML = (dadosAtuais.config.categorias || []).map((cat, i) => `
+                <span class="bg-white text-slate-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-3 border shadow-sm">
+                    ${cat} 
+                    <button onclick="removerCategoria(${i})" class="text-rose-500 hover:scale-125 transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                </span>
+            `).join('');
+        }
+
+        function adicionarCategoria() {
+            const nome = document.getElementById('nova-cat-nome').value.trim().toLowerCase();
+            if(nome && !dadosAtuais.config.categorias.includes(nome)) {
+                dadosAtuais.config.categorias.push(nome);
+                document.getElementById('nova-cat-nome').value = "";
+                atualizarInterface();
+            }
+        }
+
+        function removerCategoria(i) {
+            if(confirm("Remover esta categoria?")) {
+                dadosAtuais.config.categorias.splice(i, 1);
+                atualizarInterface();
+            }
+        }
+
+        function novoProduto() {
+            const catPadrao = dadosAtuais.config.categorias[0] || "geral";
+            dadosAtuais.items.unshift({
+                id: Date.now(),
+                nome: "Novo Item",
+                preco: 0,
+                descricao: "Descrição do produto...",
+                imagem: "https://via.placeholder.com/150",
+                categoria: catPadrao
+            });
+            renderizarProdutos();
+        }
+
+        function renderizarProdutos() {
+            const container = document.getElementById('lista-produtos');
+            container.innerHTML = dadosAtuais.items.map((p, i) => `
+                <div class="bg-white border rounded-2xl p-4 shadow-sm relative group flex gap-4 transition hover:shadow-md">
+                    <div class="shrink-0 flex flex-col items-center gap-2">
+                        <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-xl border">
+                        <button onclick="removerItem(${i})" class="text-slate-300 hover:text-red-500 text-sm transition p-2">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
+                    </div>
+                    <div class="flex-1 space-y-2">
+                        <input type="text" onchange="editarItem(${i}, 'nome', this.value)" value="${p.nome}" class="w-full font-bold text-slate-800 bg-transparent border-b border-dashed outline-none focus:border-blue-500" placeholder="Nome do Produto">
+                        <textarea onchange="editarItem(${i}, 'descricao', this.value)" class="w-full text-xs text-slate-500 bg-transparent border-b border-dashed outline-none h-12 focus:border-blue-500 resize-none" placeholder="Descrição">${p.descricao || ''}</textarea>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-emerald-50 rounded-lg px-2 flex items-center border border-emerald-100">
+                                <span class="text-emerald-600 text-xs font-bold mr-1">R$</span>
+                                <input type="number" step="0.01" onchange="editarItem(${i}, 'preco', this.value)" value="${p.preco}" class="w-20 py-1 bg-transparent font-bold text-emerald-700 outline-none text-sm">
+                            </div>
+                            <select onchange="editarItem(${i}, 'categoria', this.value)" class="text-[10px] font-bold uppercase border rounded-lg px-2 py-1 bg-white outline-none">
+                                ${dadosAtuais.config.categorias.map(c => `<option value="${c}" ${p.categoria === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            </select>
+                        </div>
+                        <input type="text" onchange="editarItem(${i}, 'imagem', this.value)" value="${p.imagem}" class="w-full text-[9px] text-blue-400 bg-transparent outline-none italic" placeholder="URL da imagem">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editarItem(i, campo, valor) {
+            dadosAtuais.items[i][campo] = campo === 'preco' ? parseFloat(valor) : valor;
+        }
+
+        function removerItem(i) {
+            if(confirm("Excluir este produto?")) {
+                dadosAtuais.items.splice(i, 1);
+                renderizarProdutos();
+            }
         }
 
         async function salvarNoGithub() {
-            // ... mesma lógica de salvar do código anterior, 
-            // garantindo que os novos IDs (cfg-abre, cfg-fecha) sejam lidos.
+            const btn = document.getElementById('btn-salvar');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Publicando...';
+            btn.disabled = true;
+
+            const token = document.getElementById('gh-token').value;
+            const repo = document.getElementById('gh-repo').value;
+
+            // Sincronizar Configurações do Form para o JSON
+            dadosAtuais.config.nomeLoja = document.getElementById('cfg-nome').value;
+            dadosAtuais.config.whatsapp = document.getElementById('cfg-zap').value;
+            dadosAtuais.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value) || 0;
+            dadosAtuais.config.horaAbre = document.getElementById('cfg-abre').value;
+            dadosAtuais.config.horaFecha = document.getElementById('cfg-fecha').value;
+            dadosAtuais.config.fechadoManual = document.getElementById('cfg-fechado-manual').checked;
+            dadosAtuais.config.corPrincipal = document.getElementById('cfg-cor').value;
+
+            const novoConteudo = btoa(unescape(encodeURIComponent(JSON.stringify(dadosAtuais, null, 2))));
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: "Atualização Painel Admin Completo",
+                        content: novoConteudo,
+                        sha: shaArquivo
+                    })
+                });
+
+                if(res.ok) {
+                    const resData = await res.json();
+                    shaArquivo = resData.content.sha;
+                    alert("✅ SITE ATUALIZADO COM SUCESSO!");
+                } else { alert("❌ Erro ao salvar no GitHub. Verifique as permissões do seu Token."); }
+            } catch (e) { alert("❌ Erro de conexão."); }
+            
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Publicar Alterações';
+            btn.disabled = false;
         }
     </script>
 </body>
