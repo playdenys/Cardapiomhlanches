@@ -13,14 +13,14 @@
   "items": [
     {
       "id": 1,
-      "nome": "X-Burguer Especial",
-      "preco": 25.00,
+      "nome": "X-Burguer",
+      "preco": 20.00,
       "descricao": "Pão, carne e queijo.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "lanches",
       "adicionais": [
-        {"nome": "Bacon Extra", "preco": 4.50},
-        {"nome": "Ovo", "preco": 2.00}
+        {"nome": "Bacon", "preco": 5.00},
+        {"nome": "Ovo", "preco": 2.50}
       ]
     }
   ]
