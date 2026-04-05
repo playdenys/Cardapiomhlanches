@@ -3,95 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery VIP - Cardápio Online</title>
+    <title>Menu Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; --brand: #ef4444; background-color: #f8fafc; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .product-card:active { transform: scale(0.96); }
-        .modal-slide { animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes modalSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .gradient-top { background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 50%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f9fafb; --brand: #ef4444; }
+        .product-card:active { transform: scale(0.97); }
+        .modal-slide { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
-<body class="text-slate-900 pb-32">
+<body class="pb-32">
 
-    <header class="glass sticky top-0 z-50 border-b border-slate-100 px-4 py-3">
-        <div class="max-w-2xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <img id="ui-logo" src="" class="w-12 h-12 rounded-2xl object-cover border-2 border-white shadow-sm hidden">
-                    <div id="dot-status" class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"></div>
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b p-4">
+        <div class="max-w-2xl mx-auto flex items-center gap-3">
+            <img id="ui-logo" src="" class="w-12 h-12 rounded-2xl object-cover border hidden">
+            <div>
+                <h1 id="ui-nome" class="font-black text-lg italic text-slate-800 tracking-tight uppercase">Carregando...</h1>
+                <div class="flex items-center gap-2">
+                    <div id="dot-status" class="w-2 h-2 rounded-full bg-slate-300"></div>
+                    <span id="ui-status-text" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">...</span>
                 </div>
-                <div>
-                    <h1 id="ui-nome" class="font-extrabold text-lg tracking-tight leading-none text-slate-800 uppercase italic">Carregando...</h1>
-                    <span id="ui-status-text" class="text-[10px] font-black uppercase tracking-widest mt-1 block">...</span>
-                </div>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                <i class="fa-solid fa-store text-xs"></i>
             </div>
         </div>
     </header>
 
-    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-12 mt-6">
-        </main>
+    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-10 mt-4"></main>
 
-    <footer class="mt-12 mb-24 text-center px-6">
-        <div class="w-10 h-1 bg-slate-200 mx-auto rounded-full mb-6"></div>
-        <p id="ui-footer" class="text-slate-400 text-[11px] leading-relaxed max-w-xs mx-auto italic font-medium"></p>
-        <p class="text-[9px] text-slate-300 uppercase tracking-[0.3em] mt-8 font-black">Powered by Delivery VIP</p>
+    <footer class="mt-20 mb-32 text-center px-6">
+        <div class="w-12 h-1 bg-slate-200 mx-auto rounded-full mb-4"></div>
+        <p id="ui-footer" class="text-slate-400 text-xs italic leading-relaxed max-w-xs mx-auto"></p>
+        <p class="text-[9px] text-slate-300 uppercase tracking-[0.4em] mt-8 font-black">Sistema Delivery VIP</p>
     </footer>
 
-    <div id="bar-carrinho" class="fixed bottom-8 left-0 right-0 z-40 hidden px-4">
-        <div class="max-w-md mx-auto bg-slate-950 rounded-[2.5rem] p-2 shadow-2xl flex items-center justify-between border border-white/10">
-            <div class="flex items-center gap-4 pl-6">
+    <div id="bar-carrinho" class="fixed bottom-6 left-0 right-0 z-40 hidden px-4">
+        <div class="max-w-md mx-auto bg-slate-900 rounded-[2.5rem] p-2 shadow-2xl flex items-center justify-between border border-white/10">
+            <div class="pl-6 flex items-center gap-4">
                 <div class="relative">
-                    <i class="fa-solid fa-bag-shopping text-white text-xl"></i>
-                    <span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+                    <i class="fa-solid fa-bag-shopping text-white"></i>
+                    <span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">0</span>
                 </div>
-                <div>
-                    <p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.15em] leading-none">Total Pedido</p>
-                    <p id="cart-total" class="text-white font-black text-xl leading-none mt-1">R$ 0,00</p>
-                </div>
+                <p id="cart-total" class="text-white font-black text-lg">R$ 0,00</p>
             </div>
-            <button onclick="enviarWhatsApp()" class="bg-white text-slate-950 h-16 px-10 rounded-[2.2rem] font-black uppercase text-[11px] tracking-widest hover:bg-slate-100 transition">
-                Finalizar
-            </button>
+            <button onclick="enviarWhatsApp()" class="bg-white text-slate-900 h-14 px-8 rounded-[2rem] font-black uppercase text-[10px] tracking-widest">Finalizar</button>
         </div>
     </div>
 
-    <div id="modal-produto" class="fixed inset-0 bg-slate-950/80 z-[60] hidden backdrop-blur-sm flex items-end justify-center">
-        <div class="bg-white w-full max-w-xl rounded-t-[3.5rem] overflow-hidden modal-slide max-h-[95vh] flex flex-col">
-            <div class="relative h-72 w-full flex-shrink-0">
+    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[60] hidden flex items-end justify-center backdrop-blur-sm">
+        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide max-h-[92vh] flex flex-col">
+            <div class="relative h-60">
                 <img id="modal-img" src="" class="w-full h-full object-cover">
-                <div class="absolute inset-0 gradient-top"></div>
-                <button onclick="fecharModal()" class="absolute top-6 right-6 bg-white/10 backdrop-blur-md text-white w-12 h-12 rounded-full flex items-center justify-center border border-white/20">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="fecharModal()" class="absolute top-6 right-6 bg-black/20 text-white w-10 h-10 rounded-full backdrop-blur-md"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
-            <div class="flex-1 overflow-y-auto px-10 py-8">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 id="modal-nome" class="text-2xl font-black text-slate-800 leading-tight"></h2>
+            <div class="p-8 overflow-y-auto flex-1">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 id="modal-nome" class="text-2xl font-black text-slate-800 italic uppercase"></h2>
                     <span id="modal-preco-base" class="text-xl font-bold text-emerald-600 italic"></span>
                 </div>
-                <p id="modal-desc" class="text-slate-500 text-sm leading-relaxed mb-8"></p>
+                <p id="modal-desc" class="text-slate-400 text-sm mb-8"></p>
                 
-                <div id="container-adicionais" class="space-y-3"></div>
+                <div id="container-ads" class="space-y-3"></div>
 
-                <div class="mt-10">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3">Alguma observação?</label>
-                    <textarea id="modal-obs" placeholder="Ex: Sem cebola, ponto da carne, etc..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm outline-none focus:border-emerald-500 resize-none h-24 transition"></textarea>
+                <div class="mt-8">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Alguma observação?</label>
+                    <textarea id="modal-obs" placeholder="Ex: Sem cebola, ponto da carne..." class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-emerald-500 h-24 resize-none"></textarea>
                 </div>
             </div>
-
-            <div class="p-10 border-t border-slate-100 bg-slate-50/50">
-                <button onclick="confirmarAdicao()" id="btn-add-modal" class="w-full h-18 py-5 rounded-[2.2rem] font-black text-white shadow-xl flex justify-between items-center px-10 active:scale-95 transition" style="background-color: var(--brand);">
-                    <span class="uppercase tracking-widest text-[11px]">Confirmar e Adicionar</span>
+            <div class="p-8 border-t bg-slate-50">
+                <button onclick="confirmarAdd()" id="btn-add-modal" class="w-full py-5 rounded-[2rem] font-black text-white shadow-xl flex justify-between px-10 transition active:scale-95" style="background: var(--brand)">
+                    <span class="uppercase tracking-widest text-[10px]">Adicionar</span>
                     <span id="val-modal-total" class="text-xl"></span>
                 </button>
             </div>
@@ -99,21 +80,19 @@
     </div>
 
     <script>
-        let DATA = {}; let carrinho = []; let adicionaisEscolhidos = []; let produtoAberto = null;
+        let DATA = {}; let carrinho = []; let addsEscolhidos = []; let prodAberto = null;
 
         async function init() {
-            try {
-                const res = await fetch('produtos.json', { cache: 'no-store' });
-                DATA = await res.json();
-                document.body.style.setProperty('--brand', DATA.config.corPrincipal);
-                document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
-                document.getElementById('ui-footer').innerText = DATA.config.footerText || "";
-                if(DATA.config.linkLogo) {
-                    const img = document.getElementById('ui-logo');
-                    img.src = DATA.config.linkLogo; img.classList.remove('hidden');
-                }
-                renderStatus(); renderMenu();
-            } catch(e) { document.getElementById('ui-nome').innerText = "Cardápio indisponível"; }
+            const res = await fetch('produtos.json', { cache: 'no-store' });
+            DATA = await res.json();
+            document.body.style.setProperty('--brand', DATA.config.corPrincipal);
+            document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
+            document.getElementById('ui-footer').innerText = DATA.config.footerText || "";
+            if(DATA.config.linkLogo) {
+                const img = document.getElementById('ui-logo');
+                img.src = DATA.config.linkLogo; img.classList.remove('hidden');
+            }
+            renderStatus(); renderMenu();
         }
 
         function verificarAberto() {
@@ -126,11 +105,9 @@
         }
 
         function renderStatus() {
-            const dot = document.getElementById('dot-status'); const txt = document.getElementById('ui-status-text');
             const aberto = verificarAberto();
-            dot.className = `absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${aberto ? 'bg-emerald-500' : 'bg-amber-500'}`;
-            txt.innerText = aberto ? 'Aberto Agora' : 'Fechado / Agende';
-            txt.className = `text-[10px] font-black uppercase tracking-widest mt-1 block ${aberto ? 'text-emerald-500' : 'text-amber-500'}`;
+            document.getElementById('dot-status').className = `w-2 h-2 rounded-full ${aberto ? 'bg-emerald-500' : 'bg-amber-500'}`;
+            document.getElementById('ui-status-text').innerText = aberto ? 'Aberto' : 'Fechado / Agende';
         }
 
         function renderMenu() {
@@ -138,111 +115,112 @@
             container.innerHTML = (DATA.config.categorias || []).map(cat => {
                 const itens = DATA.items.filter(i => i.categoria === cat);
                 if(!itens.length) return '';
-                return `
-                <section>
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="h-3 w-10 rounded-full" style="background-color: var(--brand)"></div>
-                        <h2 class="text-xl font-black text-slate-800 uppercase tracking-tighter italic">${cat}</h2>
-                    </div>
+                return `<section>
+                    <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6 flex items-center gap-3">
+                        <span class="w-1.5 h-6 rounded-full" style="background:var(--brand)"></span> ${cat}
+                    </h2>
                     <div class="grid gap-6">
-                        ${itens.map(p => {
-                            const esgotado = p.ativo === false;
-                            return `
-                            <div ${esgotado ? '' : `onclick="abrirProduto(${p.id})"`} class="product-card group bg-white rounded-[2.8rem] flex items-center p-3 shadow-sm border border-slate-100 relative ${esgotado ? 'opacity-60 grayscale' : 'cursor-pointer hover:shadow-xl hover:shadow-slate-200/50'}">
-                                <div class="relative h-32 w-32 flex-shrink-0">
-                                    <img src="${p.imagem}" class="w-full h-full object-cover rounded-[2.2rem] shadow-md border-2 border-white">
-                                    ${!esgotado ? `<div class="absolute -bottom-1 -right-1 w-10 h-10 bg-slate-950 text-white rounded-full shadow-lg flex items-center justify-center text-xs border-2 border-white"><i class="fa-solid fa-plus"></i></div>` : ''}
-                                </div>
-                                <div class="ml-6 flex-1 pr-4">
-                                    <h3 class="font-bold text-slate-800 leading-snug group-hover:text-red-500 transition">${p.nome}</h3>
-                                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-2 font-medium">${p.descricao || ''}</p>
-                                    <p class="text-emerald-600 font-black mt-3 italic text-sm">R$ ${p.preco.toFixed(2)}</p>
-                                </div>
-                                ${esgotado ? `<div class="absolute inset-0 flex items-center justify-center"><span class="bg-slate-900 text-white text-[10px] font-black px-5 py-2 rounded-full shadow-2xl border border-white/10 uppercase tracking-widest">Esgotado</span></div>` : ''}
-                            </div>`
-                        }).join('')}
+                        ${itens.map(p => `
+                        <div onclick="${p.ativo ? `abrirProduto(${p.id})` : ''}" class="product-card bg-white p-3 rounded-[2.5rem] flex items-center border border-slate-100 shadow-sm ${!p.ativo ? 'opacity-50 grayscale' : 'cursor-pointer'}">
+                            <img src="${p.imagem}" class="w-28 h-28 object-cover rounded-[2rem] shadow-md">
+                            <div class="ml-5 flex-1 pr-2">
+                                <h3 class="font-bold text-slate-800 leading-tight">${p.nome}</h3>
+                                <p class="text-[10px] text-slate-400 mt-1 line-clamp-2">${p.descricao || ''}</p>
+                                <p class="text-emerald-600 font-black mt-2 italic text-sm">R$ ${p.preco.toFixed(2)}</p>
+                            </div>
+                        </div>`).join('')}
                     </div>
                 </section>`;
             }).join('');
         }
 
         function abrirProduto(id) {
-            produtoAberto = DATA.items.find(i => i.id === id); adicionaisEscolhidos = [];
-            document.getElementById('modal-img').src = produtoAberto.imagem;
-            document.getElementById('modal-nome').innerText = produtoAberto.nome;
-            document.getElementById('modal-desc').innerText = produtoAberto.descricao || '';
-            document.getElementById('modal-preco-base').innerText = `R$ ${produtoAberto.preco.toFixed(2)}`;
+            prodAberto = DATA.items.find(x => x.id === id); addsEscolhidos = [];
+            document.getElementById('modal-img').src = prodAberto.imagem;
+            document.getElementById('modal-nome').innerText = prodAberto.nome;
+            document.getElementById('modal-desc').innerText = prodAberto.descricao || '';
+            document.getElementById('modal-preco-base').innerText = `R$ ${prodAberto.preco.toFixed(2)}`;
             document.getElementById('modal-obs').value = "";
-
-            const containerAds = document.getElementById('container-adicionais');
-            const limite = produtoAberto.limiteAdicionais || 0;
             
-            containerAds.innerHTML = (produtoAberto.adicionais || []).length ? 
-                `<div class="flex justify-between items-center mb-5">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Complementos</p>
-                    ${limite > 0 ? `<span class="bg-amber-100 text-amber-700 text-[9px] font-black px-3 py-1 rounded-full uppercase">Até ${limite} itens</span>` : ''}
-                </div>` : '';
+            const container = document.getElementById('container-ads');
+            const lim = prodAberto.limiteAdicionais || 0;
+            container.innerHTML = (prodAberto.adicionais || []).length ? 
+                `<div class="flex justify-between items-center mb-4"><span class="text-[10px] font-black text-slate-400 uppercase">Adicionais</span> ${lim > 0 ? `<span class="bg-amber-100 text-amber-700 text-[9px] font-bold px-2 py-0.5 rounded uppercase">Até ${lim} itens</span>` : ''}</div>` : '';
 
-            (produtoAberto.adicionais || []).forEach(ad => {
-                containerAds.innerHTML += `
-                    <label class="flex justify-between items-center bg-slate-50 p-5 rounded-[2rem] border border-transparent cursor-pointer active:scale-95 transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 mb-3 block">
-                        <div class="flex items-center gap-4">
-                            <input type="checkbox" onchange="validarLimiteAd(this, '${ad.nome}', ${ad.preco})" class="w-7 h-7 accent-emerald-500 rounded-lg">
-                            <div>
-                                <span class="text-sm font-bold text-slate-700 block">${ad.nome}</span>
-                                ${ad.desc ? `<span class="text-[10px] text-slate-400 block font-medium italic">${ad.desc}</span>` : ''}
-                            </div>
-                        </div>
-                        <span class="text-xs font-black text-emerald-600">+ R$ ${ad.preco.toFixed(2)}</span>
-                    </label>`;
+            (prodAberto.adicionais || []).forEach((ad, i) => {
+                container.innerHTML += `
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-3xl border">
+                    <div class="flex-1">
+                        <span class="text-sm font-bold text-slate-700 block">${ad.nome}</span>
+                        ${ad.desc ? `<span class="text-[10px] text-slate-400 italic block leading-none mt-1">${ad.desc}</span>` : ''}
+                        <span class="text-[11px] font-black text-emerald-600 mt-1 block">+ R$ ${ad.preco.toFixed(2)}</span>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white border rounded-2xl p-1">
+                        <button onclick="mudarQtdAd(${i}, -1)" class="w-8 h-8 rounded-xl text-slate-400">-</button>
+                        <span id="qtd-ad-${i}" class="text-sm font-black w-4 text-center">0</span>
+                        <button onclick="mudarQtdAd(${i}, 1)" class="w-8 h-8 bg-slate-900 text-white rounded-xl">+</button>
+                    </div>
+                </div>`;
             });
-            atualizarTotalModal(); document.getElementById('modal-produto').classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            updateTotalModal(); document.getElementById('modal-produto').classList.remove('hidden');
         }
 
-        function validarLimiteAd(el, nome, preco) {
-            const limite = produtoAberto.limiteAdicionais || 0;
-            if (el.checked && limite > 0 && adicionaisEscolhidos.length >= limite) {
-                el.checked = false;
-                alert(`Ops! Você pode escolher no máximo ${limite} adicionais para este item.`);
-                return;
-            }
-            const i = adicionaisEscolhidos.findIndex(a => a.nome === nome);
-            if(i > -1) adicionaisEscolhidos.splice(i, 1); else adicionaisEscolhidos.push({ nome, preco });
-            atualizarTotalModal();
+        function mudarQtdAd(idx, delta) {
+            const ad = prodAberto.adicionais[idx];
+            const el = document.getElementById(`qtd-ad-${idx}`);
+            let qtd = parseInt(el.innerText);
+            
+            const totalAgora = addsEscolhidos.reduce((a, b) => a + b.qtd, 0);
+            const limTotal = prodAberto.limiteAdicionais || 0;
+
+            if (delta > 0) {
+                if (limTotal > 0 && totalAgora >= limTotal) { alert("Limite total atingido!"); return; }
+                if (qtd >= (ad.maxPorItem || 1)) { alert(`Máximo de ${ad.maxPorItem}x para este item.`); return; }
+                qtd++;
+            } else { if (qtd > 0) qtd--; }
+
+            el.innerText = qtd;
+            const findIdx = addsEscolhidos.findIndex(x => x.nome === ad.nome);
+            if (qtd > 0) {
+                if (findIdx > -1) addsEscolhidos[findIdx].qtd = qtd;
+                else addsEscolhidos.push({ nome: ad.nome, preco: ad.preco, qtd });
+            } else if (findIdx > -1) addsEscolhidos.splice(findIdx, 1);
+            
+            updateTotalModal();
         }
 
-        function atualizarTotalModal() {
-            const total = produtoAberto.preco + adicionaisEscolhidos.reduce((acc, a) => acc + a.preco, 0);
+        function updateTotalModal() {
+            const total = prodAberto.preco + addsEscolhidos.reduce((a, b) => a + (b.preco * b.qtd), 0);
             document.getElementById('val-modal-total').innerText = `R$ ${total.toFixed(2)}`;
         }
 
-        function confirmarAdicao() {
-            const totalItem = produtoAberto.preco + adicionaisEscolhidos.reduce((acc, a) => acc + a.preco, 0);
+        function confirmarAdd() {
+            const total = prodAberto.preco + addsEscolhidos.reduce((a, b) => a + (b.preco * b.qtd), 0);
             const obs = document.getElementById('modal-obs').value.trim();
-            const nomeFinal = adicionaisEscolhidos.length ? `${produtoAberto.nome} (+${adicionaisEscolhidos.map(a=>a.nome).join(',')})` : produtoAberto.nome;
-            carrinho.push({ nome: nomeFinal, preco: totalItem, obs: obs });
-            fecharModal(); atualizarBarra();
+            let nomeFinal = prodAberto.nome;
+            if (addsEscolhidos.length) nomeFinal += ` (+ ${addsEscolhidos.map(x => `${x.qtd}x ${x.nome}`).join(', ')})`;
+            carrinho.push({ nome: nomeFinal, preco: total, obs });
+            fecharModal(); updateBar();
         }
 
-        function atualizarBarra() {
-            const totalFinal = carrinho.reduce((acc, i) => acc + i.preco, 0) + (DATA.config.taxaEntrega || 0);
-            document.getElementById('cart-total').innerText = "R$ " + totalFinal.toFixed(2);
+        function updateBar() {
+            const total = carrinho.reduce((a, b) => a + b.preco, 0) + DATA.config.taxaEntrega;
+            document.getElementById('cart-total').innerText = "R$ " + total.toFixed(2);
             document.getElementById('cart-count').innerText = carrinho.length;
             document.getElementById('bar-carrinho').classList.remove('hidden');
         }
 
-        function fecharModal() { document.getElementById('modal-produto').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+        function fecharModal() { document.getElementById('modal-produto').classList.add('hidden'); }
 
         function enviarWhatsApp() {
-            const ab = verificarAberto();
-            let msg = `*${ab ? '🚀 NOVO PEDIDO' : '📅 AGENDAMENTO'}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
+            let msg = `*NOVO PEDIDO*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
             carrinho.forEach(i => {
                 msg += `✅ *1x ${i.nome}*\n`;
                 if(i.obs) msg += `   _OBS: ${i.obs}_\n`;
                 msg += `   _R$ ${i.preco.toFixed(2)}_\n\n`;
             });
             msg += `━━━━━━━━━━━━━━━━━━━━\n🛵 *Entrega:* R$ ${DATA.config.taxaEntrega.toFixed(2)}\n`;
-            msg += `💰 *TOTAL: R$ ${(carrinho.reduce((acc,i)=>acc+i.preco, 0) + DATA.config.taxaEntrega).toFixed(2)}*`;
+            msg += `💰 *TOTAL: R$ ${(carrinho.reduce((a,b)=>a+b.preco,0) + DATA.config.taxaEntrega).toFixed(2)}*`;
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
         }
 
