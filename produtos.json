@@ -1,28 +1,25 @@
 {
   "config": {
     "nomeLoja": "Sua Lanchonete",
-    "linkLogo": "https://link-da-sua-logo.png",
-    "corPrincipal": "#ef4444",
-    "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
-    "horaAbre": "18:00",
-    "horaFecha": "23:59",
-    "fechadoManual": false,
-    "categorias": ["burgers", "bebidas", "combos"],
-    "footerText": "Lanchonete desde 2021 realizando desejos" 
+    "footerText": "Lanchonete desde 2021 realizando desejos",
+    "categorias": ["burgers", "bebidas"],
+    "...": "outras configs existentes"
   },
   "items": [
     {
-      "id": 1,
-      "nome": "X-Burger Especial",
-      "preco": 25.90,
+      "id": 123,
+      "nome": "X-Bacon Pro",
+      "preco": 30.00,
       "categoria": "burgers",
-      "descricao": "Carne 160g, queijo cheddar e molho da casa.",
-      "imagem": "https://link-da-foto.jpg",
-      "ativo": true,
+      "limiteAdicionais": 3, 
       "adicionais": [
-        { "nome": "Bacon Extra", "preco": 4.50 }
-      ]
+        { 
+          "nome": "Carne Extra", 
+          "preco": 10.00, 
+          "desc": "Hambúrguer artesanal de 160g" 
+        }
+      ],
+      "ativo": true
     }
   ]
 }
