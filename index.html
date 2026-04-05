@@ -54,8 +54,13 @@
                 </div>
 
                 <div id="area-agendamento" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-2xl">
-                    <p class="text-amber-700 text-xs font-bold mb-2 uppercase">Loja Fechada - Escolha o horário de Agendamento:</p>
-                    <input type="time" id="cli-agendamento" class="w-full p-2 rounded-lg border-2 border-amber-200 outline-none">
+                    <div class="flex items-center gap-3 text-amber-700">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                        <div>
+                            <p class="text-xs font-bold uppercase">Loja Fechada no Momento</p>
+                            <p class="text-[10px] font-medium mt-0.5">Seu pedido será enviado como **AGENDAMENTO**. Assim que abrirmos, iniciaremos o preparo!</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="campo-endereco">
@@ -93,7 +98,7 @@
 
     <div id="bar-carrinho" class="fixed bottom-6 left-4 right-4 shadow-2xl rounded-2xl p-4 hidden z-40 bg-white border border-slate-100 border-t-4" style="border-top-color: var(--brand-color);">
         <button onclick="toggleCarrinho()" class="w-full py-3 rounded-xl font-bold flex justify-between px-6 text-white transition active:scale-95" style="background-color: var(--brand-color);">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sacola</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Ver Sacola</span>
             <span id="cart-total">R$ 0,00</span>
         </button>
     </div>
@@ -143,12 +148,14 @@
                 label.innerText = "Aberto Agora";
                 label.className = "text-green-600 font-bold text-[10px] uppercase px-2 py-1 rounded-full border border-green-100 bg-green-50";
                 areaAgendamento.classList.add('hidden');
-                btnFinalizar.innerText = "Enviar Pedido via WhatsApp";
+                btnFinalizar.innerText = "Finalizar Pedido Agora";
+                btnFinalizar.style.backgroundColor = DATA.config.corPrincipal;
             } else {
                 label.innerText = "Fechado (Agendando)";
                 label.className = "text-amber-600 font-bold text-[10px] uppercase px-2 py-1 rounded-full border border-amber-100 bg-amber-50";
                 areaAgendamento.classList.remove('hidden');
-                btnFinalizar.innerText = "Agendar para WhatsApp";
+                btnFinalizar.innerText = "Enviar como Agendamento";
+                btnFinalizar.style.backgroundColor = "#d97706"; // Cor de alerta/âmbar para agendamento
             }
         }
 
@@ -261,19 +268,19 @@
         document.getElementById('form-checkout').onsubmit = function(e) {
             e.preventDefault();
             const aberta = verificarAberto();
-            const agendamento = document.getElementById('cli-agendamento').value;
-            if(!aberta && !agendamento) return alert("Escolha um horário de agendamento.");
             
             const sub = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
             const taxa = metodoEntrega === 'entrega' ? (parseFloat(DATA.config.taxaEntrega) || 0) : 0;
             
             let msg = `*${aberta ? 'NOVO PEDIDO' : 'PEDIDO AGENDADO'}*\n`;
-            if(!aberta) msg += `⏰ *PARA:* ${agendamento}\n`;
-            msg += `🛵 *Tipo:* ${metodoEntrega}\n👤 *Cliente:* ${document.getElementById('cli-nome').value}\n`;
+            if(!aberta) msg += `⚠️ _Pedido enviado com a loja fechada_\n`;
+            
+            msg += `\n🛵 *Tipo:* ${metodoEntrega === 'entrega' ? 'Entrega' : 'Retirada'}\n👤 *Cliente:* ${document.getElementById('cli-nome').value}\n`;
             if(metodoEntrega==='entrega') msg += `📍 *End:* ${document.getElementById('cli-end').value}\n`;
             msg += `💳 *Pagam:* ${document.getElementById('cli-pag').value}\n\n*ITENS:*\n`;
             carrinho.forEach(it => msg += `✅ ${it.qtd}x ${it.nome} - R$ ${(it.preco*it.qtd).toFixed(2)}\n`);
             msg += `\n*TOTAL: R$ ${(sub+taxa).toFixed(2)}*`;
+            
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
         }
 
