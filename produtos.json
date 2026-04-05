@@ -1,40 +1,27 @@
 {
   "config": {
-    "nomeLoja": "Nome da Sua Lanchonete",
+    "nomeLoja": "Sua Lanchonete Pro",
     "corPrincipal": "#ef4444",
     "whatsapp": "5511999999999",
     "linkLogo": "https://via.placeholder.com/150",
     "taxaEntrega": 5.00,
+    "horaAbre": "18:00",
+    "horaFecha": "23:59",
+    "fechadoManual": false,
     "categorias": [
       "lanches",
       "bebidas",
-      "porções"
+      "combos"
     ]
   },
   "items": [
     {
-      "id": 1712345678901,
-      "nome": "X-Burguer Clássico",
-      "preco": 25.90,
-      "descricao": "Pão brioche, blend bovino 160g, queijo prato derretido e maionese artesanal.",
+      "id": 1,
+      "nome": "Produto Exemplo",
+      "preco": 20.00,
+      "descricao": "Clique no Admin para editar este item.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "lanches"
-    },
-    {
-      "id": 1712345678902,
-      "nome": "Batata Frita G",
-      "preco": 18.00,
-      "descricao": "400g de batata frita crocante com sal e alecrim.",
-      "imagem": "https://via.placeholder.com/300",
-      "categoria": "porções"
-    },
-    {
-      "id": 1712345678903,
-      "nome": "Coca-Cola 350ml",
-      "preco": 6.00,
-      "descricao": "Lata gelada.",
-      "imagem": "https://via.placeholder.com/300",
-      "categoria": "bebidas"
     }
   ]
 }
