@@ -1,98 +1,149 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Painel Admin Automático</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
 <body class="bg-slate-50 p-4">
-    <div class="max-w-2xl mx-auto space-y-6">
+    <div class="max-w-2xl mx-auto space-y-6 pb-24">
         
         <div id="setup" class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
             <h2 class="font-bold mb-4">Conectar ao GitHub</h2>
             <input type="password" id="gh-token" placeholder="Seu GitHub Token" class="w-full border p-2 mb-2 rounded">
-            <input type="text" id="gh-repo" placeholder="usuario/nome-do-repositorio" class="w-full border p-2 mb-2 rounded">
-            <button onclick="carregarDadosAtuais()" class="w-full bg-slate-800 text-white py-2 rounded font-bold">Conectar e Abrir Painel</button>
+            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border p-2 mb-2 rounded">
+            <button onclick="carregarDadosAtuais()" class="w-full bg-slate-800 text-white py-2 rounded font-bold">Abrir Painel</button>
         </div>
 
         <div id="editor" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <h2 class="font-bold text-lg mb-4">Configurações Visuais</h2>
-                <input type="text" id="cfg-nome" placeholder="Nome da Loja" class="w-full border p-2 mb-2 rounded">
-                <input type="color" id="cfg-cor" class="w-full h-10 border p-1 rounded mb-2">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-amber-500">
+                <h2 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-list"></i> Minhas Categorias</h2>
+                <div id="lista-categorias" class="flex flex-wrap gap-2 mb-4"></div>
+                <div class="flex gap-2">
+                    <input type="text" id="nova-cat-nome" placeholder="Ex: Sobremesas" class="flex-1 border p-2 rounded">
+                    <button onclick="adicionarCategoria()" class="bg-amber-500 text-white px-4 py-2 rounded font-bold">+ Criar</button>
+                </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <h2 class="font-bold text-lg mb-4">Produtos</h2>
-                <div id="lista-produtos" class="space-y-2 mb-4"></div>
-                <button onclick="novoProduto()" class="w-full border-2 border-dashed border-slate-300 py-3 rounded-lg text-slate-500 hover:bg-slate-50">+ Novo Produto</button>
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <h2 class="font-bold text-lg mb-4 text-blue-600"><i class="fa-solid fa-burger"></i> Adicionar Produto</h2>
+                <div class="grid grid-cols-1 gap-3">
+                    <input type="text" id="p-nome" placeholder="Nome do Produto" class="border p-2 rounded">
+                    <input type="number" id="p-preco" placeholder="Preço" class="border p-2 rounded">
+                    <input type="text" id="p-img" placeholder="Link da Imagem (ImgBB)" class="border p-2 rounded">
+                    <select id="p-cat-select" class="border p-2 rounded bg-white font-bold text-blue-600">
+                        </select>
+                    <button onclick="adicionarProduto()" class="bg-blue-600 text-white py-3 rounded-lg font-bold">Adicionar à Lista</button>
+                </div>
+                
+                <hr class="my-6">
+                <div id="lista-produtos" class="space-y-3"></div>
             </div>
 
-            <button onclick="salvarNoGithub()" id="btn-salvar" class="fixed bottom-6 right-6 bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-all">
+            <button onclick="salvarNoGithub()" id="btn-salvar" class="fixed bottom-6 right-6 bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-all z-50">
                 <i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE
             </button>
         </div>
     </div>
 
     <script>
-        let dadosAtuais = { config: {}, items: [] };
-        let shaArquivo = ""; // Necessário para o GitHub saber qual versão estamos editando
+        let dadosAtuais = { config: { categorias: ["lanches", "bebidas"] }, items: [] };
+        let shaArquivo = "";
 
         async function carregarDadosAtuais() {
             const token = document.getElementById('gh-token').value;
             const repo = document.getElementById('gh-repo').value;
-            
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
                     headers: { 'Authorization': `token ${token}` }
                 });
                 const data = await res.json();
                 shaArquivo = data.sha;
-                dadosAtuais = JSON.parse(atob(data.content)); // Decodifica o conteúdo do GitHub
+                dadosAtuais = JSON.parse(atob(data.content));
 
-                // Preencher campos
-                document.getElementById('cfg-nome').value = dadosAtuais.config.nomeLoja;
-                document.getElementById('cfg-cor').value = dadosAtuais.config.corPrincipal;
-                
+                // Garantir que a lista de categorias existe no JSON
+                if(!dadosAtuais.config.categorias) dadosAtuais.config.categorias = ["lanches", "bebidas"];
+
                 document.getElementById('setup').classList.add('hidden');
                 document.getElementById('editor').classList.remove('hidden');
-                renderizarProdutos();
-            } catch (e) { alert("Erro ao conectar! Verifique o Token e o Nome do Repositório."); }
+                atualizarInterface();
+            } catch (e) { alert("Erro ao conectar!"); }
+        }
+
+        function atualizarInterface() {
+            renderizarCategorias();
+            renderizarProdutos();
+        }
+
+        function renderizarCategorias() {
+            const container = document.getElementById('lista-categorias');
+            const select = document.getElementById('p-cat-select');
+            
+            // Renderiza as tags de categoria
+            container.innerHTML = dadosAtuais.config.categorias.map((cat, i) => `
+                <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2">
+                    ${cat} 
+                    <button onclick="removerCategoria(${i})" class="text-red-500">×</button>
+                </span>
+            `).join('');
+
+            // Atualiza o select do formulário de produtos
+            select.innerHTML = dadosAtuais.config.categorias.map(cat => `
+                <option value="${cat}">${cat.toUpperCase()}</option>
+            `).join('');
+        }
+
+        function adicionarCategoria() {
+            const nome = document.getElementById('nova-cat-nome').value.trim().toLowerCase();
+            if(nome && !dadosAtuais.config.categorias.includes(nome)) {
+                dadosAtuais.config.categorias.push(nome);
+                document.getElementById('nova-cat-nome').value = "";
+                renderizarCategorias();
+            }
+        }
+
+        function removerCategoria(index) {
+            if(confirm("Deseja apagar esta categoria?")) {
+                dadosAtuais.config.categorias.splice(index, 1);
+                renderizarCategorias();
+            }
+        }
+
+        function adicionarProduto() {
+            const p = {
+                id: Date.now(),
+                nome: document.getElementById('p-nome').value,
+                preco: parseFloat(document.getElementById('p-preco').value),
+                imagem: document.getElementById('p-img').value,
+                categoria: document.getElementById('p-cat-select').value
+            };
+            if(!p.nome || !p.preco) return alert("Preencha os dados!");
+            dadosAtuais.items.push(p);
+            renderizarProdutos();
+            // Limpar campos
+            document.getElementById('p-nome').value = "";
+            document.getElementById('p-preco').value = "";
         }
 
         function renderizarProdutos() {
             const lista = document.getElementById('lista-produtos');
-            lista.innerHTML = dadosAtuais.items.map((p, index) => `
-                <div class="flex gap-2 bg-slate-50 p-2 rounded border">
-                    <input type="text" value="${p.nome}" onchange="atualizarItem(${index}, 'nome', this.value)" class="flex-1 p-1 border rounded">
-                    <input type="number" value="${p.preco}" onchange="atualizarItem(${index}, 'preco', this.value)" class="w-20 p-1 border rounded">
-                    <button onclick="remover(${index})" class="text-red-500 px-2"><i class="fa-solid fa-trash"></i></button>
+            lista.innerHTML = dadosAtuais.items.map((p, i) => `
+                <div class="flex items-center justify-between bg-slate-50 p-2 rounded border border-slate-200">
+                    <div class="text-sm">
+                        <b class="block">${p.nome}</b>
+                        <span class="text-blue-600 font-bold">R$ ${p.preco.toFixed(2)}</span> | 
+                        <span class="text-amber-600 italic">${p.categoria}</span>
+                    </div>
+                    <button onclick="removerProduto(${i})" class="text-red-400 p-2"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
         }
 
-        function atualizarItem(index, campo, valor) {
-            dadosAtuais.items[index][campo] = campo === 'preco' ? parseFloat(valor) : valor;
-        }
-
-        function novoProduto() {
-            dadosAtuais.items.push({ nome: "Novo Lanche", preco: 0, categoria: "lanches", imagem: "" });
+        function removerProduto(i) {
+            dadosAtuais.items.splice(i, 1);
             renderizarProdutos();
         }
 
         async function salvarNoGithub() {
             const btn = document.getElementById('btn-salvar');
-            btn.innerText = "Salvando...";
+            btn.innerText = "Salvando no Site...";
             btn.disabled = true;
 
             const token = document.getElementById('gh-token').value;
             const repo = document.getElementById('gh-repo').value;
-            
-            // Atualiza config antes de enviar
-            dadosAtuais.config.nomeLoja = document.getElementById('cfg-nome').value;
-            dadosAtuais.config.corPrincipal = document.getElementById('cfg-cor').value;
-
             const novoConteudo = btoa(unescape(encodeURIComponent(JSON.stringify(dadosAtuais, null, 2))));
 
             try {
@@ -100,22 +151,19 @@
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: "Atualização via Painel Admin",
+                        message: "Categorias e Produtos atualizados",
                         content: novoConteudo,
                         sha: shaArquivo
                     })
                 });
-
                 if(res.ok) {
                     const resData = await res.json();
-                    shaArquivo = resData.content.sha; // Atualiza o SHA para a próxima edição
+                    shaArquivo = resData.content.sha;
                     alert("✅ SITE ATUALIZADO COM SUCESSO!");
                 }
             } catch (e) { alert("Erro ao salvar!"); }
-            
             btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE';
             btn.disabled = false;
         }
     </script>
 </body>
-</html>
