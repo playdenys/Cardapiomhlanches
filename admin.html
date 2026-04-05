@@ -1,46 +1,94 @@
-<body class="bg-slate-50 p-4">
-    <div class="max-w-2xl mx-auto space-y-6 pb-24">
-        
-        <div id="setup" class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
-            <h2 class="font-bold mb-4">Conectar ao GitHub</h2>
-            <input type="password" id="gh-token" placeholder="Seu GitHub Token" class="w-full border p-2 mb-2 rounded">
-            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border p-2 mb-2 rounded">
-            <button onclick="carregarDadosAtuais()" class="w-full bg-slate-800 text-white py-2 rounded font-bold">Abrir Painel</button>
-        </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Cardápio Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .card-produto:hover .acoes { opacity: 1; }
+    </style>
+</head>
+<body class="bg-slate-50 pb-24">
 
-        <div id="editor" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-amber-500">
-                <h2 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-list"></i> Minhas Categorias</h2>
-                <div id="lista-categorias" class="flex flex-wrap gap-2 mb-4"></div>
-                <div class="flex gap-2">
-                    <input type="text" id="nova-cat-nome" placeholder="Ex: Sobremesas" class="flex-1 border p-2 rounded">
-                    <button onclick="adicionarCategoria()" class="bg-amber-500 text-white px-4 py-2 rounded font-bold">+ Criar</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
-                <h2 class="font-bold text-lg mb-4 text-blue-600"><i class="fa-solid fa-burger"></i> Adicionar Produto</h2>
-                <div class="grid grid-cols-1 gap-3">
-                    <input type="text" id="p-nome" placeholder="Nome do Produto" class="border p-2 rounded">
-                    <input type="number" id="p-preco" placeholder="Preço" class="border p-2 rounded">
-                    <input type="text" id="p-img" placeholder="Link da Imagem (ImgBB)" class="border p-2 rounded">
-                    <select id="p-cat-select" class="border p-2 rounded bg-white font-bold text-blue-600">
-                        </select>
-                    <button onclick="adicionarProduto()" class="bg-blue-600 text-white py-3 rounded-lg font-bold">Adicionar à Lista</button>
-                </div>
-                
-                <hr class="my-6">
-                <div id="lista-produtos" class="space-y-3"></div>
-            </div>
-
-            <button onclick="salvarNoGithub()" id="btn-salvar" class="fixed bottom-6 right-6 bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-all z-50">
-                <i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE
+    <div id="setup" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full">
+            <h1 class="text-2xl font-bold mb-2 text-slate-800 text-center">Painel Administrativo</h1>
+            <p class="text-slate-500 text-sm text-center mb-6">Conecte sua conta do GitHub para gerenciar o cardápio.</p>
+            <input type="password" id="gh-token" placeholder="GitHub Token (ghp_...)" class="w-full border-2 p-3 rounded-xl mb-3 focus:border-blue-500 outline-none transition">
+            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border-2 p-3 rounded-xl mb-6 focus:border-blue-500 outline-none transition">
+            <button onclick="carregarDadosAtuais()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                Acessar Dashboard
             </button>
         </div>
     </div>
 
+    <div id="editor" class="hidden">
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-40 p-4 shadow-sm">
+            <div class="max-w-5xl mx-auto flex justify-between items-center">
+                <div>
+                    <h2 id="display-loja" class="font-bold text-slate-800 text-xl">Nome da Loja</h2>
+                    <span class="text-xs text-green-500 font-bold flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Sistema Online</span>
+                </div>
+                <button onclick="salvarNoGithub()" id="btn-salvar" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 shadow-md transition">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Alterações
+                </button>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto p-4 md:p-8 space-y-10">
+            
+            <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2 text-lg">
+                    <i class="fa-solid fa-palette text-blue-500"></i> Identidade Visual
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Nome da Unidade</label>
+                        <input type="text" id="cfg-nome" oninput="document.getElementById('display-loja').innerText = this.value" class="w-full bg-slate-50 p-3 rounded-xl border mt-1">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Cor da Marca</label>
+                        <div class="flex gap-2 mt-1">
+                            <input type="color" id="cfg-cor" class="w-12 h-12 rounded-lg border-none cursor-pointer">
+                            <input type="text" id="cfg-zap" placeholder="WhatsApp (DDD+Número)" class="flex-1 bg-slate-50 p-3 rounded-xl border">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Logo da Loja (URL)</label>
+                        <input type="text" id="cfg-logo" placeholder="Link da imagem" class="w-full bg-slate-50 p-3 rounded-xl border mt-1">
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-700 mb-4 text-lg"><i class="fa-solid fa-layer-group text-amber-500"></i> Categorias</h3>
+                <div id="lista-categorias" class="flex flex-wrap gap-2 mb-4"></div>
+                <div class="flex gap-2 max-w-sm">
+                    <input type="text" id="nova-cat-nome" placeholder="Nova categoria..." class="flex-1 bg-slate-50 p-2 rounded-lg border">
+                    <button onclick="adicionarCategoria()" class="bg-amber-500 text-white px-4 rounded-lg font-bold hover:bg-amber-600 transition">+</button>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-700 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-rose-500"></i> Cardápio de Produtos
+                    </h3>
+                    <button onclick="novoProduto()" class="bg-slate-800 text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-slate-700">+ Novo Item</button>
+                </div>
+                
+                <div id="lista-produtos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    </div>
+            </section>
+        </main>
+    </div>
+
     <script>
-        let dadosAtuais = { config: { categorias: ["lanches", "bebidas"] }, items: [] };
+        let dadosAtuais = { config: {}, items: [] };
         let shaArquivo = "";
 
         async function carregarDadosAtuais() {
@@ -54,13 +102,17 @@
                 shaArquivo = data.sha;
                 dadosAtuais = JSON.parse(atob(data.content));
 
-                // Garantir que a lista de categorias existe no JSON
-                if(!dadosAtuais.config.categorias) dadosAtuais.config.categorias = ["lanches", "bebidas"];
+                // Preencher campos
+                document.getElementById('cfg-nome').value = dadosAtuais.config.nomeLoja;
+                document.getElementById('cfg-cor').value = dadosAtuais.config.corPrincipal;
+                document.getElementById('cfg-zap').value = dadosAtuais.config.whatsapp;
+                document.getElementById('cfg-logo').value = dadosAtuais.config.linkLogo;
+                document.getElementById('display-loja').innerText = dadosAtuais.config.nomeLoja;
 
                 document.getElementById('setup').classList.add('hidden');
                 document.getElementById('editor').classList.remove('hidden');
                 atualizarInterface();
-            } catch (e) { alert("Erro ao conectar!"); }
+            } catch (e) { alert("Erro ao conectar! Verifique seus dados."); }
         }
 
         function atualizarInterface() {
@@ -70,100 +122,119 @@
 
         function renderizarCategorias() {
             const container = document.getElementById('lista-categorias');
-            const select = document.getElementById('p-cat-select');
-            
-            // Renderiza as tags de categoria
-            container.innerHTML = dadosAtuais.config.categorias.map((cat, i) => `
-                <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2">
+            container.innerHTML = (dadosAtuais.config.categorias || []).map((cat, i) => `
+                <span class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-3">
                     ${cat} 
-                    <button onclick="removerCategoria(${i})" class="text-red-500">×</button>
+                    <button onclick="removerCategoria(${i})" class="text-slate-400 hover:text-rose-500 transition"><i class="fa-solid fa-xmark"></i></button>
                 </span>
-            `).join('');
-
-            // Atualiza o select do formulário de produtos
-            select.innerHTML = dadosAtuais.config.categorias.map(cat => `
-                <option value="${cat}">${cat.toUpperCase()}</option>
             `).join('');
         }
 
         function adicionarCategoria() {
-            const nome = document.getElementById('nova-cat-nome').value.trim().toLowerCase();
+            const nome = document.getElementById('nova-cat-nome').value.trim();
+            if(!dadosAtuais.config.categorias) dadosAtuais.config.categorias = [];
             if(nome && !dadosAtuais.config.categorias.includes(nome)) {
                 dadosAtuais.config.categorias.push(nome);
                 document.getElementById('nova-cat-nome').value = "";
-                renderizarCategorias();
+                atualizarInterface();
             }
         }
 
-        function removerCategoria(index) {
-            if(confirm("Deseja apagar esta categoria?")) {
-                dadosAtuais.config.categorias.splice(index, 1);
-                renderizarCategorias();
+        function removerCategoria(i) {
+            if(confirm("Deseja remover esta categoria?")) {
+                dadosAtuais.config.categorias.splice(i, 1);
+                atualizarInterface();
             }
         }
 
-        function adicionarProduto() {
-            const p = {
+        function novoProduto() {
+            const catPadrao = dadosAtuais.config.categorias ? dadosAtuais.config.categorias[0] : "lanches";
+            dadosAtuais.items.unshift({
                 id: Date.now(),
-                nome: document.getElementById('p-nome').value,
-                preco: parseFloat(document.getElementById('p-preco').value),
-                imagem: document.getElementById('p-img').value,
-                categoria: document.getElementById('p-cat-select').value
-            };
-            if(!p.nome || !p.preco) return alert("Preencha os dados!");
-            dadosAtuais.items.push(p);
+                nome: "Nome do Produto",
+                preco: 0,
+                descricao: "Breve descrição dos ingredientes...",
+                imagem: "",
+                categoria: catPadrao
+            });
             renderizarProdutos();
-            // Limpar campos
-            document.getElementById('p-nome').value = "";
-            document.getElementById('p-preco').value = "";
         }
 
         function renderizarProdutos() {
-            const lista = document.getElementById('lista-produtos');
-            lista.innerHTML = dadosAtuais.items.map((p, i) => `
-                <div class="flex items-center justify-between bg-slate-50 p-2 rounded border border-slate-200">
-                    <div class="text-sm">
-                        <b class="block">${p.nome}</b>
-                        <span class="text-blue-600 font-bold">R$ ${p.preco.toFixed(2)}</span> | 
-                        <span class="text-amber-600 italic">${p.categoria}</span>
+            const container = document.getElementById('lista-produtos');
+            container.innerHTML = dadosAtuais.items.map((p, i) => `
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition relative group card-produto">
+                    <div class="flex gap-4">
+                        <div class="w-24 h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-100">
+                            <img src="${p.imagem || 'https://via.placeholder.com/150'}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 space-y-2">
+                            <input type="text" onchange="editarProduto(${i}, 'nome', this.value)" value="${p.nome}" class="w-full font-bold text-slate-800 bg-transparent border-b border-transparent focus:border-blue-300 outline-none">
+                            <textarea onchange="editarProduto(${i}, 'descricao', this.value)" class="w-full text-xs text-slate-500 bg-transparent border-b border-transparent focus:border-blue-300 outline-none resize-none" rows="2">${p.descricao || ''}</textarea>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center bg-emerald-50 rounded-lg px-2 border border-emerald-100">
+                                    <span class="text-emerald-600 text-xs font-bold">R$</span>
+                                    <input type="number" onchange="editarProduto(${i}, 'preco', this.value)" value="${p.preco}" class="w-16 p-1 bg-transparent font-bold text-emerald-700 outline-none text-sm">
+                                </div>
+                                <select onchange="editarProduto(${i}, 'categoria', this.value)" class="text-xs font-bold text-slate-400 bg-transparent outline-none">
+                                    ${dadosAtuais.config.categorias.map(c => `<option value="${c}" ${p.categoria === c ? 'selected' : ''}>${c.toUpperCase()}</option>`)}
+                                </select>
+                            </div>
+                            <input type="text" onchange="editarProduto(${i}, 'imagem', this.value)" value="${p.imagem}" placeholder="URL da Foto" class="w-full text-[10px] text-blue-400 bg-transparent border-none outline-none">
+                        </div>
                     </div>
-                    <button onclick="removerProduto(${i})" class="text-red-400 p-2"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="removerProduto(${i})" class="absolute top-2 right-2 text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition p-2">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
                 </div>
             `).join('');
         }
 
+        function editarProduto(i, campo, valor) {
+            dadosAtuais.items[i][campo] = campo === 'preco' ? parseFloat(valor) : valor;
+        }
+
         function removerProduto(i) {
-            dadosAtuais.items.splice(i, 1);
-            renderizarProdutos();
+            if(confirm("Excluir este produto permanentemente?")) {
+                dadosAtuais.items.splice(i, 1);
+                renderizarProdutos();
+            }
         }
 
         async function salvarNoGithub() {
             const btn = document.getElementById('btn-salvar');
-            btn.innerText = "Salvando no Site...";
+            const originalTxt = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Publicando...';
             btn.disabled = true;
 
             const token = document.getElementById('gh-token').value;
             const repo = document.getElementById('gh-repo').value;
+
+            // Atualiza Configurações Globais
+            dadosAtuais.config.nomeLoja = document.getElementById('cfg-nome').value;
+            dadosAtuais.config.corPrincipal = document.getElementById('cfg-cor').value;
+            dadosAtuais.config.whatsapp = document.getElementById('cfg-zap').value;
+            dadosAtuais.config.linkLogo = document.getElementById('cfg-logo').value;
+
             const novoConteudo = btoa(unescape(encodeURIComponent(JSON.stringify(dadosAtuais, null, 2))));
 
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: "Categorias e Produtos atualizados",
-                        content: novoConteudo,
-                        sha: shaArquivo
-                    })
+                    body: JSON.stringify({ message: "Update via Dashboard Pro", content: novoConteudo, sha: shaArquivo })
                 });
+
                 if(res.ok) {
                     const resData = await res.json();
                     shaArquivo = resData.content.sha;
-                    alert("✅ SITE ATUALIZADO COM SUCESSO!");
+                    alert("✅ Site atualizado com sucesso!");
                 }
-            } catch (e) { alert("Erro ao salvar!"); }
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE';
+            } catch (e) { alert("Erro ao salvar no GitHub."); }
+            
+            btn.innerHTML = originalTxt;
             btn.disabled = false;
         }
     </script>
 </body>
+</html>
