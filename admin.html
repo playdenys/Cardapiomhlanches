@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Real-Time - Cardápio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Gerir Cardápio na Nuvem</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
+            <input type="text" id="prod-nome" placeholder="Nome do Lanche" class="p-2 border rounded">
+            <input type="number" id="prod-preco" placeholder="Preço (Ex: 25.90)" class="p-2 border rounded">
+            <select id="prod-cat" class="p-2 border rounded">
+                <option value="lanches">Lanches</option>
+                <option value="porcoes">Porções</option>
+                <option value="bebidas">Bebidas</option>
+            </select>
+            <input type="file" id="prod-foto" accept="image/*" class="p-2 text-sm text-gray-500">
+            <button onclick="salvarProduto()" id="btn-salvar" class="md:col-span-2 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
+                Fazer Upload e Salvar
+            </button>
+        </div>
+
+        <div id="lista-produtos" class="space-y-4">
+            <p class="text-center text-gray-500">Carregando cardápio...</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. COLE SUAS CONFIGURAÇÕES DO FIREBASE AQUI
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            projectId: "SEU_PROJETO",
+            storageBucket: "SEU_PROJETO.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 2. COLE SUA CHAVE DO IMGBB AQUI
+        const IMGBB_API_KEY = "SUA_CHAVE_IMGBB";
+
+        async function salvarProduto() {
+            const btn = document.getElementById('btn-salvar');
+            const nome = document.getElementById('prod-nome').value;
+            const preco = parseFloat(document.getElementById('prod-preco').value);
+            const cat = document.getElementById('prod-cat').value;
+            const fotoFile = document.getElementById('prod-foto').files[0];
+
+            if (!nome || !preco || !fotoFile) return alert("Preencha tudo!");
+
+            btn.disabled = true;
+            btn.innerText = "Enviando imagem...";
+
+            try {
+                // Upload para ImgBB
+                const formData = new FormData();
+                formData.append("image", fotoFile);
+                
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+                const urlImagem = data.data.url;
+
+                // Salvar no Firebase Firestore
+                await db.collection("produtos").add({
+                    nome,
+                    preco,
+                    categoria: cat,
+                    imagem: urlImagem,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("Produto adicionado com sucesso!");
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao salvar.");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Ler dados em tempo real
+        db.collection("produtos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            const container = document.getElementById('lista-produtos');
+            container.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const p = doc.data();
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3 border-b">
+                        <img src="${p.imagem}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1 px-4">
+                            <h3 class="font-bold">${p.nome}</h3>
+                            <p class="text-sm text-gray-600">R$ ${p.preco.toFixed(2)}</p>
+                        </div>
+                        <button onclick="eliminar('${doc.id}')" class="text-red-500">Excluir</button>
+                    </div>
+                `;
+            });
+        });
+
+        async function eliminar(id) {
+            if(confirm("Deseja remover?")) await db.collection("produtos").doc(id).delete();
+        }
+    </script>
+</body>
+</html>

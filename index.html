@@ -1,0 +1,90 @@
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+    // 1. CONFIGURAÇÃO DO FIREBASE (Use a mesma que você colocou no admin.html)
+    const firebaseConfig = {
+        apiKey: "SUA_API_KEY",
+        authDomain: "SEU_PROJETO.firebaseapp.com",
+        projectId: "SEU_PROJETO",
+        storageBucket: "SEU_PROJETO.appspot.com",
+        messagingSenderId: "...",
+        appId: "..."
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 2. CONFIGURAÇÕES GERAIS (Ajuste conforme necessário)
+    const STORE_CONFIG = {
+        name: "Bruto's Burger & Lanches",
+        whatsappNumber: "5511999999999",
+        deliveryFee: 5.00
+    };
+
+    let cart = [];
+    let products = []; // Agora começa vazio e carrega do Firebase
+
+    // 3. FUNÇÃO PARA CARREGAR PRODUTOS DO FIREBASE
+    function loadProducts() {
+        // Escuta a coleção "produtos" em tempo real
+        db.collection("produtos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            products = [];
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                products.push({
+                    id: doc.id,
+                    ...data
+                });
+            });
+            renderMenu(); // Re-renderiza o menu sempre que os dados mudarem
+        });
+    }
+
+    // 4. RENDERIZAR O MENU (Adaptado para os dados do Firebase)
+    function renderMenu() {
+        const container = document.getElementById('menu-container');
+        const categories = [
+            { id: 'lanches', title: 'Lanches Artesanais', icon: 'fa-burger' },
+            { id: 'porcoes', title: 'Porções & Fritas', icon: 'fa-fire' },
+            { id: 'bebidas', title: 'Bebidas Geladas', icon: 'fa-glass-water' }
+        ];
+
+        let html = '';
+        categories.forEach(category => {
+            const catProducts = products.filter(p => p.categoria === category.id);
+            if (catProducts.length === 0) return;
+
+            html += `
+                <div id="cat-${category.id}" class="mb-10 pt-20 -mt-20">
+                    <h2 class="text-2xl font-bold text-white mb-6 border-b border-zinc-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid ${category.icon} text-brand-red"></i> ${category.title}
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            `;
+
+            catProducts.forEach(prod => {
+                html += `
+                    <div onclick="openProductModal('${prod.id}')" class="bg-brand-card rounded-xl p-3 border border-zinc-800 hover:border-brand-red/50 transition cursor-pointer flex gap-4 shadow-lg group">
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-white font-semibold text-lg group-hover:text-brand-red transition">${prod.nome}</h3>
+                                <p class="text-sm text-gray-400 mt-1 line-clamp-2">Ingredientes selecionados e sabor incomparável.</p>
+                            </div>
+                            <span class="text-brand-yellow font-bold mt-3 block">R$ ${prod.preco.toFixed(2)}</span>
+                        </div>
+                        <div class="w-28 h-28 rounded-lg bg-zinc-800 bg-cover bg-center shrink-0 shadow-md" style="background-image: url('${prod.imagem}')"></div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+        });
+        container.innerHTML = html || '<p class="text-center text-gray-500 py-10">Nenhum produto cadastrado ainda.</p>';
+    }
+
+    // Inicializa a carga de dados
+    loadProducts();
+
+    // Mantenha as outras funções (openProductModal, addToCart, finishOrder, etc.) 
+    // Apenas certifique-se de que elas usem os nomes de campos do Firebase (nome, preco, imagem).
+</script>
