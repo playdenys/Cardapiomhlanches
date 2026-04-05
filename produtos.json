@@ -1,47 +1,40 @@
 {
   "config": {
-    "nomeLoja": "MH Lanches",
-    "corPrincipal": "#f50505",
-    "corFundo": "#121212",
-    "linkLogo": "https://ibb.co/7xwhDvHs",
-    "whatsapp": "81985770055",
+    "nomeLoja": "Nome da Sua Lanchonete",
+    "corPrincipal": "#ef4444",
+    "whatsapp": "5511999999999",
+    "linkLogo": "https://via.placeholder.com/150",
+    "taxaEntrega": 5.00,
     "categorias": [
+      "lanches",
       "bebidas",
-      "sobremesas",
-      "hamburgueres"
+      "porções"
     ]
   },
   "items": [
     {
-      "id": 1775414459534,
-      "nome": "Hamburguer",
-      "preco": 12,
-      "descricao": "carne mussarela e tomate",
-      "imagem": "",
-      "categoria": "hamburgueres"
-    },
-    {
-      "id": 1775412732906,
-      "nome": "burguer",
-      "preco": 14,
-      "imagem": "https://ibb.co/QjnzkTyB",
-      "categoria": "lanches",
-      "descricao": "simples"
-    },
-    {
-      "id": 1775412763738,
-      "nome": "burguer",
-      "preco": 12,
-      "imagem": "https://ibb.co/QjnzkTyB",
+      "id": 1712345678901,
+      "nome": "X-Burguer Clássico",
+      "preco": 25.90,
+      "descricao": "Pão brioche, blend bovino 160g, queijo prato derretido e maionese artesanal.",
+      "imagem": "https://via.placeholder.com/300",
       "categoria": "lanches"
     },
     {
-      "id": 1775414072309,
-      "nome": "test",
-      "preco": 8,
-      "imagem": "",
-      "categoria": "sobremesas",
-      "descricao": "doces deliciosos"
+      "id": 1712345678902,
+      "nome": "Batata Frita G",
+      "preco": 18.00,
+      "descricao": "400g de batata frita crocante com sal e alecrim.",
+      "imagem": "https://via.placeholder.com/300",
+      "categoria": "porções"
+    },
+    {
+      "id": 1712345678903,
+      "nome": "Coca-Cola 350ml",
+      "preco": 6.00,
+      "descricao": "Lata gelada.",
+      "imagem": "https://via.placeholder.com/300",
+      "categoria": "bebidas"
     }
   ]
 }
