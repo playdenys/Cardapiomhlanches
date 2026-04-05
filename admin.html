@@ -2,97 +2,119 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Controle Total</title>
+    <title>Painel Admin Automático</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
-    <div class="max-w-4xl mx-auto space-y-8">
+<body class="bg-slate-50 p-4">
+    <div class="max-w-2xl mx-auto space-y-6">
         
-        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500">
-            <h1 class="text-2xl font-bold mb-6"><i class="fa-solid fa-sliders text-blue-500"></i> Configurações da Página</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700">Nome da Loja</label>
-                    <input type="text" id="cfg-nome" class="w-full border p-2 rounded-lg mt-1">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700">WhatsApp (com DDD)</label>
-                    <input type="text" id="cfg-zap" class="w-full border p-2 rounded-lg mt-1">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700">Cor Principal (Botões/Destaques)</label>
-                    <input type="color" id="cfg-cor" class="w-full h-10 border p-1 rounded-lg mt-1">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700">Link do Logo (URL)</label>
-                    <input type="text" id="cfg-logo" class="w-full border p-2 rounded-lg mt-1">
-                </div>
-            </div>
+        <div id="setup" class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <h2 class="font-bold mb-4">Conectar ao GitHub</h2>
+            <input type="password" id="gh-token" placeholder="Seu GitHub Token" class="w-full border p-2 mb-2 rounded">
+            <input type="text" id="gh-repo" placeholder="usuario/nome-do-repositorio" class="w-full border p-2 mb-2 rounded">
+            <button onclick="carregarDadosAtuais()" class="w-full bg-slate-800 text-white py-2 rounded font-bold">Conectar e Abrir Painel</button>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500">
-            <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-plus text-green-500"></i> Adicionar Produto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="p-nome" placeholder="Nome do Produto" class="border p-2 rounded-lg">
-                <input type="number" id="p-preco" placeholder="Preço (Ex: 29.90)" class="border p-2 rounded-lg">
-                <input type="text" id="p-img" placeholder="Link da Imagem" class="border p-2 rounded-lg">
-                <select id="p-cat" class="border p-2 rounded-lg">
-                    <option value="lanches">Lanches</option>
-                    <option value="bebidas">Bebidas</option>
-                    <option value="porcoes">Porções</option>
-                </select>
-                <button onclick="adicionarProduto()" class="md:col-span-2 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition">Adicionar à Lista</button>
+        <div id="editor" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="font-bold text-lg mb-4">Configurações Visuais</h2>
+                <input type="text" id="cfg-nome" placeholder="Nome da Loja" class="w-full border p-2 mb-2 rounded">
+                <input type="color" id="cfg-cor" class="w-full h-10 border p-1 rounded mb-2">
             </div>
-        </div>
 
-        <div class="bg-zinc-900 p-6 rounded-2xl shadow-2xl text-white">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold text-yellow-400">Código para o seu GitHub</h2>
-                <button onclick="copiarCodigo()" class="bg-blue-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700">Copiar Tudo</button>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="font-bold text-lg mb-4">Produtos</h2>
+                <div id="lista-produtos" class="space-y-2 mb-4"></div>
+                <button onclick="novoProduto()" class="w-full border-2 border-dashed border-slate-300 py-3 rounded-lg text-slate-500 hover:bg-slate-50">+ Novo Produto</button>
             </div>
-            <p class="text-xs text-gray-400 mb-4">Copie o conteúdo abaixo e cole no arquivo <b>produtos.json</b> do seu GitHub.</p>
-            <textarea id="output" class="w-full h-64 bg-black p-4 font-mono text-green-400 text-xs rounded-lg border border-zinc-700" readonly></textarea>
+
+            <button onclick="salvarNoGithub()" id="btn-salvar" class="fixed bottom-6 right-6 bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-all">
+                <i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE
+            </button>
         </div>
     </div>
 
     <script>
-        let dados = {
-            config: { nomeLoja: "", corPrincipal: "#000000", corFundo: "#121212", linkLogo: "", whatsapp: "" },
-            items: []
-        };
+        let dadosAtuais = { config: {}, items: [] };
+        let shaArquivo = ""; // Necessário para o GitHub saber qual versão estamos editando
 
-        function adicionarProduto() {
-            const item = {
-                id: Date.now(),
-                nome: document.getElementById('p-nome').value,
-                preco: parseFloat(document.getElementById('p-preco').value),
-                imagem: document.getElementById('p-img').value,
-                categoria: document.getElementById('p-cat').value
-            };
+        async function carregarDadosAtuais() {
+            const token = document.getElementById('gh-token').value;
+            const repo = document.getElementById('gh-repo').value;
             
-            if(!item.nome || !item.preco) return alert("Preencha o nome e preço!");
-            
-            dados.items.push(item);
-            gerarOutput();
-            alert("Produto adicionado à lista abaixo!");
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await res.json();
+                shaArquivo = data.sha;
+                dadosAtuais = JSON.parse(atob(data.content)); // Decodifica o conteúdo do GitHub
+
+                // Preencher campos
+                document.getElementById('cfg-nome').value = dadosAtuais.config.nomeLoja;
+                document.getElementById('cfg-cor').value = dadosAtuais.config.corPrincipal;
+                
+                document.getElementById('setup').classList.add('hidden');
+                document.getElementById('editor').classList.remove('hidden');
+                renderizarProdutos();
+            } catch (e) { alert("Erro ao conectar! Verifique o Token e o Nome do Repositório."); }
         }
 
-        function gerarOutput() {
-            dados.config.nomeLoja = document.getElementById('cfg-nome').value;
-            dados.config.corPrincipal = document.getElementById('cfg-cor').value;
-            dados.config.linkLogo = document.getElementById('cfg-logo').value;
-            dados.config.whatsapp = document.getElementById('cfg-zap').value;
-
-            document.getElementById('output').value = JSON.stringify(dados, null, 2);
+        function renderizarProdutos() {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = dadosAtuais.items.map((p, index) => `
+                <div class="flex gap-2 bg-slate-50 p-2 rounded border">
+                    <input type="text" value="${p.nome}" onchange="atualizarItem(${index}, 'nome', this.value)" class="flex-1 p-1 border rounded">
+                    <input type="number" value="${p.preco}" onchange="atualizarItem(${index}, 'preco', this.value)" class="w-20 p-1 border rounded">
+                    <button onclick="remover(${index})" class="text-red-500 px-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
         }
 
-        function copiarCodigo() {
-            gerarOutput();
-            const area = document.getElementById('output');
-            area.select();
-            document.execCommand('copy');
-            alert("Copiado! Agora cole no produtos.json do seu GitHub.");
+        function atualizarItem(index, campo, valor) {
+            dadosAtuais.items[index][campo] = campo === 'preco' ? parseFloat(valor) : valor;
+        }
+
+        function novoProduto() {
+            dadosAtuais.items.push({ nome: "Novo Lanche", preco: 0, categoria: "lanches", imagem: "" });
+            renderizarProdutos();
+        }
+
+        async function salvarNoGithub() {
+            const btn = document.getElementById('btn-salvar');
+            btn.innerText = "Salvando...";
+            btn.disabled = true;
+
+            const token = document.getElementById('gh-token').value;
+            const repo = document.getElementById('gh-repo').value;
+            
+            // Atualiza config antes de enviar
+            dadosAtuais.config.nomeLoja = document.getElementById('cfg-nome').value;
+            dadosAtuais.config.corPrincipal = document.getElementById('cfg-cor').value;
+
+            const novoConteudo = btoa(unescape(encodeURIComponent(JSON.stringify(dadosAtuais, null, 2))));
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: "Atualização via Painel Admin",
+                        content: novoConteudo,
+                        sha: shaArquivo
+                    })
+                });
+
+                if(res.ok) {
+                    const resData = await res.json();
+                    shaArquivo = resData.content.sha; // Atualiza o SHA para a próxima edição
+                    alert("✅ SITE ATUALIZADO COM SUCESSO!");
+                }
+            } catch (e) { alert("Erro ao salvar!"); }
+            
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO SITE';
+            btn.disabled = false;
         }
     </script>
 </body>
