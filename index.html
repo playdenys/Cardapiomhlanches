@@ -1,38 +1,102 @@
-<script>
-    const STORE_CONFIG = {
-        name: "Bruto's Burger",
-        whatsappNumber: "5511999999999",
-        deliveryFee: 5.00
-    };
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #121212; color: white; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-20">
 
-    // LINK PARA O SEU ARQUIVO JSON NO GITHUB
-    // Exemplo: https://seu-usuario.github.io/seu-repositorio/produtos.json
-    const DATA_URL = "produtos.json"; 
+    <header class="relative h-48 bg-zinc-900 flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?w=800')] bg-cover bg-center opacity-30"></div>
+        <h1 id="store-name" class="relative z-10 text-3xl font-bold">Carregando...</h1>
+    </header>
 
-    async function loadProducts() {
-        try {
-            const response = await fetch(DATA_URL);
-            const products = await response.json();
-            renderMenu(products);
-        } catch (error) {
-            console.error("Erro ao carregar produtos:", error);
-            document.getElementById('menu-container').innerHTML = "<p class='text-white text-center'>Erro ao carregar o cardápio.</p>";
+    <main id="menu-container" class="container mx-auto px-4 mt-8 space-y-10">
+        <p class="text-center text-zinc-500">Buscando cardápio atualizado...</p>
+    </main>
+
+    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 p-4 hidden">
+        <button onclick="enviarWhatsApp()" class="w-full bg-green-600 py-3 rounded-xl font-bold flex justify-between px-6">
+            <span>Enviar Pedido</span>
+            <span id="cart-total">R$ 0,00</span>
+        </button>
+    </div>
+
+    <script>
+        // CONFIGURAÇÕES DA LOJA
+        const CONFIG = {
+            name: "Bruto's Burger",
+            whatsapp: "5511999999999", // SEU WHATSAPP AQUI
+            jsonUrl: "produtos.json"    // NOME DO ARQUIVO NO GITHUB
+        };
+
+        document.getElementById('store-name').innerText = CONFIG.name;
+
+        async function fetchMenu() {
+            try {
+                // O 'cache: no-store' força o navegador a pegar a versão mais nova do GitHub
+                const response = await fetch(CONFIG.jsonUrl, { cache: "no-store" });
+                const data = await response.json();
+                renderizar(data);
+            } catch (e) {
+                document.getElementById('menu-container').innerHTML = "<p class='text-center text-red-500'>Erro ao carregar produtos. Verifique o arquivo produtos.json</p>";
+            }
         }
-    }
 
-    function renderMenu(products) {
-        const container = document.getElementById('menu-container');
-        // ... (Aqui vai a mesma lógica de renderização que usamos antes)
-        // Ela vai percorrer a lista 'products' e criar o HTML.
-        console.log("Produtos carregados:", products);
-        
-        // Exemplo simplificado de renderização:
-        let html = '';
-        products.forEach(p => {
-            html += `<div class="bg-zinc-800 p-4 rounded mb-2">${p.nome} - R$ ${p.preco}</div>`;
-        });
-        container.innerHTML = html;
-    }
+        function renderizar(produtos) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = "";
 
-    loadProducts();
-</script>
+            // Agrupar por categoria
+            const categorias = [...new Set(produtos.map(p => p.categoria))];
+
+            categorias.forEach(cat => {
+                let html = `<section>
+                    <h2 class="text-xl font-bold mb-4 capitalize border-b border-zinc-800 pb-2 text-rose-500">${cat}</h2>
+                    <div class="grid gap-4">`;
+
+                produtos.filter(p => p.categoria === cat).forEach(p => {
+                    html += `
+                        <div class="bg-zinc-900 p-3 rounded-lg flex gap-4 border border-zinc-800">
+                            <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-md">
+                            <div class="flex-1">
+                                <h3 class="font-bold">${p.nome}</h3>
+                                <p class="text-rose-400 font-bold">R$ ${p.preco.toFixed(2)}</p>
+                                <button onclick="addAoCarrinho('${p.nome}', ${p.preco})" class="mt-2 text-xs bg-zinc-800 px-3 py-1 rounded-full border border-zinc-700">+ Adicionar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></section>`;
+                container.innerHTML += html;
+            });
+        }
+
+        let carrinho = [];
+        function addAoCarrinho(nome, preco) {
+            carrinho.push({nome, preco});
+            document.getElementById('cart-bar').classList.remove('hidden');
+            const total = carrinho.reduce((acc, i) => acc + i.preco, 0);
+            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
+        }
+
+        function enviarWhatsApp() {
+            let texto = `*NOVO PEDIDO*\n\n`;
+            carrinho.forEach(i => texto += `• ${i.nome} - R$ ${i.preco.toFixed(2)}\n`);
+            const total = carrinho.reduce((acc, i) => acc + i.preco, 0);
+            texto += `\n*TOTAL: R$ ${total.toFixed(2)}*`;
+            window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`);
+        }
+
+        fetchMenu();
+    </script>
+</body>
+</html>
