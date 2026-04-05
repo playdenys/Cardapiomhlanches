@@ -3,113 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio Digital</title>
+    <title>Cardápio Digital Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; --brand-color: #ef4444; }
+        .category-title { border-left: 4px solid var(--brand-color); padding-left: 10px; }
+        .product-card { transition: transform 0.2s; }
+        .product-card:active { transform: scale(0.96); }
+        .modal-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-slate-50 pb-24">
-    <header class="bg-white p-4 shadow-sm sticky top-0 z-50 flex justify-between items-center">
-        <h1 id="ui-nome" class="font-bold text-lg">Carregando...</h1>
-        <div id="status-loja" class="text-[10px] font-bold px-2 py-1 rounded-full border">---</div>
+<body class="bg-slate-50 pb-32">
+
+    <header class="bg-white border-b sticky top-0 z-50 p-4">
+        <div class="max-w-2xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img id="ui-logo" src="" class="w-12 h-12 rounded-2xl object-cover border hidden">
+                <div>
+                    <h1 id="ui-nome" class="font-extrabold text-xl tracking-tight text-slate-800 italic">Carregando...</h1>
+                    <div id="status-loja" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase mt-1">
+                        <span class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></span> Verificando...
+                    </div>
+                </div>
+            </div>
+            <button onclick="window.location.reload()" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+        </div>
     </header>
 
-    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-4"></main>
+    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-8">
+        </main>
 
-    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[60] hidden flex items-end justify-center">
-        <div class="bg-white w-full max-w-lg rounded-t-3xl p-6 space-y-4 overflow-y-auto max-h-[90vh]">
-            <div id="detalhe-conteudo"></div>
+    <div id="modal-produto" class="fixed inset-0 bg-black/60 z-[60] hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-xl rounded-t-[32px] sm:rounded-3xl overflow-hidden modal-up shadow-2xl flex flex-col max-h-[95vh]">
+            <div id="detalhe-conteudo" class="overflow-y-auto">
+                </div>
         </div>
     </div>
 
-    <div id="bar-carrinho" class="fixed bottom-6 left-4 right-4 hidden z-40">
-        <button onclick="enviarPedido()" class="w-full bg-emerald-600 text-white p-4 rounded-2xl font-bold flex justify-between shadow-xl">
-            <span id="btn-texto">Ver Pedido</span>
-            <span id="cart-total">R$ 0,00</span>
+    <div id="bar-carrinho" class="fixed bottom-6 left-4 right-4 z-40 hidden max-w-2xl mx-auto">
+        <button onclick="enviarWhatsApp()" class="w-full bg-emerald-600 text-white p-5 rounded-2xl font-black flex justify-between items-center shadow-2xl hover:bg-emerald-700 transition active:scale-95">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <span id="btn-texto" class="uppercase tracking-wide">Ver Pedido</span>
+            </div>
+            <span id="cart-total" class="text-xl">R$ 0,00</span>
         </button>
     </div>
 
     <script>
-        let DATA = {}; let carrinho = []; let adicionaisEscolhidos = [];
+        let DATA = {};
+        let carrinho = [];
+        let adicionaisEscolhidos = [];
 
         async function init() {
-            const res = await fetch('produtos.json', { cache: 'no-store' });
-            DATA = await res.json();
-            document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
-            renderMenu(); renderStatus();
+            try {
+                const res = await fetch('produtos.json', { cache: 'no-store' });
+                DATA = await res.json();
+                
+                // Aplicar Identidade
+                document.body.style.setProperty('--brand-color', DATA.config.corPrincipal);
+                document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
+                if(DATA.config.linkLogo) {
+                    const img = document.getElementById('ui-logo');
+                    img.src = DATA.config.linkLogo;
+                    img.classList.remove('hidden');
+                }
+
+                renderStatus();
+                renderMenu();
+            } catch (e) {
+                document.getElementById('ui-nome').innerText = "Erro ao carregar cardápio";
+            }
         }
 
         function verificarAberto() {
             if(DATA.config.fechadoManual) return false;
-            const agora = new Date(); const minAt = agora.getHours()*60 + agora.getMinutes();
-            const [hA, mA] = DATA.config.horaAbre.split(':').map(Number); const [hF, mF] = DATA.config.horaFecha.split(':').map(Number);
-            let minA = hA*60+mA; let minF = hF*60+mF; if(minF < minA) minF += 1440;
+            const agora = new Date();
+            const minAt = agora.getHours() * 60 + agora.getMinutes();
+            const [hA, mA] = DATA.config.horaAbre.split(':').map(Number);
+            const [hF, mF] = DATA.config.horaFecha.split(':').map(Number);
+            let minA = hA * 60 + mA;
+            let minF = hF * 60 + mF;
+            if(minF < minA) minF += 1440; // Ajuste para horário que vira a noite
             return minAt >= minA && minAt <= minF;
         }
 
         function renderStatus() {
-            const s = document.getElementById('status-loja');
+            const status = document.getElementById('status-loja');
             const ab = verificarAberto();
-            s.innerText = ab ? "ABERTO" : "FECHADO (AGENDANDO)";
-            s.className = ab ? "text-green-600 border-green-200 bg-green-50 px-2 py-1 rounded-full text-[10px] font-bold" : "text-amber-600 border-amber-200 bg-amber-50 px-2 py-1 rounded-full text-[10px] font-bold";
+            if(ab) {
+                status.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase mt-1 bg-green-100 text-green-700 border border-green-200";
+                status.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> Aberto agora`;
+            } else {
+                status.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase mt-1 bg-amber-100 text-amber-700 border border-amber-200";
+                status.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span> Fechado (Recebendo Agendamentos)`;
+            }
         }
 
         function renderMenu() {
-            document.getElementById('menu').innerHTML = DATA.items.map(p => `
-                <div onclick="abrir(${p.id})" class="bg-white p-3 rounded-2xl flex gap-4 border shadow-sm cursor-pointer">
-                    <div class="flex-1"><h3 class="font-bold">${p.nome}</h3><p class="text-xs text-slate-400">${p.descricao || ''}</p><p class="mt-2 font-bold text-emerald-600">R$ ${p.preco.toFixed(2)}</p></div>
-                    <img src="${p.imagem}" class="w-20 h-20 rounded-xl object-cover">
-                </div>`).join('');
+            const container = document.getElementById('menu');
+            // Segue a ordem exata do array de categorias configurado no admin
+            container.innerHTML = (DATA.config.categorias || []).map(cat => {
+                const itens = DATA.items.filter(i => i.categoria === cat);
+                if(itens.length === 0) return '';
+                
+                return `
+                <section>
+                    <h2 class="text-xl font-black text-slate-800 mb-4 capitalize italic category-title">${cat}</h2>
+                    <div class="grid gap-3">
+                        ${itens.map(p => {
+                            const esgotado = p.ativo === false;
+                            return `
+                            <div ${esgotado ? '' : `onclick="abrirProduto(${p.id})"`} class="product-card bg-white p-3 rounded-2xl flex gap-4 border shadow-sm relative overflow-hidden ${esgotado ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer'}">
+                                ${esgotado ? `<div class="absolute top-2 left-2 bg-slate-800 text-white text-[9px] font-black px-2 py-1 rounded z-10">ESGOTADO</div>` : ''}
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-slate-800">${p.nome}</h3>
+                                    <p class="text-[11px] text-slate-400 font-medium line-clamp-2 mt-1 leading-relaxed">${p.descricao || ''}</p>
+                                    <div class="mt-3 font-bold text-emerald-600">R$ ${p.preco.toFixed(2)}</div>
+                                </div>
+                                <img src="${p.imagem}" class="w-24 h-24 object-cover rounded-2xl border">
+                            </div>`
+                        }).join('')}
+                    </div>
+                </section>`;
+            }).join('');
         }
 
-        function abrir(id) {
+        function abrirProduto(id) {
             const p = DATA.items.find(i => i.id === id);
             adicionaisEscolhidos = [];
-            let ads = (p.adicionais || []).map(a => `
-                <label class="flex justify-between items-center p-3 border rounded-xl mb-2">
-                    <span class="text-sm">${a.nome} (+R$ ${a.preco.toFixed(2)})</span>
-                    <input type="checkbox" onchange="toggleAd('${a.nome}', ${a.preco}, ${p.preco})" class="w-5 h-5">
-                </label>`).join('');
+            
+            let htmlAds = "";
+            if (p.adicionais && p.adicionais.length > 0) {
+                htmlAds = `
+                <div class="p-6 bg-slate-50 border-t">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Turbine seu pedido</p>
+                    ${p.adicionais.map((ad, idx) => `
+                        <label class="flex justify-between items-center bg-white p-4 rounded-2xl border mb-2 cursor-pointer active:bg-slate-50 shadow-sm transition">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" onchange="toggleAd('${ad.nome}', ${ad.preco}, ${p.preco})" class="w-6 h-6 accent-emerald-500 rounded-lg">
+                                <span class="text-sm font-bold text-slate-700">${ad.nome}</span>
+                            </div>
+                            <span class="text-sm font-black text-emerald-600">+ R$ ${ad.preco.toFixed(2)}</span>
+                        </label>
+                    `).join('')}
+                </div>`;
+            }
 
             document.getElementById('detalhe-conteudo').innerHTML = `
-                <h2 class="text-xl font-bold">${p.nome}</h2>
-                <div class="py-4">${ads}</div>
-                <button onclick="addCar(${p.id})" class="w-full bg-red-500 text-white p-4 rounded-xl font-bold">Adicionar • R$ <span id="val-mod">${p.preco.toFixed(2)}</span></button>
-                <button onclick="document.getElementById('modal-produto').classList.add('hidden')" class="w-full text-slate-400 font-bold p-2">Cancelar</button>
-            `;
+                <div class="relative">
+                    <img src="${p.imagem}" class="w-full h-72 object-cover">
+                    <button onclick="fecharModal()" class="absolute top-4 right-4 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-2xl font-black text-slate-800">${p.nome}</h2>
+                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">${p.descricao || ''}</p>
+                    <div class="text-2xl font-black text-emerald-600 mt-4 italic">R$ ${p.preco.toFixed(2)}</div>
+                </div>
+                ${htmlAds}
+                <div class="p-6 pt-2">
+                    <button onclick="confirmarAdicao(${p.id})" class="w-full py-5 rounded-2xl font-black text-white shadow-xl flex justify-between px-8 items-center" style="background-color: var(--brand-color);">
+                        <span class="uppercase tracking-tighter">Adicionar à Sacola</span>
+                        <span class="text-xl">R$ <span id="val-modal">${p.preco.toFixed(2)}</span></span>
+                    </button>
+                </div>`;
+            
             document.getElementById('modal-produto').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
-        function toggleAd(n, pr, base) {
-            const i = adicionaisEscolhidos.findIndex(a => a.nome === n);
-            if(i > -1) adicionaisEscolhidos.splice(i,1); else adicionaisEscolhidos.push({nome:n, preco:pr});
-            const tot = base + adicionaisEscolhidos.reduce((acc,a)=>acc+a.preco, 0);
-            document.getElementById('val-mod').innerText = tot.toFixed(2);
+        function toggleAd(nome, preco, precoBase) {
+            const idx = adicionaisEscolhidos.findIndex(a => a.nome === nome);
+            if(idx > -1) adicionaisEscolhidos.splice(idx, 1);
+            else adicionaisEscolhidos.push({ nome, preco });
+            
+            const total = precoBase + adicionaisEscolhidos.reduce((acc, a) => acc + a.preco, 0);
+            document.getElementById('val-modal').innerText = total.toFixed(2);
         }
 
-        function addCar(id) {
+        function confirmarAdicao(id) {
             const p = DATA.items.find(i => i.id === id);
-            const tot = p.preco + adicionaisEscolhidos.reduce((acc,a)=>acc+a.preco, 0);
-            const n = p.nome + (adicionaisEscolhidos.length ? " ("+adicionaisEscolhidos.map(a=>a.nome).join(', ')+")" : "");
-            carrinho.push({nome: n, preco: tot});
-            document.getElementById('modal-produto').classList.add('hidden');
-            updBar();
+            const totalItem = p.preco + adicionaisEscolhidos.reduce((acc, a) => acc + a.preco, 0);
+            
+            // Monta o nome com os adicionais para o carrinho
+            const nomeFinal = adicionaisEscolhidos.length > 0 
+                ? `${p.nome} (+ ${adicionaisEscolhidos.map(a => a.nome).join(', ')})` 
+                : p.nome;
+
+            carrinho.push({ nome: nomeFinal, preco: totalItem });
+            fecharModal();
+            atualizarBarra();
         }
 
-        function updBar() {
-            const tot = carrinho.reduce((acc, i) => acc + i.preco, 0) + DATA.config.taxaEntrega;
-            document.getElementById('cart-total').innerText = "R$ " + tot.toFixed(2);
+        function atualizarBarra() {
+            const totalFinal = carrinho.reduce((acc, i) => acc + i.preco, 0) + (DATA.config.taxaEntrega || 0);
+            document.getElementById('cart-total').innerText = "R$ " + totalFinal.toFixed(2);
             document.getElementById('bar-carrinho').classList.remove('hidden');
-            document.getElementById('btn-texto').innerText = verificarAberto() ? "Finalizar Pedido" : "Enviar Agendamento";
+            document.getElementById('btn-texto').innerText = verificarAberto() ? "Finalizar Pedido" : "Fazer Agendamento";
         }
 
-        function enviarPedido() {
+        function fecharModal() {
+            document.getElementById('modal-produto').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function enviarWhatsApp() {
             const ab = verificarAberto();
-            let msg = `*${ab ? 'NOVO PEDIDO' : 'AGENDAMENTO'}*\n\n`;
-            carrinho.forEach(i => msg += `✅ ${i.nome} - R$ ${i.preco.toFixed(2)}\n`);
-            msg += `\n*Entrega:* R$ ${DATA.config.taxaEntrega.toFixed(2)}`;
-            msg += `\n*TOTAL: R$ ${(carrinho.reduce((acc,i)=>acc+i.preco, 0) + DATA.config.taxaEntrega).toFixed(2)}*`;
+            let msg = `*${ab ? '🚀 NOVO PEDIDO' : '📅 NOVO AGENDAMENTO'}*\n`;
+            msg += `----------------------------\n\n`;
+            
+            carrinho.forEach(item => {
+                msg += `✅ *1x ${item.nome}*\n`;
+                msg += `   _R$ ${item.preco.toFixed(2)}_\n\n`;
+            });
+
+            msg += `----------------------------\n`;
+            msg += `🛵 *Taxa de Entrega:* R$ ${DATA.config.taxaEntrega.toFixed(2)}\n`;
+            msg += `💰 *TOTAL: R$ ${(carrinho.reduce((acc, i) => acc + i.preco, 0) + DATA.config.taxaEntrega).toFixed(2)}*\n\n`;
+            
+            if(!ab) msg += `⚠️ _Este é um agendamento para o próximo horário de funcionamento._`;
+
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
         }
+
         init();
     </script>
 </body>
