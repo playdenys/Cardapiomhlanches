@@ -4,7 +4,12 @@
     "corPrincipal": "#f50505",
     "corFundo": "#121212",
     "linkLogo": "https://ibb.co/7xwhDvHs",
-    "whatsapp": "81985770055"
+    "whatsapp": "81985770055",
+    "categorias": [
+      "lanches",
+      "bebidas",
+      "sobremesas"
+    ]
   },
   "items": [
     {
@@ -20,6 +25,13 @@
       "preco": 12,
       "imagem": "https://ibb.co/QjnzkTyB",
       "categoria": "lanches"
+    },
+    {
+      "id": 1775414072309,
+      "nome": "test",
+      "preco": 8,
+      "imagem": "",
+      "categoria": "sobremesas"
     }
   ]
 }
