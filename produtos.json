@@ -1,6 +1,6 @@
 {
   "config": {
-    "nomeLoja": "Delivery Pro Exemplo",
+    "nomeLoja": "mh lanches",
     "linkLogo": "https://via.placeholder.com/150",
     "corPrincipal": "#2563eb",
     "whatsapp": "81985770055",
@@ -22,7 +22,7 @@
         "meioAMeio": false
       }
     ],
-    "footerText": "Entregas rÃ¡pidas e sabor incomparÃ¡vel!"
+    "footerText": "Entregas rÃÂ¡pidas e sabor incomparÃÂ¡vel!"
   },
   "items": [
     {
@@ -48,10 +48,10 @@
     },
     {
       "id": 1,
-      "nome": "Pizza Calabresa (FamÃ­lia)",
+      "nome": "Pizza Calabresa (FamÃÂ­lia)",
       "preco": 45.9,
       "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orÃ©gano.",
+      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orÃÂ©gano.",
       "imagem": "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
       "limiteAdicionais": 3,
@@ -70,10 +70,10 @@
     },
     {
       "id": 2,
-      "nome": "Pizza Mussarela (FamÃ­lia)",
+      "nome": "Pizza Mussarela (FamÃÂ­lia)",
       "preco": 40,
       "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orÃ©gano.",
+      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orÃÂ©gano.",
       "imagem": "https://images.unsplash.com/photo-1573821663912-569905455b13?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
       "limiteAdicionais": 3,
@@ -102,7 +102,7 @@
       "data": "05/04/2026",
       "valor": 57.9,
       "itens": [
-        "Pizza Calabresa (FamÃ­lia)",
+        "Pizza Calabresa (FamÃÂ­lia)",
         "Coca-Cola 2L"
       ]
     },
@@ -110,15 +110,15 @@
       "data": "05/04/2026",
       "valor": 40,
       "itens": [
-        "Pizza Mussarela (FamÃ­lia)"
+        "Pizza Mussarela (FamÃÂ­lia)"
       ]
     },
     {
       "data": "01/04/2026",
       "valor": 103.8,
       "itens": [
-        "Pizza Calabresa (FamÃ­lia)",
-        "Pizza Mussarela (FamÃ­lia)",
+        "Pizza Calabresa (FamÃÂ­lia)",
+        "Pizza Mussarela (FamÃÂ­lia)",
         "Coca-Cola 2L"
       ]
     }
