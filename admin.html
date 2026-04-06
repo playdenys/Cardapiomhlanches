@@ -3,415 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Delivery Pro</title>
+    <title>Painel Administrativo - Delivery Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-        .sidebar-item.active { background: #eff6ff; color: #2563eb; border-right: 4px solid #2563eb; }
-        .stat-card { transition: transform 0.2s; }
-        .stat-card:hover { transform: translateY(-5px); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; }
+        .card-dash { background: white; border-radius: 2rem; padding: 1.5rem; border: 1px solid #e2e8f0; }
     </style>
 </head>
-<body class="flex min-h-screen">
+<body class="p-4 md:p-8">
 
-    <div id="setup" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full">
-            <div class="text-center mb-8">
-                <div class="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-200">
-                    <i class="fa-solid fa-rocket text-white text-2xl"></i>
-                </div>
-                <h1 class="text-2xl font-black">Painel Admin</h1>
-                <p class="text-slate-400 text-sm">Gerencie seu delivery em tempo real</p>
-            </div>
-            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full border-2 p-4 rounded-2xl mb-4 outline-none focus:border-blue-600 transition-all">
-            <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full border-2 p-4 rounded-2xl mb-6 outline-none focus:border-blue-600 transition-all">
-            <button onclick="carregarDados()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Acessar Sistema</button>
-        </div>
-    </div>
-
-    <aside id="sidebar" class="hidden w-64 bg-white border-r flex-col sticky top-0 h-screen lg:flex">
-        <div class="p-6">
-            <h2 id="header-nome" class="font-black text-xl text-blue-600 italic">DELIVERY PRO</h2>
-        </div>
-        <nav class="flex-1 space-y-1">
-            <button onclick="mudarAba('aba-dash')" id="nav-dash" class="sidebar-item active w-full flex items-center gap-3 px-6 py-4 font-bold text-sm">
-                <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
-            </button>
-            <button onclick="mudarAba('aba-produtos')" id="nav-produtos" class="sidebar-item w-full flex items-center gap-3 px-6 py-4 font-bold text-sm">
-                <i class="fa-solid fa-box w-5"></i> Produtos
-            </button>
-            <button onclick="mudarAba('aba-categorias')" id="nav-categorias" class="sidebar-item w-full flex items-center gap-3 px-6 py-4 font-bold text-sm">
-                <i class="fa-solid fa-layer-group w-5"></i> Categorias
-            </button>
-            <button onclick="mudarAba('aba-loja')" id="nav-loja" class="sidebar-item w-full flex items-center gap-3 px-6 py-4 font-bold text-sm">
-                <i class="fa-solid fa-gears w-5"></i> Configurações
-            </button>
-        </nav>
-        <div class="p-6 border-t">
-            <button onclick="salvarNoGithub()" id="btn-salvar" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-emerald-100 hover:bg-emerald-600 transition-all">
-                <i class="fa-solid fa-cloud-arrow-up mr-2"></i> PUBLICAR SITE
-            </button>
-        </div>
-    </aside>
-
-    <main id="editor" class="hidden flex-1 overflow-y-auto">
-        
-        <section id="aba-dash" class="p-8 space-y-8">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h2 class="text-3xl font-black">Visão Geral</h2>
-                    <p class="text-slate-400 text-sm">Aqui está o que aconteceu na sua loja.</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="bg-blue-100 text-blue-600 p-3 rounded-2xl"><i class="fa-solid fa-sack-dollar text-xl"></i></div>
-                        <span class="text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">HOJE</span>
-                    </div>
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Vendas Hoje</p>
-                    <h3 id="stat-hoje" class="text-2xl font-black mt-1">R$ 0,00</h3>
-                </div>
-                <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="bg-purple-100 text-purple-600 p-3 rounded-2xl"><i class="fa-solid fa-calendar-check text-xl"></i></div>
-                        <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">MÊS</span>
-                    </div>
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Vendas no Mês</p>
-                    <h3 id="stat-mes" class="text-2xl font-black mt-1">R$ 0,00</h3>
-                </div>
-                <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="bg-orange-100 text-orange-600 p-3 rounded-2xl"><i class="fa-solid fa-fire text-xl"></i></div>
-                        <span class="text-[10px] font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-lg">TOP ITEM</span>
-                    </div>
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Mais Vendido</p>
-                    <h3 id="stat-top" class="text-lg font-black mt-1 truncate">---</h3>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
-                    <h4 class="font-black text-sm mb-6 uppercase tracking-tighter">Ranking de Produtos (Saídas)</h4>
-                    <div id="lista-ranking" class="space-y-4"></div>
-                </div>
-                <div class="bg-white p-6 rounded-[2rem] border shadow-sm flex flex-col items-center justify-center text-center">
-                    <i class="fa-solid fa-chart-line text-slate-200 text-6xl mb-4"></i>
-                    <p class="text-slate-400 text-sm font-medium">Os gráficos detalhados são alimentados conforme os pedidos chegam pelo WhatsApp.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="aba-produtos" class="hidden p-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-                <h2 class="text-2xl font-black">Cardápio</h2>
-                <div class="flex gap-3 w-full md:w-auto">
-                    <div class="bg-white border rounded-2xl flex items-center px-4 flex-1">
-                        <i class="fa-solid fa-magnifying-glass text-slate-300"></i>
-                        <input type="text" id="busca-prod" oninput="renderProdutos()" placeholder="Buscar..." class="p-3 bg-transparent outline-none text-sm w-full">
-                    </div>
-                    <button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs whitespace-nowrap shadow-lg shadow-blue-100">NOVO ITEM</button>
-                </div>
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+            <div>
+                <h1 class="text-3xl font-black italic text-slate-800 uppercase tracking-tighter">Dashboard <span class="text-blue-600">Admin</span></h1>
+                <p class="text-slate-500 text-sm font-medium">Gerencie suas vendas e cardápio em tempo real.</p>
             </div>
             
-            <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
-                <button onclick="filtrarProdutos('todos')" class="bg-white border px-4 py-2 rounded-xl text-[10px] font-black uppercase whitespace-nowrap">Todos</button>
-                <button onclick="filtrarProdutos('ativo')" class="bg-white border px-4 py-2 rounded-xl text-[10px] font-black uppercase whitespace-nowrap text-emerald-600">Ativos</button>
-                <button onclick="filtrarProdutos('pausado')" class="bg-white border px-4 py-2 rounded-xl text-[10px] font-black uppercase whitespace-nowrap text-red-600">Pausados</button>
-                <button onclick="filtrarProdutos('preco')" class="bg-white border px-4 py-2 rounded-xl text-[10px] font-black uppercase whitespace-nowrap">Maior Preço</button>
+            <div class="flex flex-wrap gap-2 bg-white p-2 rounded-[2rem] border shadow-sm w-full md:w-auto">
+                <input type="password" id="gh-token" placeholder="GitHub Token" class="bg-slate-50 px-4 py-2 rounded-xl text-xs outline-none focus:ring-2 ring-blue-500">
+                <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="bg-slate-50 px-4 py-2 rounded-xl text-xs outline-none focus:ring-2 ring-blue-500">
+                <button onclick="salvarConfig()" class="bg-slate-900 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase hover:bg-blue-600 transition-all">Salvar Acesso</button>
             </div>
+        </header>
 
-            <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-        </section>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="card-dash border-l-8 border-blue-600 shadow-xl shadow-blue-50">
+                <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Vendas Hoje</p>
+                <h2 id="venda-hoje" class="text-3xl font-black text-slate-800 italic">R$ 0,00</h2>
+            </div>
+            <div class="card-dash border-l-8 border-emerald-500 shadow-xl shadow-emerald-50">
+                <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Vendas no Mês</p>
+                <h2 id="venda-mes" class="text-3xl font-black text-slate-800 italic">R$ 0,00</h2>
+            </div>
+            <div class="card-dash border-l-8 border-purple-500 shadow-xl shadow-purple-50">
+                <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Total Pedidos</p>
+                <h2 id="total-pedidos" class="text-3xl font-black text-slate-800 italic">0</h2>
+            </div>
+        </div>
 
-        <section id="aba-categorias" class="hidden p-8">
-            <div class="max-w-2xl mx-auto">
-                <div class="bg-white p-8 rounded-[2rem] border shadow-sm">
-                    <h2 class="text-xl font-black mb-6">Organizar Vitrine</h2>
-                    <div class="flex gap-2 mb-8">
-                        <input type="text" id="nova-cat" placeholder="Ex: Bebidas" class="flex-1 border-2 p-4 rounded-2xl outline-none focus:border-blue-600 transition-all">
-                        <button onclick="addCategoria()" class="bg-slate-900 text-white px-8 rounded-2xl font-bold">ADD</button>
-                    </div>
-                    <div id="lista-categorias" class="space-y-3"></div>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <div class="card-dash shadow-sm">
+                <h3 class="font-black text-slate-800 mb-6 uppercase text-xs italic tracking-widest"><i class="fa-solid fa-chart-line mr-2"></i> Evolução Diária</h3>
+                <canvas id="chartVendas" height="200"></canvas>
             </div>
-        </section>
+            <div class="card-dash shadow-sm">
+                <h3 class="font-black text-slate-800 mb-6 uppercase text-xs italic tracking-widest"><i class="fa-solid fa-trophy mr-2"></i> Produtos Mais Vendidos</h3>
+                <div id="ranking-produtos" class="space-y-4">
+                    </div>
+            </div>
+        </div>
 
-        <section id="aba-loja" class="hidden p-8">
-            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-[2rem] border space-y-4">
-                    <label class="block text-[10px] font-black text-slate-400">NOME DA LOJA</label>
-                    <input type="text" id="cfg-nome" class="w-full border-2 p-3 rounded-xl outline-none focus:border-blue-600 font-bold">
-                    
-                    <label class="block text-[10px] font-black text-slate-400">WHATSAPP (COM DDD)</label>
-                    <input type="text" id="cfg-zap" class="w-full border-2 p-3 rounded-xl outline-none focus:border-blue-600 font-bold">
-                    
-                    <label class="block text-[10px] font-black text-slate-400">TAXA DE ENTREGA FIXA (R$)</label>
-                    <input type="number" id="cfg-taxa" class="w-full border-2 p-3 rounded-xl outline-none focus:border-blue-600 font-bold">
-                </div>
-                <div class="bg-white p-6 rounded-[2rem] border space-y-4 text-center flex flex-col justify-center">
-                   <div id="loja-status-box" class="p-6 rounded-3xl border-2 border-dashed transition-all">
-                        <p class="font-black text-sm mb-4">STATUS DO DELIVERY</p>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="cfg-manual" class="sr-only peer">
-                            <div class="w-14 h-7 bg-emerald-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-slate-300"></div>
-                        </label>
-                        <p id="loja-status-txt" class="mt-4 text-xs font-black text-emerald-600 uppercase">Loja Aberta</p>
-                   </div>
-                </div>
+        <div class="card-dash shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-slate-800 uppercase text-xs italic tracking-widest">Gestão do Cardápio</h3>
+                <button onclick="salvarAlteracoes()" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg shadow-emerald-100 hover:scale-105 transition-all">Salvar Mudanças no GitHub</button>
             </div>
-        </section>
-    </main>
-
-    <div id="modal-produto" class="fixed inset-0 bg-slate-900/80 z-[110] hidden flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] max-h-[90vh] overflow-hidden flex flex-col">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="font-black italic uppercase">Editor de Item</h3>
-                <button onclick="fecharModalProduto()"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-8 overflow-y-auto flex-1 space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Nome</label>
-                        <input type="text" id="prod-nome" class="w-full border-b-2 p-2 outline-none focus:border-blue-600 font-bold">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Preço (R$)</label>
-                        <input type="number" id="prod-preco" step="0.01" class="w-full border-b-2 p-2 outline-none focus:border-emerald-500 font-black text-emerald-600">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Categoria</label>
-                        <select id="prod-cat" class="w-full border-b-2 p-2 outline-none font-bold bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">URL Imagem</label>
-                        <input type="text" id="prod-img" class="w-full border-b-2 p-2 outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase">Descrição</label>
-                    <textarea id="prod-desc" class="w-full border-2 p-4 rounded-2xl h-24 outline-none focus:border-blue-600"></textarea>
-                </div>
-                
-                <div class="bg-slate-50 p-6 rounded-[2rem] border">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-black uppercase">Adicionais / Complementos</span>
-                        <button onclick="addLinhaAd()" class="bg-slate-900 text-white text-[10px] px-4 py-2 rounded-full">+ ADD</button>
-                    </div>
-                    <div id="lista-ads-modal" class="space-y-3"></div>
-                </div>
-            </div>
-            <div class="p-6 border-t flex justify-end gap-4">
-                <label class="flex items-center gap-2 mr-auto">
-                    <input type="checkbox" id="prod-ativo" class="w-5 h-5 accent-emerald-500" checked>
-                    <span class="font-bold text-xs">DISPONÍVEL</span>
-                </label>
-                <button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-black shadow-lg">SALVAR ITEM</button>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-[10px] uppercase text-slate-400 border-b">
+                            <th class="pb-4">Produto</th>
+                            <th class="pb-4">Preço (R$)</th>
+                            <th class="pb-4">Categoria</th>
+                            <th class="pb-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-edit" class="text-sm font-medium">
+                        </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        let DATA = {}; let SHA = ""; let editID = null; let adsTemp = [];
+        let DATA = {};
+        let myChart = null;
 
-        async function carregarDados() {
-            const token = document.getElementById('gh-token').value;
-            const repo = document.getElementById('gh-repo').value;
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, { headers: { 'Authorization': `token ${token}` }});
-                const d = await res.json(); SHA = d.sha; DATA = JSON.parse(atob(d.content));
-                
-                // Mapear campos
-                document.getElementById('cfg-nome').value = DATA.config.nomeLoja;
-                document.getElementById('cfg-zap').value = DATA.config.whatsapp;
-                document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega;
-                document.getElementById('cfg-manual').checked = DATA.config.fechadoManual;
-                
-                renderDash(); renderCategorias(); renderProdutos();
-                document.getElementById('setup').classList.add('hidden');
-                document.getElementById('editor').classList.remove('hidden');
-                document.getElementById('sidebar').classList.remove('hidden');
-                document.getElementById('sidebar').classList.add('flex');
-            } catch(e) { alert("Acesso Negado!"); }
+        // Ao carregar, recupera Token e Repo do LocalStorage (Praticidade!)
+        window.onload = () => {
+            document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
+            document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
+            loadData();
+        };
+
+        function salvarConfig() {
+            localStorage.setItem('gh_token', document.getElementById('gh-token').value);
+            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value);
+            alert("Configurações de acesso salvas no seu navegador!");
+            location.reload();
         }
 
-        // --- LÓGICA DE DASHBOARD ---
-        function renderDash() {
-            // Se não existirem vendas no JSON ainda, iniciamos zerado
+        async function loadData() {
+            const res = await fetch('produtos.json', { cache: 'no-store' });
+            DATA = await res.json();
+            processarEstatisticas();
+            renderListaProdutos();
+        }
+
+        function processarEstatisticas() {
             const vendas = DATA.vendas || [];
-            const hoje = new Date().toLocaleDateString();
-            
-            const totalHoje = vendas.filter(v => v.data === hoje).reduce((a,b) => a + b.valor, 0);
-            const totalMes = vendas.reduce((a,b) => a + b.valor, 0);
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            const mesAtual = new Date().getMonth();
 
-            document.getElementById('stat-hoje').innerText = `R$ ${totalHoje.toFixed(2)}`;
-            document.getElementById('stat-mes').innerText = `R$ ${totalMes.toFixed(2)}`;
+            let totalHoje = 0;
+            let totalMes = 0;
+            let contagemProdutos = {};
 
-            // Ranking
-            const ranking = {};
             vendas.forEach(v => {
+                const [d, m, y] = v.data.split('/');
+                const dataVenda = new Date(y, m - 1, d);
+
+                // Soma Hoje
+                if(v.data === hoje) totalHoje += v.valor;
+                
+                // Soma Mês
+                if(dataVenda.getMonth() === mesAtual) totalMes += v.valor;
+
+                // Ranking de Produtos
                 v.itens.forEach(item => {
-                    ranking[item] = (ranking[item] || 0) + 1;
+                    contagemProdutos[item] = (contagemProdutos[item] || 0) + 1;
                 });
             });
 
-            const sortedRanking = Object.entries(ranking).sort((a,b) => b[1] - a[1]).slice(0, 5);
-            if(sortedRanking[0]) document.getElementById('stat-top').innerText = sortedRanking[0][0];
+            document.getElementById('venda-hoje').innerText = `R$ ${totalHoje.toFixed(2)}`;
+            document.getElementById('venda-mes').innerText = `R$ ${totalMes.toFixed(2)}`;
+            document.getElementById('total-pedidos').innerText = vendas.length;
 
-            document.getElementById('lista-ranking').innerHTML = sortedRanking.map(([nome, qtd], i) => `
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+            renderRanking(contagemProdutos);
+            renderGrafico(vendas);
+        }
+
+        function renderRanking(contagem) {
+            const sortable = Object.entries(contagem).sort(([,a],[,b]) => b-a).slice(0, 5);
+            const container = document.getElementById('ranking-produtos');
+            container.innerHTML = sortable.map(([nome, qtd], i) => `
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl">
                     <div class="flex items-center gap-3">
-                        <span class="w-6 h-6 flex items-center justify-center bg-slate-900 text-white rounded-full text-[10px] font-black">${i+1}</span>
-                        <span class="font-bold text-xs">${nome}</span>
+                        <span class="w-6 h-6 flex items-center justify-center bg-blue-600 text-white text-[10px] font-bold rounded-full">${i+1}</span>
+                        <span class="text-xs font-bold text-slate-700">${nome}</span>
                     </div>
-                    <span class="font-black text-xs text-blue-600">${qtd}x</span>
+                    <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${qtd} vendidos</span>
                 </div>
-            `).join('') || '<p class="text-center text-slate-300 py-4 text-xs">Sem dados suficientes</p>';
+            `).join('');
         }
 
-        // --- PRODUTOS ---
-        function renderProdutos() {
-            const busca = document.getElementById('busca-prod').value.toLowerCase();
-            const filtrados = DATA.items.filter(p => p.nome.toLowerCase().includes(busca) || p.categoria.toLowerCase().includes(busca));
-            
-            document.getElementById('grid-produtos').innerHTML = filtrados.map(p => `
-                <div class="bg-white p-5 rounded-[2rem] border shadow-sm flex flex-col gap-4 relative">
-                    <div class="flex items-center gap-4">
-                        <img src="${p.imagem}" class="w-16 h-16 rounded-2xl object-cover border shadow-sm">
-                        <div class="flex-1 overflow-hidden">
-                            <span class="text-[9px] font-black text-blue-500 uppercase">${p.categoria}</span>
-                            <h4 class="font-bold text-sm truncate">${p.nome}</h4>
-                            <p class="text-emerald-600 font-black text-sm">R$ ${p.preco.toFixed(2)}</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 border-t pt-4">
-                        <button onclick="abrirModalProduto(${p.id})" class="flex-1 bg-slate-900 text-white py-2 rounded-xl font-bold text-[10px] uppercase">Editar</button>
-                        <button onclick="toggleStatusProd(${p.id})" class="px-4 py-2 rounded-xl border font-bold text-[10px] uppercase ${p.ativo ? 'text-emerald-600' : 'text-red-500'}">${p.ativo ? 'Ativo' : 'Pausado'}</button>
-                    </div>
-                </div>`).join('');
-            
-            document.getElementById('prod-cat').innerHTML = (DATA.config.categorias || []).map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+        function renderGrafico(vendas) {
+            const ultimos7Dias = [...Array(7)].map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                return d.toLocaleDateString('pt-BR');
+            }).reverse();
+
+            const valores = ultimos7Dias.map(dia => {
+                return vendas.filter(v => v.data === dia).reduce((acc, curr) => acc + curr.valor, 0);
+            });
+
+            const ctx = document.getElementById('chartVendas').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ultimos7Dias.map(d => d.split('/')[0] + '/' + d.split('/')[1]),
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: valores,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 4,
+                        pointRadius: 0
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
         }
 
-        function toggleStatusProd(id) {
-            const p = DATA.items.find(x => x.id === id);
-            p.ativo = !p.ativo;
-            renderProdutos();
+        function renderListaProdutos() {
+            const tbody = document.getElementById('lista-edit');
+            tbody.innerHTML = DATA.items.map((p, i) => `
+                <tr class="border-b last:border-0">
+                    <td class="py-4 flex items-center gap-3">
+                        <img src="${p.imagem}" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                        <input type="text" value="${p.nome}" onchange="updateItem(${i}, 'nome', this.value)" class="bg-transparent border-b border-transparent focus:border-blue-600 outline-none">
+                    </td>
+                    <td class="py-4">
+                        <input type="number" step="0.01" value="${p.preco}" onchange="updateItem(${i}, 'preco', parseFloat(this.value))" class="w-20 bg-transparent border-b border-transparent focus:border-blue-600 outline-none font-bold text-emerald-600">
+                    </td>
+                    <td class="py-4">
+                        <span class="text-[10px] uppercase font-black text-slate-400 bg-slate-100 px-3 py-1 rounded-full">${p.categoria}</span>
+                    </td>
+                    <td class="py-4">
+                        <button onclick="toggleItem(${i})" class="w-12 h-6 rounded-full relative transition-all ${p.ativo ? 'bg-emerald-500' : 'bg-slate-300'}">
+                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-all ${p.ativo ? 'translate-x-6' : ''}"></div>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        // --- CATEGORIAS ---
-        function renderCategorias() {
-            const container = document.getElementById('lista-categorias');
-            container.innerHTML = (DATA.config.categorias || []).map((c, i) => `
-                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between shadow-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="flex flex-col gap-1">
-                            <button onclick="moverCat(${i}, -1)" class="text-slate-300 hover:text-blue-600"><i class="fa-solid fa-circle-chevron-up text-xl"></i></button>
-                            <button onclick="moverCat(${i}, 1)" class="text-slate-300 hover:text-blue-600"><i class="fa-solid fa-circle-chevron-down text-xl"></i></button>
-                        </div>
-                        <div>
-                            <span class="font-black text-xs uppercase tracking-widest">${c.nome}</span>
-                            <p class="text-[9px] font-bold ${c.meioAMeio ? 'text-blue-600' : 'text-slate-300'}">${c.meioAMeio ? 'MEIO A MEIO ATIVO' : 'NORMAL'}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                         <button onclick="toggleCatMeio(${i})" class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-pizza-slice"></i></button>
-                         <button onclick="removerCat(${i})" class="w-10 h-10 rounded-full bg-red-50 text-red-400 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`).join('');
-        }
+        function updateItem(idx, campo, valor) { DATA.items[idx][campo] = valor; }
+        function toggleItem(idx) { DATA.items[idx].ativo = !DATA.items[idx].ativo; renderListaProdutos(); }
 
-        function moverCat(index, delta) {
-            const novaPos = index + delta;
-            if (novaPos < 0 || novaPos >= DATA.config.categorias.length) return;
-            const item = DATA.config.categorias.splice(index, 1)[0];
-            DATA.config.categorias.splice(novaPos, 0, item);
-            renderCategorias();
-        }
-
-        function toggleCatMeio(i) { DATA.config.categorias[i].meioAMeio = !DATA.config.categorias[i].meioAMeio; renderCategorias(); }
-
-        function addCategoria() {
-            const v = document.getElementById('nova-cat').value.trim();
-            if(v) { DATA.config.categorias.push({ nome: v, meioAMeio: false }); document.getElementById('nova-cat').value = ""; renderCategorias(); }
-        }
-
-        // --- MODAL ITEM ---
-        function abrirModalProduto(id = null) {
-            editID = id;
-            if(id) {
-                const p = DATA.items.find(x => x.id === id);
-                document.getElementById('prod-nome').value = p.nome;
-                document.getElementById('prod-preco').value = p.preco;
-                document.getElementById('prod-cat').value = p.categoria;
-                document.getElementById('prod-img').value = p.imagem;
-                document.getElementById('prod-desc').value = p.descricao || "";
-                document.getElementById('prod-ativo').checked = p.ativo !== false;
-                adsTemp = JSON.parse(JSON.stringify(p.adicionais || []));
-            } else {
-                document.getElementById('prod-nome').value = ""; document.getElementById('prod-preco').value = "";
-                adsTemp = [];
-            }
-            renderAdsModal();
-            document.getElementById('modal-produto').classList.remove('hidden');
-        }
-
-        function renderAdsModal() {
-            document.getElementById('lista-ads-modal').innerHTML = adsTemp.map((a, i) => `
-                <div class="bg-white p-3 rounded-xl border flex gap-2 items-center">
-                    <input type="text" value="${a.nome}" onchange="adsTemp[${i}].nome=this.value" placeholder="Opcional" class="flex-1 text-xs font-bold outline-none">
-                    <input type="number" step="0.01" value="${a.preco}" onchange="adsTemp[${i}].preco=parseFloat(this.value)||0" class="w-16 font-black text-emerald-600 text-xs">
-                    <button onclick="adsTemp.splice(${i},1); renderAdsModal()" class="text-red-300"><i class="fa-solid fa-trash-can"></i></button>
-                </div>`).join('');
-        }
-
-        function addLinhaAd() { adsTemp.push({ nome: "", preco: 0, maxPorItem: 1 }); renderAdsModal(); }
-
-        function salvarProdutoModal() {
-            const obj = {
-                id: editID || Date.now(),
-                nome: document.getElementById('prod-nome').value,
-                preco: parseFloat(document.getElementById('prod-preco').value) || 0,
-                categoria: document.getElementById('prod-cat').value,
-                imagem: document.getElementById('prod-img').value,
-                descricao: document.getElementById('prod-desc').value,
-                ativo: document.getElementById('prod-ativo').checked,
-                adicionais: adsTemp.filter(x => x.nome !== "")
-            };
-            if(editID) DATA.items[DATA.items.findIndex(x => x.id === editID)] = obj;
-            else DATA.items.unshift(obj);
-            renderProdutos(); fecharModalProduto();
-        }
-
-        function fecharModalProduto() { document.getElementById('modal-produto').classList.add('hidden'); }
-
-        async function salvarNoGithub() {
-            const btn = document.getElementById('btn-salvar'); btn.disabled = true;
-            DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
-            DATA.config.whatsapp = document.getElementById('cfg-zap').value;
-            DATA.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value) || 0;
-            DATA.config.fechadoManual = document.getElementById('cfg-manual').checked;
-
+        async function salvarAlteracoes() {
             const token = document.getElementById('gh-token').value;
             const repo = document.getElementById('gh-repo').value;
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
-                    method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Update Admin", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: SHA })
-                });
-                if(res.ok) { SHA = (await res.json()).content.sha; alert("✅ Cardápio Atualizado!"); }
-            } catch(e) { alert("Erro ao salvar!"); }
-            btn.disabled = false;
-        }
+            if(!token || !repo) return alert("Preencha o Token e o Repositório!");
 
-        function mudarAba(aba) {
-            ['aba-dash', 'aba-produtos', 'aba-categorias', 'aba-loja'].forEach(a => document.getElementById(a).classList.add('hidden'));
-            ['nav-dash', 'nav-produtos', 'nav-categorias', 'nav-loja'].forEach(n => document.getElementById(n).classList.remove('active'));
-            document.getElementById(aba).classList.remove('hidden');
-            document.getElementById(aba.replace('aba-', 'nav-')).classList.add('active');
+            const url = `https://api.github.com/repos/${repo}/contents/produtos.json`;
+            
+            try {
+                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                const getData = await getRes.json();
+                const sha = getData.sha;
+
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: "Update cardápio via Admin",
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))),
+                        sha: sha
+                    })
+                });
+
+                if(putRes.ok) alert("✅ Cardápio atualizado no GitHub com sucesso!");
+                else alert("❌ Erro ao salvar. Verifique o token e permissões.");
+            } catch (e) { alert("Erro de conexão!"); }
         }
     </script>
 </body>
