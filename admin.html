@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Controle Total</title>
+    <title>Admin - Gestão Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>body { font-family: 'Inter', sans-serif; background: #f3f4f6; } .tab-active { border-bottom: 3px solid #3b82f6; color: #1d4ed8; font-weight: 700; }</style>
@@ -33,16 +33,7 @@
         </header>
 
         <main class="max-w-5xl mx-auto p-4 py-8">
-            <section id="aba-categorias" class="hidden">
-                <div class="bg-white p-6 rounded-2xl border max-w-lg">
-                    <div class="flex gap-2 mb-6">
-                        <input type="text" id="nova-cat" placeholder="Ex: Pizzas" class="flex-1 border p-3 rounded-xl">
-                        <button onclick="addCategoria()" class="bg-slate-800 text-white px-6 rounded-xl font-bold">Add</button>
-                    </div>
-                    <div id="lista-categorias" class="space-y-3"></div>
-                </div>
-            </section>
-
+            
             <section id="aba-loja" class="space-y-6">
                 <div class="bg-white p-6 rounded-2xl border grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" id="cfg-nome" placeholder="Nome da Loja" class="border p-3 rounded-xl">
@@ -59,37 +50,78 @@
                 </div>
             </section>
 
+            <section id="aba-categorias" class="hidden">
+                <div class="bg-white p-6 rounded-2xl border max-w-lg mx-auto">
+                    <div class="flex gap-2 mb-6">
+                        <input type="text" id="nova-cat" placeholder="Nova Categoria..." class="flex-1 border p-3 rounded-xl outline-none focus:border-blue-500">
+                        <button onclick="addCategoria()" class="bg-slate-800 text-white px-6 rounded-xl font-bold">Add</button>
+                    </div>
+                    <div id="lista-categorias" class="space-y-3"></div>
+                </div>
+            </section>
+
             <section id="aba-produtos" class="hidden">
-                <div class="flex justify-between items-center mb-6"><h3 class="font-black italic text-slate-700">Seus Produtos</h3><button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ Novo</button></div>
-                <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                
+                <div class="bg-white p-4 rounded-2xl border mb-6 flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm">
+                    <div class="flex-1 w-full flex items-center gap-2 bg-slate-50 border rounded-xl px-3">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                        <input type="text" id="busca-produto" oninput="renderProdutos()" placeholder="Buscar por nome ou categoria..." class="w-full p-3 bg-transparent outline-none text-sm">
+                    </div>
+                    
+                    <div class="flex gap-4 w-full md:w-auto">
+                        <select id="ordem-produto" onchange="renderProdutos()" class="border p-3 rounded-xl text-sm outline-none bg-white font-bold text-slate-600 flex-1 md:flex-none cursor-pointer">
+                            <option value="padrao">Organizar: Padrão</option>
+                            <option value="nome">Nome (A a Z)</option>
+                            <option value="categoria">Por Categoria</option>
+                            <option value="preco-asc">Menor Preço</option>
+                            <option value="preco-desc">Maior Preço</option>
+                            <option value="ativos">Status: Apenas Ativos</option>
+                            <option value="pausados">Status: Pausados</option>
+                        </select>
+                        <button onclick="abrirModalProduto()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-black text-sm whitespace-nowrap shadow-md hover:bg-blue-700">+ Novo</button>
+                    </div>
+                </div>
+
+                <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </section>
         </main>
     </div>
 
     <div id="modal-produto" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-2xl rounded-3xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div class="p-5 border-b bg-slate-50 flex justify-between font-bold text-slate-500 uppercase text-[10px]">
-                <span>Configuração de Item</span>
-                <button onclick="fecharModalProduto()"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="bg-white w-full max-w-2xl rounded-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-5 border-b bg-slate-50 flex justify-between items-center">
+                <span class="font-bold text-slate-500 uppercase text-[10px] tracking-widest">Configuração de Produto</span>
+                <button onclick="fecharModalProduto()"><i class="fa-solid fa-xmark text-lg text-slate-400 hover:text-red-500"></i></button>
             </div>
             <div class="p-6 overflow-y-auto space-y-4 flex-1">
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="prod-nome" placeholder="Nome" class="border p-3 rounded-xl">
-                    <input type="number" id="prod-preco" step="0.01" placeholder="Preço" class="border p-3 rounded-xl font-bold text-emerald-600">
-                    <select id="prod-cat" class="border p-3 rounded-xl capitalize"></select>
-                    <input type="text" id="prod-img" placeholder="Link Imagem" class="border p-3 rounded-xl">
+                    <input type="text" id="prod-nome" placeholder="Nome do Produto" class="border p-3 rounded-xl outline-none focus:border-blue-500 font-bold">
+                    <input type="number" id="prod-preco" step="0.01" placeholder="Preço (R$)" class="border p-3 rounded-xl outline-none focus:border-emerald-500 font-black text-emerald-600">
+                    <select id="prod-cat" class="border p-3 rounded-xl capitalize outline-none cursor-pointer"></select>
+                    <input type="text" id="prod-img" placeholder="Link da Imagem" class="border p-3 rounded-xl outline-none">
                 </div>
-                <textarea id="prod-desc" placeholder="Descrição" class="w-full border p-3 rounded-xl h-20"></textarea>
-                <div class="bg-slate-50 p-4 rounded-2xl border">
-                    <div class="flex justify-between mb-4">
-                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400">LIMITE ADS: <input type="number" id="prod-limite-ads" class="w-10 border rounded p-1 text-center font-bold"></div>
-                        <button onclick="addLinhaAd()" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-[10px]">+ ADICIONAL</button>
+                <textarea id="prod-desc" placeholder="Descrição / Ingredientes" class="w-full border p-3 rounded-xl h-20 outline-none resize-none"></textarea>
+                
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500">LIMITE DE ADICIONAIS: <input type="number" id="prod-limite-ads" class="w-12 border rounded-lg p-1 text-center font-black"></div>
+                        <button onclick="addLinhaAd()" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-slate-700">+ Adicional</button>
                     </div>
                     <div id="lista-ads-modal" class="space-y-2"></div>
                 </div>
-                <label class="flex items-center gap-2"><input type="checkbox" id="prod-ativo" class="w-5 h-5 accent-emerald-600"> <span class="font-bold">Item Ativo</span></label>
+                
+                <div class="bg-slate-50 p-4 rounded-xl border flex items-center justify-between">
+                    <span class="font-bold text-sm text-slate-700">Status no Cardápio</span>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="prod-ativo" class="w-6 h-6 accent-emerald-600">
+                        <span class="font-bold text-xs text-emerald-600">Produto Ativo</span>
+                    </label>
+                </div>
             </div>
-            <div class="p-4 border-t flex justify-end gap-3"><button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold">Salvar Item</button></div>
+            <div class="p-5 border-t bg-white flex justify-end gap-3">
+                <button onclick="fecharModalProduto()" class="px-6 py-3 rounded-xl font-bold text-slate-400 hover:bg-slate-100">Cancelar</button>
+                <button onclick="salvarProdutoModal()" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-black shadow-lg hover:bg-blue-700">Salvar Item</button>
+            </div>
         </div>
     </div>
 
@@ -102,7 +134,6 @@
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, { headers: { 'Authorization': `token ${token}` }});
                 const d = await res.json(); SHA = d.sha; DATA = JSON.parse(atob(d.content));
-                renderCategorias(); renderProdutos();
                 
                 document.getElementById('cfg-nome').value = DATA.config.nomeLoja;
                 document.getElementById('cfg-logo').value = DATA.config.linkLogo;
@@ -114,57 +145,112 @@
                 document.getElementById('cfg-manual').checked = DATA.config.fechadoManual;
                 document.getElementById('cfg-footer').value = DATA.config.footerText || "";
                 
+                renderCategorias(); 
+                renderProdutos();
+                
                 document.getElementById('setup').classList.add('hidden');
                 document.getElementById('editor').classList.remove('hidden');
-            } catch(e) { alert("Erro de conexão!"); }
+            } catch(e) { alert("Erro de conexão! Verifique o Token e o Repositório."); }
         }
 
+        // --- SISTEMA DE CATEGORIAS ---
         function renderCategorias() {
             const container = document.getElementById('lista-categorias');
             container.innerHTML = (DATA.config.categorias || []).map((c, i) => `
-                <div class="bg-white p-3 rounded-xl border flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="flex flex-col gap-1">
-                            <button onclick="moverCat(${i}, -1)" class="text-slate-300 hover:text-blue-500"><i class="fa-solid fa-chevron-up"></i></button>
-                            <button onclick="moverCat(${i}, 1)" class="text-slate-300 hover:text-blue-500"><i class="fa-solid fa-chevron-down"></i></button>
+                <div class="bg-white p-4 rounded-xl border flex items-center justify-between shadow-sm transition-all hover:border-blue-300">
+                    <div class="flex items-center gap-5">
+                        <div class="flex flex-col gap-2">
+                            <button onclick="moverCat(${i}, -1)" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center transition" title="Subir"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="moverCat(${i}, 1)" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center transition" title="Descer"><i class="fa-solid fa-arrow-down"></i></button>
                         </div>
                         <div>
-                            <span class="font-black text-xs uppercase tracking-tighter">${c.nome}</span>
-                            <label class="flex items-center gap-2 text-[9px] font-bold text-blue-500 mt-1">
-                                <input type="checkbox" onchange="toggleMeio(${i}, this.checked)" ${c.meioAMeio ? 'checked' : ''}> PERMITIR MEIO A MEIO
+                            <span class="font-black text-sm uppercase text-slate-700">${c.nome}</span>
+                            <label class="flex items-center gap-2 text-[10px] font-bold text-amber-600 mt-2 cursor-pointer bg-amber-50 px-2 py-1 rounded w-max">
+                                <input type="checkbox" onchange="toggleMeio(${i}, this.checked)" ${c.meioAMeio ? 'checked' : ''} class="accent-amber-600"> 
+                                PERMITIR MEIO A MEIO (PIZZAS)
                             </label>
                         </div>
                     </div>
-                    <button onclick="DATA.config.categorias.splice(${i},1); renderCategorias()" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="removerCat(${i})" class="w-10 h-10 rounded-full text-red-400 hover:bg-red-50 hover:text-red-600 transition"><i class="fa-solid fa-trash"></i></button>
                 </div>`).join('');
             
             document.getElementById('prod-cat').innerHTML = (DATA.config.categorias || []).map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
         }
 
-        function moverCat(index, delta) {
-            const novaPos = index + delta;
-            if (novaPos < 0 || novaPos >= DATA.config.categorias.length) return;
-            const item = DATA.config.categorias.splice(index, 1)[0];
-            DATA.config.categorias.splice(novaPos, 0, item);
-            renderCategorias();
+        function moverCat(index, direcao) {
+            const novaPosicao = index + direcao;
+            if (novaPosicao < 0 || novaPosicao >= DATA.config.categorias.length) return;
+            
+            // Troca as posições no array
+            const temp = DATA.config.categorias[index];
+            DATA.config.categorias[index] = DATA.config.categorias[novaPosicao];
+            DATA.config.categorias[novaPosicao] = temp;
+            
+            renderCategorias(); // Re-renderiza a tela
         }
 
         function toggleMeio(i, val) { DATA.config.categorias[i].meioAMeio = val; }
 
         function addCategoria() {
             const v = document.getElementById('nova-cat').value.trim();
-            if(v) { DATA.config.categorias.push({ nome: v, meioAMeio: false }); renderCategorias(); }
+            if(v) { 
+                DATA.config.categorias.push({ nome: v, meioAMeio: false }); 
+                document.getElementById('nova-cat').value = "";
+                renderCategorias(); 
+            }
         }
 
+        function removerCat(i) {
+            if(confirm("Tem certeza que deseja apagar esta categoria?")) {
+                DATA.config.categorias.splice(i, 1);
+                renderCategorias();
+            }
+        }
+
+        // --- SISTEMA DE PRODUTOS (COM FILTROS E BUSCA) ---
         function renderProdutos() {
-            document.getElementById('grid-produtos').innerHTML = DATA.items.map(p => `
-                <div class="bg-white p-4 rounded-2xl border ${!p.ativo ? 'opacity-40' : ''}">
-                    <h4 class="font-bold text-sm text-slate-700">${p.nome}</h4>
-                    <p class="text-emerald-600 font-black text-xs">R$ ${p.preco.toFixed(2)}</p>
-                    <button onclick="abrirModalProduto(${p.id})" class="w-full bg-slate-100 py-2 mt-4 rounded-xl font-bold text-[10px] uppercase text-slate-500 tracking-widest">Editar</button>
+            const termoBusca = document.getElementById('busca-produto').value.toLowerCase();
+            const ordem = document.getElementById('ordem-produto').value;
+
+            // 1. Aplica a Busca
+            let filtrados = DATA.items.filter(p => 
+                p.nome.toLowerCase().includes(termoBusca) || 
+                p.categoria.toLowerCase().includes(termoBusca)
+            );
+
+            // 2. Aplica Filtro de Status
+            if (ordem === 'ativos') filtrados = filtrados.filter(p => p.ativo);
+            if (ordem === 'pausados') filtrados = filtrados.filter(p => !p.ativo);
+
+            // 3. Aplica Ordenação
+            if (ordem === 'nome') filtrados.sort((a, b) => a.nome.localeCompare(b.nome));
+            if (ordem === 'categoria') filtrados.sort((a, b) => a.categoria.localeCompare(b.categoria));
+            if (ordem === 'preco-asc') filtrados.sort((a, b) => a.preco - b.preco);
+            if (ordem === 'preco-desc') filtrados.sort((a, b) => b.preco - a.preco);
+
+            // 4. Renderiza
+            const container = document.getElementById('grid-produtos');
+            
+            if(filtrados.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400 font-bold">Nenhum produto encontrado.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtrados.map(p => `
+                <div class="bg-white p-4 rounded-2xl border flex flex-col justify-between ${!p.ativo ? 'opacity-50 grayscale bg-slate-50' : 'shadow-sm'} relative">
+                    ${!p.ativo ? `<span class="absolute top-2 right-2 bg-slate-800 text-white text-[9px] font-black px-2 py-1 rounded uppercase">Pausado</span>` : ''}
+                    <div>
+                        <div class="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1">${p.categoria}</div>
+                        <h4 class="font-bold text-sm text-slate-800 leading-tight">${p.nome}</h4>
+                        <p class="text-emerald-600 font-black text-sm mt-1 mb-4">R$ ${p.preco.toFixed(2)}</p>
+                    </div>
+                    <button onclick="abrirModalProduto(${p.id})" class="w-full bg-slate-100 hover:bg-slate-200 py-3 rounded-xl font-black text-[10px] uppercase text-slate-600 tracking-widest transition">
+                        <i class="fa-solid fa-pen mr-1"></i> Editar
+                    </button>
                 </div>`).join('');
         }
 
+        // --- MODAL DE PRODUTO ---
         function abrirModalProduto(id = null) {
             editID = id;
             if(id) {
@@ -172,13 +258,15 @@
                 document.getElementById('prod-nome').value = p.nome;
                 document.getElementById('prod-preco').value = p.preco;
                 document.getElementById('prod-cat').value = p.categoria;
-                document.getElementById('prod-img').value = p.imagem;
+                document.getElementById('prod-img').value = p.imagem || "";
                 document.getElementById('prod-desc').value = p.descricao || "";
                 document.getElementById('prod-ativo').checked = p.ativo !== false;
                 document.getElementById('prod-limite-ads').value = p.limiteAdicionais || 0;
                 adsTemp = JSON.parse(JSON.stringify(p.adicionais || []));
             } else {
                 document.getElementById('prod-nome').value = ""; document.getElementById('prod-preco').value = "";
+                document.getElementById('prod-img').value = ""; document.getElementById('prod-desc').value = "";
+                document.getElementById('prod-ativo').checked = true;
                 document.getElementById('prod-limite-ads').value = 0; adsTemp = [];
             }
             renderAdsModal();
@@ -187,11 +275,11 @@
 
         function renderAdsModal() {
             document.getElementById('lista-ads-modal').innerHTML = adsTemp.map((a, i) => `
-                <div class="bg-white p-2 rounded-lg border flex gap-2 items-center">
-                    <input type="text" value="${a.nome}" onchange="adsTemp[${i}].nome=this.value" placeholder="Nome" class="flex-1 border p-1 rounded text-[10px] font-bold">
-                    <input type="number" value="${a.maxPorItem || 1}" onchange="adsTemp[${i}].maxPorItem=parseInt(this.value)||1" class="w-8 border p-1 rounded text-[10px] text-center font-bold">
-                    <input type="number" step="0.01" value="${a.preco}" onchange="adsTemp[${i}].preco=parseFloat(this.value)||0" class="w-12 border p-1 rounded text-[10px] font-black text-emerald-600">
-                    <button onclick="adsTemp.splice(${i},1); renderAdsModal()" class="text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+                <div class="bg-white p-3 rounded-xl border flex gap-2 items-center">
+                    <input type="text" value="${a.nome}" onchange="adsTemp[${i}].nome=this.value" placeholder="Nome do Adicional" class="flex-1 border p-2 rounded-lg text-xs font-bold outline-none">
+                    <input type="number" value="${a.maxPorItem || 1}" onchange="adsTemp[${i}].maxPorItem=parseInt(this.value)||1" title="Qtd Máxima" class="w-12 border p-2 rounded-lg text-xs text-center font-bold outline-none">
+                    <input type="number" step="0.01" value="${a.preco}" onchange="adsTemp[${i}].preco=parseFloat(this.value)||0" title="Preço" class="w-16 border p-2 rounded-lg text-xs font-black text-emerald-600 outline-none">
+                    <button onclick="adsTemp.splice(${i},1); renderAdsModal()" class="text-red-400 px-2 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
                 </div>`).join('');
         }
 
@@ -200,24 +288,35 @@
         function salvarProdutoModal() {
             const obj = {
                 id: editID || Date.now(),
-                nome: document.getElementById('prod-nome').value,
+                nome: document.getElementById('prod-nome').value.trim(),
                 preco: parseFloat(document.getElementById('prod-preco').value) || 0,
                 categoria: document.getElementById('prod-cat').value,
-                imagem: document.getElementById('prod-img').value || "https://via.placeholder.com/300",
-                descricao: document.getElementById('prod-desc').value,
+                imagem: document.getElementById('prod-img').value.trim() || "https://via.placeholder.com/300",
+                descricao: document.getElementById('prod-desc').value.trim(),
                 ativo: document.getElementById('prod-ativo').checked,
                 limiteAdicionais: parseInt(document.getElementById('prod-limite-ads').value) || 0,
                 adicionais: adsTemp.filter(x => x.nome !== "")
             };
-            if(editID) DATA.items[DATA.items.findIndex(x => x.id === editID)] = obj;
-            else DATA.items.unshift(obj);
-            renderProdutos(); fecharModalProduto();
+            
+            if(!obj.nome) return alert("O produto precisa de um nome!");
+
+            if(editID) {
+                const idx = DATA.items.findIndex(x => x.id === editID);
+                DATA.items[idx] = obj;
+            } else {
+                DATA.items.unshift(obj);
+            }
+            
+            renderProdutos(); // Já renderiza com os filtros aplicados
+            fecharModalProduto();
         }
 
         function fecharModalProduto() { document.getElementById('modal-produto').classList.add('hidden'); }
 
+        // --- SALVAR NO GITHUB ---
         async function salvarNoGithub() {
-            const btn = document.getElementById('btn-salvar'); btn.disabled = true; btn.innerText = "Publicando...";
+            const btn = document.getElementById('btn-salvar'); 
+            btn.disabled = true; btn.innerText = "Sincronizando...";
             
             DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
             DATA.config.linkLogo = document.getElementById('cfg-logo').value;
@@ -234,16 +333,22 @@
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/produtos.json`, {
                     method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Update", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: SHA })
+                    body: JSON.stringify({ message: "Atualiza Cardápio", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: SHA })
                 });
-                if(res.ok) { SHA = (await res.json()).content.sha; alert("Site Publicado!"); }
-            } catch(e) { alert("Erro!"); }
+                if(res.ok) { 
+                    SHA = (await res.json()).content.sha; 
+                    alert("✅ Site Publicado com Sucesso!"); 
+                } else {
+                    alert("Erro ao publicar. Verifique o Token.");
+                }
+            } catch(e) { alert("Erro de conexão com o GitHub!"); }
+            
             btn.disabled = false; btn.innerText = "Publicar Site";
         }
 
         function mudarAba(aba) {
             ['aba-loja', 'aba-categorias', 'aba-produtos'].forEach(a => document.getElementById(a).classList.add('hidden'));
-            ['nav-loja', 'nav-categorias', 'nav-produtos'].forEach(n => document.getElementById(n).className = "pb-2 text-slate-400 font-bold");
+            ['nav-loja', 'nav-categorias', 'nav-produtos'].forEach(n => document.getElementById(n).className = "pb-2 text-slate-400 font-bold hover:text-blue-500 transition");
             document.getElementById(aba).classList.remove('hidden');
             document.getElementById(aba.replace('aba-', 'nav-')).className = "pb-2 tab-active";
         }
