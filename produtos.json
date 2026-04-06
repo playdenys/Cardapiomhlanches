@@ -45,3 +45,26 @@
   ],
   "vendas": []
 }
+{
+  "config": {
+    "nomeLoja": "Pastelaria Pro",
+    "whatsapp": "5511999999999",
+    "taxaEntrega": 5.00,
+    "fechadoManual": false,
+    "categorias": [
+      { "nome": "Pastéis", "ordem": 0 },
+      { "nome": "Bebidas", "ordem": 1 }
+    ],
+    "horarios": {
+      "0": { "aberto": false, "inicio": "00:00", "fim": "00:00" },
+      "1": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
+      "2": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
+      "3": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
+      "4": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
+      "5": { "aberto": true, "inicio": "18:00", "fim": "00:00" },
+      "6": { "aberto": true, "inicio": "18:00", "fim": "00:00" }
+    }
+  },
+  "items": [],
+  "vendas": []
+}
