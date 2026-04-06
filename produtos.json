@@ -5,7 +5,8 @@
     "taxaEntrega": 5,
     "categorias": [
       "Lanches",
-      "Bebidas"
+      "Bebidas",
+      "pastel"
     ],
     "horarios": {
       "0": {
@@ -53,6 +54,15 @@
       "descricao": "Pão, carne artesanal 160g, queijo, alface e tomate.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "Lanches",
+      "ativo": true
+    },
+    {
+      "id": 1775450778302,
+      "nome": "pastel completo",
+      "preco": 7,
+      "descricao": "psdsdssdsdsd",
+      "imagem": "",
+      "categoria": "pastel",
       "ativo": true
     }
   ],
