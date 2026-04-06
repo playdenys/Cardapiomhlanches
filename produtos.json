@@ -1,145 +1,47 @@
 {
   "config": {
-    "nomeLoja": "mh lanches",
-    "linkLogo": "https://via.placeholder.com/150",
+    "nomeLoja": "Meu Delivery Pro",
+    "whatsapp": "5511999999999",
+    "taxaEntrega": 5.00,
     "corPrincipal": "#2563eb",
-    "whatsapp": "+55 81 985770055",
-    "taxaEntrega": 2,
-    "horaAbre": "18:00",
-    "horaFecha": "23:59",
     "fechadoManual": false,
     "categorias": [
-      {
-        "nome": "apstel frito",
-        "meioAMeio": false
-      },
-      {
-        "nome": "bebidas",
-        "meioAMeio": false
-      },
-      {
-        "nome": "pizzas",
-        "meioAMeio": true
-      }
-    ],
-    "footerText": "Entregas rÃÂÃÂÃÂÃÂ¡pidas e sabor incomparÃÂÃÂÃÂÃÂ¡vel!"
+      { "nome": "Pastéis", "meioAMeio": false },
+      { "nome": "Bebidas", "meioAMeio": false }
+    ]
   },
   "items": [
     {
-      "id": 1775443302437,
-      "nome": "pastel",
-      "preco": 7,
-      "categoria": "apstel frito",
-      "imagem": "",
-      "descricao": "",
-      "ativo": true,
-      "adicionais": [
-        {
-          "nome": "carne",
-          "preco": 0,
-          "maxPorItem": 1
-        },
-        {
-          "nome": "frango",
-          "preco": 0,
-          "maxPorItem": 1
-        }
-      ]
-    },
-    {
       "id": 1,
-      "nome": "Pizza Calabresa (FamÃÂÃÂÃÂÃÂ­lia)",
-      "preco": 45.9,
-      "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orÃÂÃÂÃÂÃÂ©gano.",
-      "imagem": "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400&auto=format&fit=crop",
+      "nome": "Pastel Monte seu Mix",
+      "preco": 20.00,
+      "imagem": "https://via.placeholder.com/300",
+      "descricao": "Escolha 5 sabores e 2 molhos",
+      "categoria": "Pastéis",
       "ativo": true,
-      "limiteAdicionais": 3,
-      "adicionais": [
+      "permiteObs": false,
+      "gruposAdicionais": [
         {
-          "nome": "Borda Recheada Catupiry",
-          "preco": 10,
-          "maxPorItem": 1
+          "nome": "Escolha até 5 Sabores",
+          "limite": 5,
+          "itens": [
+            {"nome": "Carne", "preco": 0},
+            {"nome": "Queijo", "preco": 0},
+            {"nome": "Frango", "preco": 0},
+            {"nome": "Calabresa", "preco": 0},
+            {"nome": "Bacon", "preco": 2.00}
+          ]
         },
         {
-          "nome": "Queijo Extra",
-          "preco": 8,
-          "maxPorItem": 1
+          "nome": "Molhos (Máx 2)",
+          "limite": 2,
+          "itens": [
+            {"nome": "Maionese", "preco": 0},
+            {"nome": "Ketchup", "preco": 0}
+          ]
         }
       ]
-    },
-    {
-      "id": 2,
-      "nome": "Pizza Mussarela (FamÃÂÃÂÃÂÃÂ­lia)",
-      "preco": 40,
-      "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orÃÂÃÂÃÂÃÂ©gano.",
-      "imagem": "https://images.unsplash.com/photo-1573821663912-569905455b13?q=80&w=400&auto=format&fit=crop",
-      "ativo": true,
-      "limiteAdicionais": 3,
-      "adicionais": [
-        {
-          "nome": "Borda Recheada Cheddar",
-          "preco": 10,
-          "maxPorItem": 1
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "nome": "Coca-Cola 2L",
-      "preco": 12,
-      "categoria": "bebidas",
-      "descricao": "Refrigerante Pet 2 Litros.",
-      "imagem": "https://images.unsplash.com/photo-1622708782596-13d6e645ddc9?q=80&w=400&auto=format&fit=crop",
-      "ativo": true,
-      "limiteAdicionais": 0,
-      "adicionais": []
     }
   ],
-  "vendas": [
-    {
-      "data": "05/04/2026",
-      "valor": 57.9,
-      "itens": [
-        "Pizza Calabresa (FamÃÂÃÂÃÂÃÂ­lia)",
-        "Coca-Cola 2L"
-      ]
-    },
-    {
-      "data": "05/04/2026",
-      "valor": 40,
-      "itens": [
-        "Pizza Mussarela (FamÃÂÃÂÃÂÃÂ­lia)"
-      ]
-    },
-    {
-      "data": "01/04/2026",
-      "valor": 103.8,
-      "itens": [
-        "Pizza Calabresa (FamÃÂÃÂÃÂÃÂ­lia)",
-        "Pizza Mussarela (FamÃÂÃÂÃÂÃÂ­lia)",
-        "Coca-Cola 2L"
-      ]
-    }
-  ]
-}
-{
-  "id": 100,
-  "nome": "Pastel Super 5",
-  "preco": 25.00,
-  "categoria": "Pastéis",
-  "permiteObs": false,
-  "gruposAdicionais": [
-    {
-      "nome": "Escolha até 5 Sabores",
-      "limite": 5,
-      "itens": ["Carne", "Queijo", "Frango", "Calabresa", "Palmito", "Pizza", "Bacon", "Ovo", "Milho", "Azeitona"]
-    },
-    {
-      "nome": "Molhos e Saladas (Máx 3)",
-      "limite": 3,
-      "itens": ["Maionese Caseira", "Ketchup", "Mostarda", "Salada", "Dueto"]
-    }
-  ]
+  "vendas": []
 }
