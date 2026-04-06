@@ -3,50 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Online</title>
+    <title>Menu Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f9fafb; --brand: #ef4444; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; --brand: #e11d48; }
         .product-card:active { transform: scale(0.97); }
         .modal-slide { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .tab-half { border-bottom: 3px solid var(--brand); font-weight: 800; color: #1e293b; }
     </style>
 </head>
-<body class="pb-32">
+<body class="pb-40">
 
     <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b p-4">
-        <div class="max-w-2xl mx-auto flex items-center gap-3">
-            <img id="ui-logo" src="" class="w-12 h-12 rounded-2xl object-cover border hidden">
-            <div>
-                <h1 id="ui-nome" class="font-black text-lg italic text-slate-800 tracking-tight uppercase">Carregando...</h1>
-                <div class="flex items-center gap-2">
-                    <div id="dot-status" class="w-2 h-2 rounded-full bg-slate-300"></div>
-                    <span id="ui-status-text" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">...</span>
+        <div class="max-w-2xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img id="ui-logo" src="" class="w-12 h-12 rounded-2xl object-cover border hidden">
+                <div>
+                    <h1 id="ui-nome" class="font-black text-lg italic text-slate-800 tracking-tight uppercase">Carregando...</h1>
+                    <div class="flex items-center gap-2">
+                        <div id="dot-status" class="w-2 h-2 rounded-full bg-slate-300"></div>
+                        <span id="ui-status-text" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Verificando...</span>
+                    </div>
                 </div>
             </div>
+            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400"><i class="fa-solid fa-shop"></i></div>
         </div>
     </header>
 
-    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-10 mt-4"></main>
+    <main id="menu" class="max-w-2xl mx-auto p-4 space-y-12 mt-6"></main>
 
-    <footer class="mt-20 mb-32 text-center px-6">
-        <div class="w-12 h-1 bg-slate-200 mx-auto rounded-full mb-4"></div>
+    <footer class="mt-20 mb-40 text-center px-6">
+        <div class="w-12 h-1 bg-slate-200 mx-auto rounded-full mb-6"></div>
         <p id="ui-footer" class="text-slate-400 text-xs italic leading-relaxed max-w-xs mx-auto"></p>
-        <p class="text-[9px] text-slate-300 uppercase tracking-[0.4em] mt-8 font-black">Sistema Delivery VIP</p>
+        <p class="text-[9px] text-slate-300 uppercase tracking-[0.4em] mt-10 font-black">Powered by Delivery VIP</p>
     </footer>
 
-    <div id="bar-carrinho" class="fixed bottom-6 left-0 right-0 z-40 hidden px-4">
+    <div id="bar-carrinho" class="fixed bottom-8 left-0 right-0 z-40 hidden px-4">
         <div class="max-w-md mx-auto bg-slate-900 rounded-[2.5rem] p-2 shadow-2xl flex items-center justify-between border border-white/10">
             <div class="pl-6 flex items-center gap-4">
-                <div class="relative">
-                    <i class="fa-solid fa-bag-shopping text-white"></i>
-                    <span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">0</span>
-                </div>
+                <div class="relative"><i class="fa-solid fa-bag-shopping text-white"></i><span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">0</span></div>
                 <p id="cart-total" class="text-white font-black text-lg">R$ 0,00</p>
             </div>
-            <button onclick="enviarWhatsApp()" class="bg-white text-slate-900 h-14 px-8 rounded-[2rem] font-black uppercase text-[10px] tracking-widest">Finalizar</button>
+            <button onclick="enviarWhatsApp()" class="bg-white text-slate-900 h-14 px-10 rounded-[2.2rem] font-black uppercase text-[10px] tracking-widest">Finalizar</button>
         </div>
     </div>
 
@@ -62,25 +63,48 @@
                     <span id="modal-preco-base" class="text-xl font-bold text-emerald-600 italic"></span>
                 </div>
                 <p id="modal-desc" class="text-slate-400 text-sm mb-8"></p>
-                
                 <div id="container-ads" class="space-y-3"></div>
-
                 <div class="mt-8">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Alguma observação?</label>
                     <textarea id="modal-obs" placeholder="Ex: Sem cebola, ponto da carne..." class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-emerald-500 h-24 resize-none"></textarea>
                 </div>
             </div>
             <div class="p-8 border-t bg-slate-50">
-                <button onclick="confirmarAdd()" id="btn-add-modal" class="w-full py-5 rounded-[2rem] font-black text-white shadow-xl flex justify-between px-10 transition active:scale-95" style="background: var(--brand)">
-                    <span class="uppercase tracking-widest text-[10px]">Adicionar</span>
+                <button onclick="confirmarAdd()" class="w-full py-5 rounded-[2.2rem] font-black text-white shadow-xl flex justify-between px-10" style="background: var(--brand)">
+                    <span class="uppercase tracking-widest text-[10px]">Adicionar Pedido</span>
                     <span id="val-modal-total" class="text-xl"></span>
                 </button>
             </div>
         </div>
     </div>
 
+    <div id="modal-meio" class="fixed inset-0 bg-black/70 z-[70] hidden flex items-end justify-center backdrop-blur-sm">
+        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide h-[95vh] flex flex-col">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="font-black italic uppercase text-slate-700">Montar Meio a Meio</h2>
+                <button onclick="document.getElementById('modal-meio').classList.add('hidden')"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="flex p-4 gap-4 bg-slate-50">
+                <button id="tab-lado1" onclick="abaMeio=1; renderListaMeio()" class="flex-1 py-3 text-center text-xs tab-half">LADO 1: <span id="txt-lado1" class="block font-black text-[10px] text-brand">ESCOLHER</span></button>
+                <button id="tab-lado2" onclick="abaMeio=2; renderListaMeio()" class="flex-1 py-3 text-center text-xs text-slate-400">LADO 2: <span id="txt-lado2" class="block font-black text-[10px]">ESCOLHER</span></button>
+            </div>
+
+            <div id="lista-sabores-meio" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+
+            <div class="p-8 border-t bg-slate-50">
+                <div class="flex justify-between mb-4 px-2">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Média de Preço</span>
+                    <span id="preco-meio-calc" class="font-black text-xl text-emerald-600 italic">R$ 0,00</span>
+                </div>
+                <button id="btn-confirmar-meio" disabled onclick="confirmarMeio()" class="w-full py-5 rounded-[2.2rem] font-black text-white bg-slate-300 cursor-not-allowed">CONFIRMAR PIZZA</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let DATA = {}; let carrinho = []; let addsEscolhidos = []; let prodAberto = null;
+        let abaMeio = 1; let lado1 = null; let lado2 = null; let catMeioAtiva = "";
 
         async function init() {
             const res = await fetch('produtos.json', { cache: 'no-store' });
@@ -88,10 +112,7 @@
             document.body.style.setProperty('--brand', DATA.config.corPrincipal);
             document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
             document.getElementById('ui-footer').innerText = DATA.config.footerText || "";
-            if(DATA.config.linkLogo) {
-                const img = document.getElementById('ui-logo');
-                img.src = DATA.config.linkLogo; img.classList.remove('hidden');
-            }
+            if(DATA.config.linkLogo) { const img = document.getElementById('ui-logo'); img.src = DATA.config.linkLogo; img.classList.remove('hidden'); }
             renderStatus(); renderMenu();
         }
 
@@ -107,22 +128,29 @@
         function renderStatus() {
             const aberto = verificarAberto();
             document.getElementById('dot-status').className = `w-2 h-2 rounded-full ${aberto ? 'bg-emerald-500' : 'bg-amber-500'}`;
-            document.getElementById('ui-status-text').innerText = aberto ? 'Aberto' : 'Fechado / Agende';
+            document.getElementById('ui-status-text').innerText = aberto ? 'Estamos Abertos' : 'Fechado no Momento';
         }
 
         function renderMenu() {
             const container = document.getElementById('menu');
             container.innerHTML = (DATA.config.categorias || []).map(cat => {
-                const itens = DATA.items.filter(i => i.categoria === cat);
+                const cNome = typeof cat === 'object' ? cat.nome : cat;
+                const cMeio = typeof cat === 'object' ? cat.meioAMeio : false;
+                const itens = DATA.items.filter(i => i.categoria === cNome);
                 if(!itens.length) return '';
-                return `<section>
-                    <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6 flex items-center gap-3">
-                        <span class="w-1.5 h-6 rounded-full" style="background:var(--brand)"></span> ${cat}
-                    </h2>
+
+                return `
+                <section>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-black italic uppercase tracking-tighter flex items-center gap-3">
+                            <span class="w-1.5 h-6 rounded-full" style="background:var(--brand)"></span> ${cNome}
+                        </h2>
+                        ${cMeio ? `<button onclick="abrirMeio('${cNome}')" class="bg-white border-2 border-slate-900 text-slate-900 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-tighter shadow-sm active:scale-95 transition">🍕 Meio a Meio</button>` : ''}
+                    </div>
                     <div class="grid gap-6">
                         ${itens.map(p => `
-                        <div onclick="${p.ativo ? `abrirProduto(${p.id})` : ''}" class="product-card bg-white p-3 rounded-[2.5rem] flex items-center border border-slate-100 shadow-sm ${!p.ativo ? 'opacity-50 grayscale' : 'cursor-pointer'}">
-                            <img src="${p.imagem}" class="w-28 h-28 object-cover rounded-[2rem] shadow-md">
+                        <div onclick="${p.ativo ? `abrirProduto(${p.id})` : ''}" class="product-card bg-white p-3 rounded-[2.5rem] flex items-center border border-slate-100 shadow-sm ${!p.ativo ? 'opacity-40 grayscale' : 'cursor-pointer'}">
+                            <img src="${p.imagem}" class="w-28 h-28 object-cover rounded-[2rem] shadow-md border-2 border-white">
                             <div class="ml-5 flex-1 pr-2">
                                 <h3 class="font-bold text-slate-800 leading-tight">${p.nome}</h3>
                                 <p class="text-[10px] text-slate-400 mt-1 line-clamp-2">${p.descricao || ''}</p>
@@ -134,6 +162,62 @@
             }).join('');
         }
 
+        // --- LÓGICA MEIO A MEIO ---
+        function abrirMeio(cat) {
+            catMeioAtiva = cat; abaMeio = 1; lado1 = null; lado2 = null;
+            document.getElementById('txt-lado1').innerText = "ESCOLHER";
+            document.getElementById('txt-lado2').innerText = "ESCOLHER";
+            document.getElementById('preco-meio-calc').innerText = "R$ 0,00";
+            document.getElementById('modal-meio').classList.remove('hidden');
+            renderListaMeio();
+        }
+
+        function renderListaMeio() {
+            const container = document.getElementById('lista-sabores-meio');
+            const itens = DATA.items.filter(i => i.categoria === catMeioAtiva && i.ativo);
+            
+            document.getElementById('tab-lado1').className = `flex-1 py-3 text-center text-xs ${abaMeio === 1 ? 'tab-half' : 'text-slate-400'}`;
+            document.getElementById('tab-lado2').className = `flex-1 py-3 text-center text-xs ${abaMeio === 2 ? 'tab-half' : 'text-slate-400'}`;
+
+            container.innerHTML = itens.map(p => `
+                <div onclick="selecionarMetade(${p.id})" class="p-4 bg-white border rounded-3xl flex justify-between items-center active:bg-slate-50 cursor-pointer">
+                    <div>
+                        <span class="font-bold text-sm block">${p.nome}</span>
+                        <span class="text-[10px] text-emerald-600 font-black italic">R$ ${p.preco.toFixed(2)} (inteira)</span>
+                    </div>
+                    <i class="fa-solid fa-circle-plus text-slate-200 text-xl"></i>
+                </div>`).join('');
+        }
+
+        function selecionarMetade(id) {
+            const p = DATA.items.find(x => x.id === id);
+            if(abaMeio === 1) {
+                lado1 = p; document.getElementById('txt-lado1').innerText = p.nome.toUpperCase(); abaMeio = 2;
+            } else {
+                lado2 = p; document.getElementById('txt-lado2').innerText = p.nome.toUpperCase();
+            }
+            
+            if(lado1 && lado2) {
+                const media = (lado1.preco + lado2.preco) / 2;
+                document.getElementById('preco-meio-calc').innerText = `R$ ${media.toFixed(2)}`;
+                const btn = document.getElementById('btn-confirmar-meio');
+                btn.disabled = false; btn.className = "w-full py-5 rounded-[2.2rem] font-black text-white shadow-xl bg-emerald-500";
+            }
+            renderListaMeio();
+        }
+
+        function confirmarMeio() {
+            const media = (lado1.preco + lado2.preco) / 2;
+            carrinho.push({
+                nome: `MEIO: ${lado1.nome} / MEIO: ${lado2.nome}`,
+                preco: media,
+                obs: "Pizza Meio a Meio"
+            });
+            document.getElementById('modal-meio').classList.add('hidden');
+            updateBar();
+        }
+
+        // --- LÓGICA PADRÃO ---
         function abrirProduto(id) {
             prodAberto = DATA.items.find(x => x.id === id); addsEscolhidos = [];
             document.getElementById('modal-img').src = prodAberto.imagem;
@@ -150,11 +234,7 @@
             (prodAberto.adicionais || []).forEach((ad, i) => {
                 container.innerHTML += `
                 <div class="flex justify-between items-center bg-slate-50 p-4 rounded-3xl border">
-                    <div class="flex-1">
-                        <span class="text-sm font-bold text-slate-700 block">${ad.nome}</span>
-                        ${ad.desc ? `<span class="text-[10px] text-slate-400 italic block leading-none mt-1">${ad.desc}</span>` : ''}
-                        <span class="text-[11px] font-black text-emerald-600 mt-1 block">+ R$ ${ad.preco.toFixed(2)}</span>
-                    </div>
+                    <div class="flex-1"><span class="text-sm font-bold text-slate-700 block">${ad.nome}</span>${ad.desc ? `<span class="text-[10px] text-slate-400 italic block mt-1">${ad.desc}</span>` : ''}<span class="text-[11px] font-black text-emerald-600 mt-1 block">+ R$ ${ad.preco.toFixed(2)}</span></div>
                     <div class="flex items-center gap-4 bg-white border rounded-2xl p-1">
                         <button onclick="mudarQtdAd(${i}, -1)" class="w-8 h-8 rounded-xl text-slate-400">-</button>
                         <span id="qtd-ad-${i}" class="text-sm font-black w-4 text-center">0</span>
@@ -169,13 +249,12 @@
             const ad = prodAberto.adicionais[idx];
             const el = document.getElementById(`qtd-ad-${idx}`);
             let qtd = parseInt(el.innerText);
-            
             const totalAgora = addsEscolhidos.reduce((a, b) => a + b.qtd, 0);
             const limTotal = prodAberto.limiteAdicionais || 0;
 
             if (delta > 0) {
-                if (limTotal > 0 && totalAgora >= limTotal) { alert("Limite total atingido!"); return; }
-                if (qtd >= (ad.maxPorItem || 1)) { alert(`Máximo de ${ad.maxPorItem}x para este item.`); return; }
+                if (limTotal > 0 && totalAgora >= limTotal) { alert("Limite máximo de adicionais atingido!"); return; }
+                if (qtd >= (ad.maxPorItem || 1)) { alert(`Limite de ${ad.maxPorItem}x para este item.`); return; }
                 qtd++;
             } else { if (qtd > 0) qtd--; }
 
@@ -185,7 +264,6 @@
                 if (findIdx > -1) addsEscolhidos[findIdx].qtd = qtd;
                 else addsEscolhidos.push({ nome: ad.nome, preco: ad.preco, qtd });
             } else if (findIdx > -1) addsEscolhidos.splice(findIdx, 1);
-            
             updateTotalModal();
         }
 
@@ -213,7 +291,8 @@
         function fecharModal() { document.getElementById('modal-produto').classList.add('hidden'); }
 
         function enviarWhatsApp() {
-            let msg = `*NOVO PEDIDO*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
+            const aberto = verificarAberto();
+            let msg = `*${aberto ? '🚀 NOVO PEDIDO' : '📅 AGENDAMENTO'}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
             carrinho.forEach(i => {
                 msg += `✅ *1x ${i.nome}*\n`;
                 if(i.obs) msg += `   _OBS: ${i.obs}_\n`;
