@@ -4,15 +4,55 @@
     "linkLogo": "",
     "corPrincipal": "#e11d48",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
+    "taxaEntrega": 5,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
     "categorias": [
-      { "nome": "Pizzas", "meioAMeio": true },
-      { "nome": "Bebidas", "meioAMeio": false }
+      {
+        "nome": "Pizzas",
+        "meioAMeio": true
+      },
+      {
+        "nome": "Bebidas",
+        "meioAMeio": false
+      }
     ],
     "footerText": "Feito com amor!"
   },
-  "items": []
+  "items": [
+    {
+      "id": 1775441796714,
+      "nome": "coca",
+      "preco": 15,
+      "categoria": "Bebidas",
+      "imagem": "https://via.placeholder.com/300",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 0,
+      "adicionais": []
+    },
+    {
+      "id": 1775441786905,
+      "nome": "kmussarela",
+      "preco": 30,
+      "categoria": "Pizzas",
+      "imagem": "https://via.placeholder.com/300",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 0,
+      "adicionais": []
+    },
+    {
+      "id": 1775441773466,
+      "nome": "calabresa",
+      "preco": 40,
+      "categoria": "Pizzas",
+      "imagem": "https://via.placeholder.com/300",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 0,
+      "adicionais": []
+    }
+  ]
 }
