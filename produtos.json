@@ -14,11 +14,11 @@
         "meioAMeio": true
       },
       {
-        "nome": "bebidas",
+        "nome": "apstel frito",
         "meioAMeio": false
       },
       {
-        "nome": "apstel frito",
+        "nome": "bebidas",
         "meioAMeio": false
       }
     ],
@@ -29,7 +29,7 @@
       "id": 1775443302437,
       "nome": "pastel",
       "preco": 7,
-      "categoria": "pizzas",
+      "categoria": "apstel frito",
       "imagem": "",
       "descricao": "",
       "ativo": true,
