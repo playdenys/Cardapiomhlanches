@@ -1,59 +1,18 @@
 {
   "config": {
-    "nomeLoja": "Pizzaria & Lanches",
-    "linkLogo": "https://via.placeholder.com/150",
+    "nomeLoja": "Sua Pizzaria",
+    "linkLogo": "",
     "corPrincipal": "#e11d48",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 7,
+    "taxaEntrega": 5.00,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
     "categorias": [
-      "pizzas",
-      "bebidas"
+      { "nome": "Pizzas", "meioAMeio": true },
+      { "nome": "Bebidas", "meioAMeio": false }
     ],
-    "footerText": "As melhores pizzas da regiÃ£o!"
+    "footerText": "Feito com amor!"
   },
-  "items": [
-    {
-      "id": 101,
-      "nome": "Mussarela",
-      "preco": 30,
-      "categoria": "pizzas",
-      "descricao": "Molho, mussarela e orÃ©gano",
-      "imagem": "https://via.placeholder.com/300",
-      "ativo": true
-    },
-    {
-      "id": 102,
-      "nome": "Calabresa",
-      "preco": 40,
-      "categoria": "pizzas",
-      "descricao": "Molho, calabresa e cebola",
-      "imagem": "https://via.placeholder.com/300",
-      "ativo": true
-    },
-    {
-      "id": 1775441487321,
-      "nome": "calabresa",
-      "preco": 35,
-      "categoria": "pizzas",
-      "imagem": "",
-      "descricao": "",
-      "ativo": true,
-      "limiteAdicionais": 0,
-      "adicionais": []
-    },
-    {
-      "id": 1775441503361,
-      "nome": "cocA 2L",
-      "preco": 15,
-      "categoria": "bebidas",
-      "imagem": "",
-      "descricao": "",
-      "ativo": true,
-      "limiteAdicionais": 0,
-      "adicionais": []
-    }
-  ]
+  "items": []
 }
