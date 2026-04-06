@@ -16,11 +16,36 @@
       {
         "nome": "bebidas",
         "meioAMeio": false
+      },
+      {
+        "nome": "apstel frito",
+        "meioAMeio": false
       }
     ],
     "footerText": "Entregas rÃ¡pidas e sabor incomparÃ¡vel!"
   },
   "items": [
+    {
+      "id": 1775443302437,
+      "nome": "pastel",
+      "preco": 7,
+      "categoria": "pizzas",
+      "imagem": "",
+      "descricao": "",
+      "ativo": true,
+      "adicionais": [
+        {
+          "nome": "carne",
+          "preco": 0,
+          "maxPorItem": 1
+        },
+        {
+          "nome": "frango",
+          "preco": 0,
+          "maxPorItem": 1
+        }
+      ]
+    },
     {
       "id": 1,
       "nome": "Pizza Calabresa (FamÃ­lia)",
