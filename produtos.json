@@ -4,7 +4,7 @@
     "linkLogo": "https://via.placeholder.com/150",
     "corPrincipal": "#2563eb",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 7.00,
+    "taxaEntrega": 2,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
@@ -18,44 +18,44 @@
         "meioAMeio": false
       }
     ],
-    "footerText": "Entregas rápidas e sabor incomparável!"
+    "footerText": "Entregas rÃ¡pidas e sabor incomparÃ¡vel!"
   },
   "items": [
     {
       "id": 1,
-      "nome": "Pizza Calabresa (Família)",
-      "preco": 45.90,
+      "nome": "Pizza Calabresa (FamÃ­lia)",
+      "preco": 45.9,
       "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orégano.",
+      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orÃ©gano.",
       "imagem": "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
       "limiteAdicionais": 3,
       "adicionais": [
         {
           "nome": "Borda Recheada Catupiry",
-          "preco": 10.00,
+          "preco": 10,
           "maxPorItem": 1
         },
         {
           "nome": "Queijo Extra",
-          "preco": 8.00,
+          "preco": 8,
           "maxPorItem": 1
         }
       ]
     },
     {
       "id": 2,
-      "nome": "Pizza Mussarela (Família)",
-      "preco": 40.00,
+      "nome": "Pizza Mussarela (FamÃ­lia)",
+      "preco": 40,
       "categoria": "pizzas",
-      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orégano.",
+      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orÃ©gano.",
       "imagem": "https://images.unsplash.com/photo-1573821663912-569905455b13?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
       "limiteAdicionais": 3,
       "adicionais": [
         {
           "nome": "Borda Recheada Cheddar",
-          "preco": 10.00,
+          "preco": 10,
           "maxPorItem": 1
         }
       ]
@@ -63,7 +63,7 @@
     {
       "id": 3,
       "nome": "Coca-Cola 2L",
-      "preco": 12.00,
+      "preco": 12,
       "categoria": "bebidas",
       "descricao": "Refrigerante Pet 2 Litros.",
       "imagem": "https://images.unsplash.com/photo-1622708782596-13d6e645ddc9?q=80&w=400&auto=format&fit=crop",
@@ -75,25 +75,25 @@
   "vendas": [
     {
       "data": "05/04/2026",
-      "valor": 57.90,
+      "valor": 57.9,
       "itens": [
-        "Pizza Calabresa (Família)",
+        "Pizza Calabresa (FamÃ­lia)",
         "Coca-Cola 2L"
       ]
     },
     {
       "data": "05/04/2026",
-      "valor": 40.00,
+      "valor": 40,
       "itens": [
-        "Pizza Mussarela (Família)"
+        "Pizza Mussarela (FamÃ­lia)"
       ]
     },
     {
       "data": "01/04/2026",
-      "valor": 103.80,
+      "valor": 103.8,
       "itens": [
-        "Pizza Calabresa (Família)",
-        "Pizza Mussarela (Família)",
+        "Pizza Calabresa (FamÃ­lia)",
+        "Pizza Mussarela (FamÃ­lia)",
         "Coca-Cola 2L"
       ]
     }
