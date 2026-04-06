@@ -22,6 +22,48 @@
   },
   "items": [
     {
+      "id": 1775442051218,
+      "nome": "PASTEL",
+      "preco": 7,
+      "categoria": "Bebidas",
+      "imagem": "https://via.placeholder.com/300",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 8,
+      "adicionais": [
+        {
+          "nome": "CALABRESA",
+          "preco": 0,
+          "desc": "",
+          "maxPorItem": 2
+        },
+        {
+          "nome": "CARNE",
+          "preco": 0,
+          "desc": "",
+          "maxPorItem": 2
+        },
+        {
+          "nome": "SALADA",
+          "preco": 0,
+          "desc": "",
+          "maxPorItem": 1
+        },
+        {
+          "nome": "DUETO",
+          "preco": 0,
+          "desc": "",
+          "maxPorItem": 1
+        },
+        {
+          "nome": "FRANGO",
+          "preco": 0,
+          "desc": "",
+          "maxPorItem": 1
+        }
+      ]
+    },
+    {
       "id": 1775441796714,
       "nome": "coca",
       "preco": 15,
