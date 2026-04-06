@@ -1,30 +1,34 @@
 {
   "config": {
-    "nomeLoja": "Nome da Sua Lanchonete",
+    "nomeLoja": "Pizzaria & Lanches",
     "linkLogo": "https://via.placeholder.com/150",
-    "corPrincipal": "#ef4444",
+    "corPrincipal": "#e11d48",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
+    "taxaEntrega": 7.00,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
-    "categorias": ["lanches", "bebidas"],
-    "footerText": "Lanchonete desde 2021 realizando desejos ✨"
+    "categorias": ["pizzas", "bebidas"],
+    "footerText": "As melhores pizzas da região!"
   },
   "items": [
     {
-      "id": 1,
-      "nome": "X-Burger Especial",
-      "preco": 25.90,
-      "categoria": "lanches",
-      "descricao": "Pão, carne artesanal 160g, queijo e molho.",
+      "id": 101,
+      "nome": "Mussarela",
+      "preco": 30.00,
+      "categoria": "pizzas",
+      "descricao": "Molho, mussarela e orégano",
       "imagem": "https://via.placeholder.com/300",
-      "ativo": true,
-      "limiteAdicionais": 5,
-      "adicionais": [
-        { "nome": "Bacon", "preco": 4.00, "desc": "3 fatias crocantes", "maxPorItem": 2 },
-        { "nome": "Ovo", "preco": 2.50, "desc": "Gema mole ou dura", "maxPorItem": 1 }
-      ]
+      "ativo": true
+    },
+    {
+      "id": 102,
+      "nome": "Calabresa",
+      "preco": 40.00,
+      "categoria": "pizzas",
+      "descricao": "Molho, calabresa e cebola",
+      "imagem": "https://via.placeholder.com/300",
+      "ativo": true
     }
   ]
 }
