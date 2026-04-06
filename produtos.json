@@ -1,100 +1,101 @@
 {
   "config": {
-    "nomeLoja": "Mh lanches",
-    "linkLogo": "",
-    "corPrincipal": "#e11d48",
-    "whatsapp": "81985770055",
-    "taxaEntrega": 5,
+    "nomeLoja": "Delivery Pro Exemplo",
+    "linkLogo": "https://via.placeholder.com/150",
+    "corPrincipal": "#2563eb",
+    "whatsapp": "5511999999999",
+    "taxaEntrega": 7.00,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
     "categorias": [
       {
-        "nome": "Pizzas",
+        "nome": "pizzas",
         "meioAMeio": true
       },
       {
-        "nome": "Bebidas",
+        "nome": "bebidas",
         "meioAMeio": false
       }
     ],
-    "footerText": "Feito com amor!"
+    "footerText": "Entregas rápidas e sabor incomparável!"
   },
   "items": [
     {
-      "id": 1775442051218,
-      "nome": "PASTEL",
-      "preco": 7,
-      "categoria": "Bebidas",
-      "imagem": "https://via.placeholder.com/300",
-      "descricao": "",
+      "id": 1,
+      "nome": "Pizza Calabresa (Família)",
+      "preco": 45.90,
+      "categoria": "pizzas",
+      "descricao": "Molho de tomate, mussarela, calabresa fatiada, cebola e orégano.",
+      "imagem": "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
-      "limiteAdicionais": 8,
+      "limiteAdicionais": 3,
       "adicionais": [
         {
-          "nome": "CALABRESA",
-          "preco": 0,
-          "desc": "",
-          "maxPorItem": 2
-        },
-        {
-          "nome": "CARNE",
-          "preco": 0,
-          "desc": "",
-          "maxPorItem": 2
-        },
-        {
-          "nome": "SALADA",
-          "preco": 0,
-          "desc": "",
+          "nome": "Borda Recheada Catupiry",
+          "preco": 10.00,
           "maxPorItem": 1
         },
         {
-          "nome": "DUETO",
-          "preco": 0,
-          "desc": "",
-          "maxPorItem": 1
-        },
-        {
-          "nome": "FRANGO",
-          "preco": 0,
-          "desc": "",
+          "nome": "Queijo Extra",
+          "preco": 8.00,
           "maxPorItem": 1
         }
       ]
     },
     {
-      "id": 1775441796714,
-      "nome": "coca",
-      "preco": 15,
-      "categoria": "Bebidas",
-      "imagem": "https://via.placeholder.com/300",
-      "descricao": "",
+      "id": 2,
+      "nome": "Pizza Mussarela (Família)",
+      "preco": 40.00,
+      "categoria": "pizzas",
+      "descricao": "Molho de tomate, mussarela em dobro, tomate fatiado e orégano.",
+      "imagem": "https://images.unsplash.com/photo-1573821663912-569905455b13?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
-      "limiteAdicionais": 0,
-      "adicionais": []
+      "limiteAdicionais": 3,
+      "adicionais": [
+        {
+          "nome": "Borda Recheada Cheddar",
+          "preco": 10.00,
+          "maxPorItem": 1
+        }
+      ]
     },
     {
-      "id": 1775441786905,
-      "nome": "kmussarela",
-      "preco": 30,
-      "categoria": "Pizzas",
-      "imagem": "https://via.placeholder.com/300",
-      "descricao": "",
+      "id": 3,
+      "nome": "Coca-Cola 2L",
+      "preco": 12.00,
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Pet 2 Litros.",
+      "imagem": "https://images.unsplash.com/photo-1622708782596-13d6e645ddc9?q=80&w=400&auto=format&fit=crop",
       "ativo": true,
       "limiteAdicionais": 0,
       "adicionais": []
+    }
+  ],
+  "vendas": [
+    {
+      "data": "05/04/2026",
+      "valor": 57.90,
+      "itens": [
+        "Pizza Calabresa (Família)",
+        "Coca-Cola 2L"
+      ]
     },
     {
-      "id": 1775441773466,
-      "nome": "calabresa",
-      "preco": 40,
-      "categoria": "Pizzas",
-      "imagem": "https://via.placeholder.com/300",
-      "descricao": "",
-      "ativo": true,
-      "limiteAdicionais": 0,
-      "adicionais": []
+      "data": "05/04/2026",
+      "valor": 40.00,
+      "itens": [
+        "Pizza Mussarela (Família)"
+      ]
+    },
+    {
+      "data": "01/04/2026",
+      "valor": 103.80,
+      "itens": [
+        "Pizza Calabresa (Família)",
+        "Pizza Mussarela (Família)",
+        "Coca-Cola 2L"
+      ]
     }
   ]
 }
