@@ -32,6 +32,28 @@
       "descricao": "Molho, calabresa e cebola",
       "imagem": "https://via.placeholder.com/300",
       "ativo": true
+    },
+    {
+      "id": 1775441487321,
+      "nome": "calabresa",
+      "preco": 35,
+      "categoria": "pizzas",
+      "imagem": "",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 0,
+      "adicionais": []
+    },
+    {
+      "id": 1775441503361,
+      "nome": "cocA 2L",
+      "preco": 15,
+      "categoria": "bebidas",
+      "imagem": "",
+      "descricao": "",
+      "ativo": true,
+      "limiteAdicionais": 0,
+      "adicionais": []
     }
   ]
 }
