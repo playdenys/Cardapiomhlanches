@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Gestor | Autônomo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-100 flex h-screen text-slate-800">
@@ -12,6 +13,7 @@
     <aside class="w-64 bg-slate-900 text-white p-6 flex flex-col hidden md:flex">
         <h2 class="font-bold text-xl mb-8 border-b border-slate-700 pb-4">Painel Delivery</h2>
         <nav class="flex-1 space-y-2">
+            <button onclick="showTab('dash')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-solid fa-chart-pie w-6"></i> Dashboard</button>
             <button onclick="showTab('produtos')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-solid fa-burger w-6"></i> Produtos</button>
             <button onclick="showTab('config')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-solid fa-gear w-6"></i> Loja & Horários</button>
             <button onclick="showTab('github')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-brands fa-github w-6"></i> Sincronização</button>
@@ -21,7 +23,29 @@
 
     <main class="flex-1 p-6 overflow-y-auto">
         
-        <section id="tab-produtos" class="tab-content space-y-6">
+        <section id="tab-dash" class="tab-content space-y-6">
+            <h2 class="text-xl font-bold">Visão Geral</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-l-4 border-l-blue-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Produtos Ativos</p>
+                    <h3 class="text-3xl font-black mt-2" id="dash-produtos">0</h3>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-l-4 border-l-orange-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Status da Loja</p>
+                    <h3 class="text-xl font-black mt-2" id="dash-status">Verificando...</h3>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-l-4 border-l-green-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase">Faturamento (Exemplo)</p>
+                    <h3 class="text-3xl font-black mt-2 text-green-600">R$ 0,00</h3>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border mt-6">
+                <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">Acessos à Loja na Semana</h3>
+                <canvas id="chartGrafico" height="80"></canvas>
+            </div>
+        </section>
+
+        <section id="tab-produtos" class="tab-content hidden space-y-6">
             <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border">
                 <h2 class="text-xl font-bold">Gestão de Estoque</h2>
                 <button onclick="abrirModalProd()" class="bg-blue-600 text-white px-4 py-2 rounded font-bold text-sm">+ Novo Produto</button>
@@ -88,6 +112,7 @@
     <script>
         let DATA = { config: { categorias: [], horarios: {} }, items: [] };
         const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+        let meuGrafico = null;
 
         window.onload = async () => {
             document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
@@ -102,9 +127,60 @@
         function showTab(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById('tab-' + id).classList.remove('hidden');
+            if (id === 'dash') renderDashboard();
         }
 
-        function renderAll() { renderCats(); renderProdutos(); preencherConfig(); }
+        function renderAll() { 
+            renderCats(); 
+            renderProdutos(); 
+            preencherConfig(); 
+            renderDashboard(); // Carrega o dashboard na inicialização
+        }
+
+        // --- DASHBOARD ---
+        function renderDashboard() {
+            // Contagem de produtos ativos com fallback caso dê erro
+            const totalAtivos = (DATA.items || []).filter(p => p.ativo).length;
+            document.getElementById('dash-produtos').innerText = totalAtivos;
+
+            // Verificar status da loja (baseado no horário atual do PC)
+            const agora = new Date();
+            const dia = agora.getDay();
+            const horaAtual = agora.getHours().toString().padStart(2,'0') + ":" + agora.getMinutes().toString().padStart(2,'0');
+            
+            const h = DATA.config?.horarios?.[dia];
+            let aberta = false;
+            
+            if (h && h.aberto && horaAtual >= h.inicio && horaAtual <= h.fim) {
+                aberta = true;
+            }
+
+            const elStatus = document.getElementById('dash-status');
+            if (aberta) {
+                elStatus.innerText = "ABERTA";
+                elStatus.className = "text-xl font-black mt-2 text-green-500";
+            } else {
+                elStatus.innerText = "FECHADA";
+                elStatus.className = "text-xl font-black mt-2 text-orange-500";
+            }
+
+            // Gráfico de Exemplo
+            const ctx = document.getElementById('chartGrafico').getContext('2d');
+            if(meuGrafico) meuGrafico.destroy();
+            meuGrafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    datasets: [{ 
+                        label: 'Acessos/Visitas', 
+                        data: [12, 19, 15, 25, 40, 50, 30], 
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+        }
 
         // --- CATEGORIAS ---
         function renderCats() {
@@ -144,7 +220,7 @@
                 id: id ? parseInt(id) : Date.now(), nome: document.getElementById('p-nome').value, preco: parseFloat(document.getElementById('p-preco').value), descricao: document.getElementById('p-desc').value, imagem: document.getElementById('p-img').value, categoria: document.getElementById('p-cat').value, ativo: document.getElementById('p-ativo').checked
             };
             if(id) { const idx = DATA.items.findIndex(x => x.id === parseInt(id)); DATA.items[idx] = prod; } else { DATA.items.push(prod); }
-            document.getElementById('modal-edit').classList.add('hidden'); renderProdutos();
+            document.getElementById('modal-edit').classList.add('hidden'); renderProdutos(); renderDashboard();
         }
 
         // --- CONFIGURAÇÕES & HORÁRIOS ---
@@ -174,6 +250,7 @@
                 DATA.config.horarios[i] = { aberto: document.getElementById(`h-aberto-${i}`).checked, inicio: document.getElementById(`h-ini-${i}`).value, fim: document.getElementById(`h-fim-${i}`).value };
             }
             alert("Aplicado! Lembre-se de clicar em 'Salvar Alterações' no menu para enviar ao GitHub.");
+            renderDashboard(); // Atualiza o status da loja se o horário foi modificado
         }
 
         // --- GITHUB SYNC ---
