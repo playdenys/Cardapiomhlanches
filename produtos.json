@@ -4,27 +4,30 @@
     "linkLogo": "https://via.placeholder.com/150",
     "corPrincipal": "#e11d48",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 7.00,
+    "taxaEntrega": 7,
     "horaAbre": "18:00",
     "horaFecha": "23:59",
     "fechadoManual": false,
-    "categorias": ["pizzas", "bebidas"],
-    "footerText": "As melhores pizzas da região!"
+    "categorias": [
+      "pizzas",
+      "bebidas"
+    ],
+    "footerText": "As melhores pizzas da regiÃ£o!"
   },
   "items": [
     {
       "id": 101,
       "nome": "Mussarela",
-      "preco": 30.00,
+      "preco": 30,
       "categoria": "pizzas",
-      "descricao": "Molho, mussarela e orégano",
+      "descricao": "Molho, mussarela e orÃ©gano",
       "imagem": "https://via.placeholder.com/300",
       "ativo": true
     },
     {
       "id": 102,
       "nome": "Calabresa",
-      "preco": 40.00,
+      "preco": 40,
       "categoria": "pizzas",
       "descricao": "Molho, calabresa e cebola",
       "imagem": "https://via.placeholder.com/300",
