@@ -1,8 +1,8 @@
 {
   "config": {
-    "nomeLoja": "Delivery Pro",
-    "whatsapp": "5511999999999",
-    "taxaEntrega": 5,
+    "nomeLoja": "MH Lanches",
+    "whatsapp": "+55 81 985770055",
+    "taxaEntrega": 2,
     "categorias": [
       "Lanches",
       "Bebidas"
@@ -14,7 +14,7 @@
         "fim": "23:00"
       },
       "1": {
-        "aberto": true,
+        "aberto": false,
         "inicio": "18:00",
         "fim": "23:00"
       },
