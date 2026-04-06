@@ -1,70 +1,29 @@
 {
   "config": {
-    "nomeLoja": "Meu Delivery Pro",
+    "nomeLoja": "Delivery Pro",
     "whatsapp": "5511999999999",
     "taxaEntrega": 5.00,
-    "corPrincipal": "#2563eb",
-    "fechadoManual": false,
-    "categorias": [
-      { "nome": "Pastéis", "meioAMeio": false },
-      { "nome": "Bebidas", "meioAMeio": false }
-    ]
+    "categorias": ["Lanches", "Bebidas"],
+    "horarios": {
+      "0": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
+      "1": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
+      "2": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
+      "3": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
+      "4": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
+      "5": {"aberto": true, "inicio": "18:00", "fim": "23:59"},
+      "6": {"aberto": true, "inicio": "18:00", "fim": "23:59"}
+    }
   },
   "items": [
     {
       "id": 1,
-      "nome": "Pastel Monte seu Mix",
-      "preco": 20.00,
+      "nome": "Hambúrguer Clássico",
+      "preco": 25.00,
+      "descricao": "Pão, carne artesanal 160g, queijo, alface e tomate.",
       "imagem": "https://via.placeholder.com/300",
-      "descricao": "Escolha 5 sabores e 2 molhos",
-      "categoria": "Pastéis",
-      "ativo": true,
-      "permiteObs": false,
-      "gruposAdicionais": [
-        {
-          "nome": "Escolha até 5 Sabores",
-          "limite": 5,
-          "itens": [
-            {"nome": "Carne", "preco": 0},
-            {"nome": "Queijo", "preco": 0},
-            {"nome": "Frango", "preco": 0},
-            {"nome": "Calabresa", "preco": 0},
-            {"nome": "Bacon", "preco": 2.00}
-          ]
-        },
-        {
-          "nome": "Molhos (Máx 2)",
-          "limite": 2,
-          "itens": [
-            {"nome": "Maionese", "preco": 0},
-            {"nome": "Ketchup", "preco": 0}
-          ]
-        }
-      ]
+      "categoria": "Lanches",
+      "ativo": true
     }
   ],
-  "vendas": []
-}
-{
-  "config": {
-    "nomeLoja": "Pastelaria Pro",
-    "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
-    "fechadoManual": false,
-    "categorias": [
-      { "nome": "Pastéis", "ordem": 0 },
-      { "nome": "Bebidas", "ordem": 1 }
-    ],
-    "horarios": {
-      "0": { "aberto": false, "inicio": "00:00", "fim": "00:00" },
-      "1": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
-      "2": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
-      "3": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
-      "4": { "aberto": true, "inicio": "18:00", "fim": "23:00" },
-      "5": { "aberto": true, "inicio": "18:00", "fim": "00:00" },
-      "6": { "aberto": true, "inicio": "18:00", "fim": "00:00" }
-    }
-  },
-  "items": [],
   "vendas": []
 }
