@@ -12,6 +12,7 @@
         .modal-slide { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        input, select, textarea { -webkit-appearance: none; }
     </style>
 </head>
 <body class="pb-32">
@@ -47,8 +48,8 @@
         </div>
     </div>
 
-    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end justify-center backdrop-blur-sm">
-        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide max-h-[95vh] flex flex-col">
+    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end justify-center backdrop-blur-sm p-0 md:p-4">
+        <div class="bg-white w-full max-w-xl rounded-t-[3rem] md:rounded-[3rem] overflow-hidden modal-slide max-h-[95vh] flex flex-col">
             <div class="relative h-64 w-full">
                 <img id="m-img" src="" class="w-full h-full object-cover">
                 <button onclick="fecharModal('modal-produto')" class="absolute top-6 right-6 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -59,7 +60,7 @@
                     <p id="m-desc" class="text-slate-400 text-sm mt-2"></p>
                 </div>
                 <div id="m-lista-ads" class="space-y-4"></div>
-                <textarea id="m-obs" placeholder="Alguma observação? (Ex: Tirar cebola)" class="w-full bg-slate-100 p-4 rounded-2xl h-24 outline-none text-sm font-medium"></textarea>
+                <textarea id="m-obs" placeholder="Alguma observação? (Ex: Sem cebola, ponto da carne...)" class="w-full bg-slate-100 p-5 rounded-3xl h-28 outline-none text-sm font-medium focus:ring-2 ring-blue-500 transition-all"></textarea>
             </div>
             <div class="p-8 border-t bg-white flex items-center gap-4">
                 <div class="flex items-center bg-slate-100 rounded-2xl p-1">
@@ -67,24 +68,24 @@
                     <span id="m-qtd" class="w-10 text-center font-black">1</span>
                     <button onclick="updateQtd(1)" class="w-10 h-10 font-bold text-xl">+</button>
                 </div>
-                <button onclick="adicionarAoCarrinho()" id="m-btn-add" class="flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Adicionar R$ 0,00</button>
+                <button onclick="adicionarAoCarrinho()" id="m-btn-add" class="flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Adicionar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-meio" class="fixed inset-0 bg-black/70 z-[110] hidden flex items-end justify-center backdrop-blur-sm">
-        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide h-[90vh] flex flex-col">
+    <div id="modal-meio" class="fixed inset-0 bg-black/70 z-[110] hidden flex items-end justify-center backdrop-blur-sm p-0 md:p-4">
+        <div class="bg-white w-full max-w-xl rounded-t-[3rem] md:rounded-[3rem] overflow-hidden modal-slide h-[90vh] flex flex-col">
             <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="font-black italic uppercase text-slate-800">Pizza Meio a Meio</h2>
+                <h2 class="font-black italic uppercase text-slate-800 tracking-tighter">Pizza Meio a Meio</h2>
                 <button onclick="fecharModal('modal-meio')" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-6">
                 <div class="grid grid-cols-2 gap-4">
-                    <div id="m-p1" class="border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50">
+                    <div id="m-p1" class="border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50 transition-all">
                         <p class="text-[9px] font-black text-slate-400 uppercase">1ª Metade</p>
                         <p id="m-p1-nome" class="font-bold text-xs mt-1 text-blue-600">Escolha...</p>
                     </div>
-                    <div id="m-p2" class="border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50">
+                    <div id="m-p2" class="border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50 transition-all">
                         <p class="text-[9px] font-black text-slate-400 uppercase">2ª Metade</p>
                         <p id="m-p2-nome" class="font-bold text-xs mt-1 text-blue-600">Escolha...</p>
                     </div>
@@ -92,46 +93,49 @@
                 <div id="m-lista-pizzas" class="space-y-2"></div>
             </div>
             <div class="p-8 border-t bg-white">
-                <button onclick="addMeioCarrinho()" id="btn-add-meio" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black uppercase text-xs tracking-widest opacity-50" disabled>Escolha as metades</button>
+                <button onclick="addMeioCarrinho()" id="btn-add-meio" class="w-full h-14 rounded-2xl bg-slate-900 text-white font-black uppercase text-xs tracking-widest opacity-50 transition-all" disabled>Escolha as metades</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-checkout" class="fixed inset-0 bg-black/70 z-[120] hidden flex items-end justify-center backdrop-blur-sm">
-        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide h-[90vh] flex flex-col">
+    <div id="modal-checkout" class="fixed inset-0 bg-black/70 z-[120] hidden flex items-end justify-center backdrop-blur-sm p-0 md:p-4">
+        <div class="bg-white w-full max-w-xl rounded-t-[3rem] md:rounded-[3rem] overflow-hidden modal-slide h-[90vh] flex flex-col">
             <div class="p-6 border-b bg-slate-50 flex justify-between items-center">
                 <h2 class="font-black italic uppercase text-slate-800">Finalizar Pedido</h2>
                 <button onclick="fecharModal('modal-checkout')" class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+            <div class="p-8 overflow-y-auto flex-1 space-y-8">
                 <div class="space-y-4">
-                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Identificação</h3>
-                    <input type="text" id="c-nome" placeholder="Seu Nome" class="w-full bg-slate-100 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 font-bold">
-                    
-                    <div class="flex gap-2">
-                        <button onclick="setEntrega('entrega')" id="b-entrega" class="flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm">Entrega</button>
-                        <button onclick="setEntrega('retirada')" id="b-retirada" class="flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm">Retirada</button>
-                    </div>
+                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2"><i class="fa-solid fa-user"></i> Seus Dados</h3>
+                    <input type="text" id="c-nome" placeholder="Seu Nome Completo" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 ring-blue-500 font-bold">
+                </div>
 
+                <div class="space-y-4">
+                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2"><i class="fa-solid fa-truck"></i> Forma de Entrega</h3>
+                    <div class="flex gap-3">
+                        <button onclick="setEntrega('entrega')" id="b-entrega" class="flex-1 py-4 rounded-3xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm">Entrega</button>
+                        <button onclick="setEntrega('retirada')" id="b-retirada" class="flex-1 py-4 rounded-3xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm">Retirada</button>
+                    </div>
                     <div id="box-endereco" class="space-y-3">
-                        <input type="text" id="c-end" placeholder="Endereço (Rua, Número, Bairro)" class="w-full bg-slate-100 p-4 rounded-2xl outline-none font-bold">
-                        <input type="text" id="c-ref" placeholder="Ponto de Referência" class="w-full bg-slate-100 p-4 rounded-2xl outline-none">
+                        <input type="text" id="c-end" placeholder="Rua, Número e Bairro" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
+                        <input type="text" id="c-ref" placeholder="Ponto de Referência (Próximo a...)" class="w-full bg-slate-100 p-5 rounded-3xl outline-none">
                     </div>
                 </div>
 
-                <div class="space-y-4 pb-10">
-                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Pagamento</h3>
-                    <select id="c-pagto" onchange="toggleTroco()" class="w-full bg-slate-100 p-4 rounded-2xl outline-none font-bold">
+                <div class="space-y-4 pb-12">
+                    <h3 class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2"><i class="fa-solid fa-credit-card"></i> Pagamento</h3>
+                    <select id="c-pagto" onchange="toggleTroco()" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold appearance-none">
                         <option value="Pix">Pix</option>
                         <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
                         <option value="Dinheiro">Dinheiro</option>
                     </select>
-                    <input type="text" id="c-troco" placeholder="Troco para quanto?" class="hidden w-full bg-slate-100 p-4 rounded-2xl outline-none font-bold">
+                    <input type="text" id="c-troco" placeholder="Troco para quanto?" class="hidden w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
                 </div>
             </div>
             <div class="p-8 border-t bg-white">
-                <button onclick="enviarWhatsApp()" class="w-full py-5 rounded-[2.2rem] bg-emerald-600 text-white font-black uppercase text-xs tracking-widest shadow-xl shadow-emerald-100">
-                    Enviar Pedido <i class="fa-brands fa-whatsapp ml-2 text-lg"></i>
+                <button onclick="enviarWhatsApp()" class="w-full py-6 rounded-[2.5rem] bg-emerald-600 text-white font-black uppercase text-xs tracking-widest shadow-xl shadow-emerald-200 active:scale-95 transition-all">
+                    Enviar Pedido via WhatsApp <i class="fa-brands fa-whatsapp ml-2 text-lg"></i>
                 </button>
             </div>
         </div>
@@ -142,20 +146,25 @@
         let metades = []; let tipoEntrega = 'entrega';
 
         async function init() {
-            const res = await fetch('produtos.json', { cache: 'no-store' });
-            DATA = await res.json();
-            
-            document.body.style.setProperty('--brand', DATA.config.corPrincipal);
-            document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
-            if(DATA.config.linkLogo) { document.getElementById('ui-logo').src = DATA.config.linkLogo; document.getElementById('ui-logo').classList.remove('hidden'); }
-            
-            // Status Loja
-            if(DATA.config.fechadoManual) {
-                document.getElementById('status-cor').className = "w-2 h-2 rounded-full bg-red-500";
-                document.getElementById('status-txt').innerText = "Loja Fechada";
-            }
+            try {
+                const res = await fetch('produtos.json', { cache: 'no-store' });
+                DATA = await res.json();
+                
+                document.body.style.setProperty('--brand', DATA.config.corPrincipal);
+                document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
+                if(DATA.config.linkLogo) { 
+                    const img = document.getElementById('ui-logo');
+                    img.src = DATA.config.linkLogo; 
+                    img.classList.remove('hidden'); 
+                }
+                
+                if(DATA.config.fechadoManual) {
+                    document.getElementById('status-cor').className = "w-2 h-2 rounded-full bg-red-500";
+                    document.getElementById('status-txt').innerText = "Loja Fechada";
+                }
 
-            renderMenu();
+                renderMenu();
+            } catch(e) { console.error("Erro ao carregar JSON:", e); }
         }
 
         function renderMenu() {
@@ -167,12 +176,12 @@
                 <section>
                     <div class="flex justify-between items-end mb-6 px-2">
                         <h2 class="text-2xl font-black italic uppercase text-slate-800 tracking-tighter">${cat.nome}</h2>
-                        ${cat.meioAMeio ? `<button onclick="abrirMeio('${cat.nome}')" class="bg-blue-600 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase shadow-lg shadow-blue-100">Meio a Meio</button>` : ''}
+                        ${cat.meioAMeio ? `<button onclick="abrirMeio('${cat.nome}')" class="bg-blue-600 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase shadow-lg shadow-blue-100"><i class="fa-solid fa-pizza-slice mr-2"></i> Meio a Meio</button>` : ''}
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${itens.map(p => `
                         <div onclick="abrirProduto(${p.id})" class="bg-white p-4 rounded-[2.5rem] flex items-center border border-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer">
-                            <img src="${p.imagem}" class="w-24 h-24 object-cover rounded-3xl shadow-md">
+                            <img src="${p.imagem}" class="w-24 h-24 object-cover rounded-3xl shadow-md bg-slate-50">
                             <div class="ml-4 flex-1">
                                 <h3 class="font-bold text-slate-800 text-sm leading-tight">${p.nome}</h3>
                                 <p class="text-slate-400 text-[10px] line-clamp-2 mt-1">${p.descricao || ''}</p>
@@ -184,7 +193,7 @@
             }).join('');
         }
 
-        // --- PRODUTO SIMPLES ---
+        // --- PRODUTO SIMPLES E ADICIONAIS ---
         function abrirProduto(id) {
             itemAtual = JSON.parse(JSON.stringify(DATA.items.find(x => x.id === id)));
             qtd = 1;
@@ -192,18 +201,19 @@
             document.getElementById('m-nome').innerText = itemAtual.nome;
             document.getElementById('m-desc').innerText = itemAtual.descricao;
             document.getElementById('m-qtd').innerText = qtd;
+            document.getElementById('m-obs').value = "";
             
             const adsBox = document.getElementById('m-lista-ads');
             adsBox.innerHTML = (itemAtual.adicionais || []).map((ad, i) => `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-[1.5rem]">
                     <div>
                         <p class="font-bold text-xs">${ad.nome}</p>
                         <p class="text-[10px] text-emerald-600 font-black">+ R$ ${ad.preco.toFixed(2)}</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="updateAd(${i}, -1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">-</button>
-                        <span id="ad-qtd-${i}" class="font-black text-xs">0</span>
-                        <button onclick="updateAd(${i}, 1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">+</button>
+                    <div class="flex items-center gap-3 bg-white p-1 rounded-xl shadow-sm">
+                        <button onclick="updateAd(${i}, -1)" class="w-8 h-8 font-bold text-lg">-</button>
+                        <span id="ad-qtd-${i}" class="font-black text-xs w-4 text-center">0</span>
+                        <button onclick="updateAd(${i}, 1)" class="w-8 h-8 font-bold text-lg">+</button>
                     </div>
                 </div>
             `).join('');
@@ -215,7 +225,7 @@
         function updateAd(idx, delta) {
             const ad = itemAtual.adicionais[idx];
             const novaQtd = (ad.qtd || 0) + delta;
-            if(novaQtd >= 0 && novaQtd <= (ad.maxPorItem || 1)) {
+            if(novaQtd >= 0 && novaQtd <= (ad.maxPorItem || 5)) {
                 ad.qtd = novaQtd;
                 document.getElementById(`ad-qtd-${idx}`).innerText = novaQtd;
                 updateTotalModal();
@@ -223,9 +233,9 @@
         }
 
         function updateTotalModal() {
-            let total = itemAtual.preco;
-            (itemAtual.adicionais || []).forEach(ad => total += (ad.preco * (ad.qtd || 0)));
-            document.getElementById('m-btn-add').innerText = `Adicionar R$ ${(total * qtd).toFixed(2)}`;
+            let totalUnitario = itemAtual.preco;
+            (itemAtual.adicionais || []).forEach(ad => totalUnitario += (ad.preco * (ad.qtd || 0)));
+            document.getElementById('m-btn-add').innerText = `Adicionar R$ ${(totalUnitario * qtd).toFixed(2)}`;
         }
 
         function updateQtd(delta) {
@@ -235,17 +245,17 @@
         }
 
         function adicionarAoCarrinho() {
-            const adsSelecionados = (itemAtual.adicionais || []).filter(a => a.qtd > 0);
-            let nomeFinal = itemAtual.nome;
-            let precoFinal = itemAtual.preco;
-            
-            adsSelecionados.forEach(a => {
-                nomeFinal += ` (+${a.qtd}x ${a.nome})`;
-                precoFinal += (a.preco * a.qtd);
-            });
+            const ads = (itemAtual.adicionais || []).filter(a => a.qtd > 0);
+            let subNome = ads.length ? " (" + ads.map(a => `${a.qtd}x ${a.nome}`).join(', ') + ")" : "";
+            let precoComAds = itemAtual.preco;
+            ads.forEach(a => precoComAds += (a.preco * a.qtd));
 
             for(let i=0; i<qtd; i++) {
-                carrinho.push({ nome: nomeFinal, preco: precoFinal, obs: document.getElementById('m-obs').value });
+                carrinho.push({ 
+                    nome: itemAtual.nome + subNome, 
+                    preco: precoComAds, 
+                    obs: document.getElementById('m-obs').value 
+                });
             }
             fecharModal('modal-produto');
             updateBar();
@@ -256,12 +266,14 @@
             metades = [];
             document.getElementById('m-p1-nome').innerText = "Escolha...";
             document.getElementById('m-p2-nome').innerText = "Escolha...";
+            document.getElementById('m-p1').className = "border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50 transition-all";
+            document.getElementById('m-p2').className = "border-2 border-dashed p-4 rounded-3xl text-center bg-slate-50 transition-all";
             document.getElementById('btn-add-meio').disabled = true;
             document.getElementById('btn-add-meio').className = "w-full h-14 rounded-2xl bg-slate-900 text-white font-black uppercase text-xs tracking-widest opacity-50";
 
             const pizzas = DATA.items.filter(i => i.categoria === cat && i.ativo);
             document.getElementById('m-lista-pizzas').innerHTML = pizzas.map(p => `
-                <div onclick="selectMetade(${p.id})" class="p-4 border rounded-2xl flex justify-between items-center bg-white active:bg-blue-50 transition-colors cursor-pointer">
+                <div onclick="selectMetade(${p.id})" class="p-4 border-2 border-slate-100 rounded-[1.5rem] flex justify-between items-center bg-white active:bg-blue-50 transition-all cursor-pointer">
                     <span class="font-bold text-xs">${p.nome}</span>
                     <span class="font-black text-xs text-emerald-600">R$ ${(p.preco/2).toFixed(2)}</span>
                 </div>
@@ -273,7 +285,9 @@
             const p = DATA.items.find(x => x.id === id);
             if(metades.length < 2) {
                 metades.push(p);
-                document.getElementById(`m-p${metades.length}-nome`).innerText = p.nome;
+                const n = metades.length;
+                document.getElementById(`m-p${n}-nome`).innerText = p.nome;
+                document.getElementById(`m-p${n}`).className = "border-2 border-blue-600 p-4 rounded-3xl text-center bg-blue-50 transition-all scale-105";
             }
             if(metades.length === 2) {
                 const btn = document.getElementById('btn-add-meio');
@@ -286,21 +300,31 @@
 
         function addMeioCarrinho() {
             const total = (metades[0].preco + metades[1].preco) / 2;
-            carrinho.push({ nome: `MEIO: ${metades[0].nome} / ${metades[1].nome}`, preco: total });
+            carrinho.push({ nome: `1/2 ${metades[0].nome} + 1/2 ${metades[1].nome}`, preco: total });
             fecharModal('modal-meio');
             updateBar();
         }
 
-        // --- CHECKOUT E WHATSAPP ---
+        // --- CHECKOUT COM LOCAL STORAGE ---
         function abrirCheckout() {
+            // RECUPERA DADOS SALVOS
+            const nS = localStorage.getItem('c_nome');
+            const eS = localStorage.getItem('c_end');
+            const rS = localStorage.getItem('c_ref');
+
+            if (nS) document.getElementById('c-nome').value = nS;
+            if (eS) document.getElementById('c-end').value = eS;
+            if (rS) document.getElementById('c-ref').value = rS;
+
             document.getElementById('modal-checkout').classList.remove('hidden');
         }
 
         function setEntrega(t) {
             tipoEntrega = t;
-            document.getElementById('b-entrega').className = t === 'entrega' ? "flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
-            document.getElementById('b-retirada').className = t === 'retirada' ? "flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
-            document.getElementById('box-endereco').classList.toggle('hidden', t === 'retirada');
+            const isE = t === 'entrega';
+            document.getElementById('b-entrega').className = isE ? "flex-1 py-4 rounded-3xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-3xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
+            document.getElementById('b-retirada').className = !isE ? "flex-1 py-4 rounded-3xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-3xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
+            document.getElementById('box-endereco').classList.toggle('hidden', !isE);
         }
 
         function toggleTroco() {
@@ -323,14 +347,22 @@
             const pagto = document.getElementById('c-pagto').value;
             const troco = document.getElementById('c-troco').value;
 
-            if(!nome) return alert("Informe seu nome!");
-            if(tipoEntrega === 'entrega' && !end) return alert("Informe o endereço!");
+            if(!nome) return alert("Por favor, informe seu nome.");
+            if(tipoEntrega === 'entrega' && !end) return alert("Informe seu endereço.");
+
+            // SALVA DADOS NO NAVEGADOR
+            localStorage.setItem('c_nome', nome);
+            localStorage.setItem('c_end', end);
+            localStorage.setItem('c_ref', ref);
 
             let msg = `*🚀 NOVO PEDIDO - ${DATA.config.nomeLoja.toUpperCase()}*\n`;
             msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-            msg += `*CLIENTE:* ${nome}\n`;
-            msg += `*TIPO:* ${tipoEntrega.toUpperCase()}\n`;
-            if(tipoEntrega === 'entrega') msg += `*ENDEREÇO:* ${end}\n*REF:* ${ref}\n`;
+            msg += `*👤 CLIENTE:* ${nome}\n`;
+            msg += `*🛵 TIPO:* ${tipoEntrega.toUpperCase()}\n`;
+            if(tipoEntrega === 'entrega') {
+                msg += `*📍 ENDEREÇO:* ${end}\n`;
+                if(ref) msg += `*🏁 REF:* ${ref}\n`;
+            }
             msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
 
             carrinho.forEach(i => {
@@ -339,15 +371,15 @@
                 msg += `   R$ ${i.preco.toFixed(2)}\n\n`;
             });
 
-            const taxa = tipoEntrega === 'entrega' ? DATA.config.taxaEntrega : 0;
+            const taxa = tipoEntrega === 'entrega' ? (DATA.config.taxaEntrega || 0) : 0;
             const total = carrinho.reduce((a,b) => a+b.preco, 0) + taxa;
 
             msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-            if(taxa > 0) msg += `*TAXA DE ENTREGA:* R$ ${taxa.toFixed(2)}\n`;
-            msg += `*TOTAL:* R$ ${total.toFixed(2)}\n`;
+            if(taxa > 0) msg += `*TAXA ENTREGA:* R$ ${taxa.toFixed(2)}\n`;
+            msg += `*💰 TOTAL:* R$ ${total.toFixed(2)}\n`;
             msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-            msg += `*PAGAMENTO:* ${pagto}\n`;
-            if(troco) msg += `*TROCO PARA:* R$ ${troco}\n`;
+            msg += `*💳 PAGAMENTO:* ${pagto}\n`;
+            if(troco) msg += `*💵 TROCO PARA:* R$ ${troco}\n`;
 
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
         }
