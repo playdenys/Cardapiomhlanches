@@ -1,23 +1,67 @@
 {
   "config": {
-    "nomeLoja": "Meu Delivery",
-    "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
-    "categorias": ["Pizzas", "Lanches", "Bebidas"],
+    "nomeLoja": "MH Lanches",
+    "whatsapp": "+55 81 985770055",
+    "taxaEntrega": 2,
+    "categorias": [
+      "Pizzas",
+      "Lanches",
+      "Bebidas"
+    ],
     "horarios": {
-      "0": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "1": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "2": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "3": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "4": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "5": {"aberto":true,"inicio":"18:00","fim":"23:59"},
-      "6": {"aberto":true,"inicio":"18:00","fim":"23:59"}
+      "0": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "1": {
+        "aberto": false,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "2": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "3": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "4": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "5": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "6": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      }
     }
   },
   "items": [],
   "complementos": [
-    {"nome": "Borda Recheada", "preco": 10.00, "categoria": "Pizzas"},
-    {"nome": "Bacon Extra", "preco": 5.00, "categoria": "Lanches"},
-    {"nome": "Maionese Caseira", "preco": 2.00, "categoria": "Lanches"}
+    {
+      "nome": "Borda Recheada",
+      "preco": 10,
+      "categoria": "Pizzas"
+    },
+    {
+      "nome": "Bacon Extra",
+      "preco": 5,
+      "categoria": "Lanches"
+    },
+    {
+      "nome": "Maionese Caseira",
+      "preco": 2,
+      "categoria": "Lanches"
+    }
   ]
 }
