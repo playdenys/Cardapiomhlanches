@@ -3,311 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Pro | Gestão Total</title>
+    <title>Painel Gestor | Autônomo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f7fe; }
-        .tab-active { background: #eff6ff; color: #2563eb; border-right: 4px solid #2563eb; }
-        .sidebar-item { transition: all 0.2s; cursor: pointer; }
-    </style>
 </head>
-<body class="flex flex-col md:flex-row min-h-screen">
+<body class="bg-slate-100 flex h-screen text-slate-800">
 
-    <aside class="w-full md:w-72 bg-white border-r flex flex-col gap-6 p-6 shadow-sm">
-        <div class="flex items-center gap-3 px-2">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-crown"></i></div>
-            <h2 class="font-black italic uppercase text-slate-800 tracking-tighter">Admin Pro</h2>
-        </div>
-        <nav class="flex flex-col gap-1">
-            <div onclick="showTab('dash')" id="btn-dash" class="sidebar-item tab-active flex items-center gap-3 p-4 rounded-xl text-sm font-bold"><i class="fa-solid fa-chart-pie"></i> Dashboard</div>
-            <div onclick="showTab('cardapio')" id="btn-cardapio" class="sidebar-item flex items-center gap-3 p-4 rounded-xl text-slate-500 font-bold text-sm"><i class="fa-solid fa-list-check"></i> Cardápio & Filtros</div>
-            <div onclick="showTab('config')" id="btn-config" class="sidebar-item flex items-center gap-3 p-4 rounded-xl text-slate-500 font-bold text-sm"><i class="fa-solid fa-clock"></i> Horários & Loja</div>
+    <aside class="w-64 bg-slate-900 text-white p-6 flex flex-col hidden md:flex">
+        <h2 class="font-bold text-xl mb-8 border-b border-slate-700 pb-4">Painel Delivery</h2>
+        <nav class="flex-1 space-y-2">
+            <button onclick="showTab('produtos')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-solid fa-burger w-6"></i> Produtos</button>
+            <button onclick="showTab('config')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-solid fa-gear w-6"></i> Loja & Horários</button>
+            <button onclick="showTab('github')" class="w-full text-left p-3 rounded hover:bg-slate-800"><i class="fa-brands fa-github w-6"></i> Sincronização</button>
         </nav>
-        <div class="mt-auto p-4 bg-slate-900 rounded-3xl text-white space-y-2">
-            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full bg-slate-800 p-2 rounded-lg text-[10px] outline-none">
-            <input type="text" id="gh-repo" placeholder="usuario/repo" class="w-full bg-slate-800 p-2 rounded-lg text-[10px] outline-none">
-            <button onclick="salvarCredenciais()" class="w-full bg-blue-600 py-2 rounded-lg text-[10px] font-black uppercase">Salvar Acesso</button>
-        </div>
+        <button onclick="salvarNoGitHub()" class="mt-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors">Salvar Alterações</button>
     </aside>
 
-    <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+    <main class="flex-1 p-6 overflow-y-auto">
         
-        <section id="tab-dash" class="tab-content space-y-6">
-            <h1 class="text-2xl font-black italic uppercase">Visão Geral</h1>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black text-slate-400 uppercase">Vendas Hoje</p>
-                    <h2 id="venda-hoje" class="text-2xl font-black italic">R$ 0,00</h2>
-                </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <p class="text-[10px] font-black text-slate-400 uppercase">Total Mês</p>
-                    <h2 id="venda-mes" class="text-2xl font-black italic text-emerald-600">R$ 0,00</h2>
-                </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase">Status Agora</p>
-                    <div id="status-loja-agora" class="mt-1 font-black text-xs">...</div>
-                </div>
+        <section id="tab-produtos" class="tab-content space-y-6">
+            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border">
+                <h2 class="text-xl font-bold">Gestão de Estoque</h2>
+                <button onclick="abrirModalProd()" class="bg-blue-600 text-white px-4 py-2 rounded font-bold text-sm">+ Novo Produto</button>
             </div>
-            <div class="bg-white p-6 rounded-3xl shadow-sm border"><canvas id="chartVendas"></canvas></div>
-        </section>
-
-        <section id="tab-cardapio" class="tab-content hidden space-y-6">
-            <div class="flex justify-between items-center bg-white p-6 rounded-3xl border">
-                <h1 class="text-xl font-black italic uppercase">Gestão de Itens</h1>
-                <button onclick="enviarParaGitHub()" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-black uppercase text-[10px]">Salvar no GitHub</button>
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <h3 class="font-bold text-sm text-gray-500 mb-4 uppercase">Categorias (Organização)</h3>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="nova-cat" placeholder="Nova categoria..." class="border p-2 rounded text-sm flex-1">
+                    <button onclick="addCat()" class="bg-slate-800 text-white px-4 rounded text-sm">Adicionar</button>
+                </div>
+                <div id="lista-cats" class="flex flex-wrap gap-2 mb-6"></div>
+                <hr class="mb-6">
+                <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
-
-            <div class="bg-white p-6 rounded-3xl border space-y-4">
-                <h3 class="text-xs font-black uppercase text-slate-400 italic">Ordem das Categorias</h3>
-                <div id="cats-box" class="flex flex-wrap gap-2"></div>
-                <div class="flex gap-2 max-w-sm pt-2">
-                    <input type="text" id="nova-cat" placeholder="Nova Categoria" class="flex-1 bg-slate-50 p-3 rounded-xl text-xs font-bold outline-none">
-                    <button onclick="addCat()" class="bg-slate-900 text-white px-4 rounded-xl font-black uppercase text-[10px]">Add</button>
-                </div>
-            </div>
-
-            <div class="bg-blue-600 p-6 rounded-3xl shadow-lg flex flex-wrap gap-4 items-end">
-                <div class="flex-1 min-w-[200px]">
-                    <label class="text-[9px] font-black text-blue-200 uppercase">Buscar por Nome</label>
-                    <input type="text" id="filtro-nome" oninput="renderProdutos()" class="w-full bg-blue-700 text-white p-3 rounded-xl outline-none placeholder:text-blue-300 font-bold text-sm">
-                </div>
-                <div>
-                    <label class="text-[9px] font-black text-blue-200 uppercase">Preço Máx</label>
-                    <input type="number" id="filtro-preco" oninput="renderProdutos()" class="w-full bg-blue-700 text-white p-3 rounded-xl outline-none font-bold text-sm w-24">
-                </div>
-                <div>
-                    <label class="text-[9px] font-black text-blue-200 uppercase">Disponibilidade</label>
-                    <select id="filtro-status" onchange="renderProdutos()" class="w-full bg-blue-700 text-white p-3 rounded-xl outline-none font-bold text-sm">
-                        <option value="todos">Todos</option>
-                        <option value="ativo">Ativos</option>
-                        <option value="inativo">Inativos</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
         <section id="tab-config" class="tab-content hidden space-y-6">
-            <h1 class="text-2xl font-black italic uppercase">Horários & Configurações</h1>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-4">
-                    <h3 class="font-black text-xs uppercase text-slate-400 mb-4 italic">Horário de Funcionamento</h3>
-                    <div id="lista-horarios" class="space-y-3"></div>
+            <h2 class="text-xl font-bold">Configurações da Loja</h2>
+            <div class="bg-white p-6 rounded-lg shadow-sm border grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div><label class="text-xs font-bold text-gray-500">Nome da Loja</label><input type="text" id="cfg-nome" class="w-full border p-2 rounded mt-1"></div>
+                    <div><label class="text-xs font-bold text-gray-500">WhatsApp (55DDD9...)</label><input type="text" id="cfg-zap" class="w-full border p-2 rounded mt-1"></div>
+                    <div><label class="text-xs font-bold text-gray-500">Taxa de Entrega (R$)</label><input type="number" id="cfg-taxa" class="w-full border p-2 rounded mt-1"></div>
                 </div>
+                <div>
+                    <h3 class="text-sm font-bold text-gray-500 mb-2">Horários de Funcionamento</h3>
+                    <div id="lista-horarios" class="space-y-2"></div>
+                </div>
+                <button onclick="salvarConfigLocal()" class="md:col-span-2 bg-slate-800 text-white py-3 rounded font-bold">Aplicar Configurações</button>
+            </div>
+        </section>
 
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-6">
-                    <h3 class="font-black text-xs uppercase text-slate-400 italic">Dados da Loja</h3>
-                    <input type="text" id="cfg-nome" placeholder="Nome da Loja" class="w-full bg-slate-50 p-4 rounded-2xl outline-none font-bold">
-                    <input type="text" id="cfg-zap" placeholder="WhatsApp" class="w-full bg-slate-50 p-4 rounded-2xl outline-none font-bold">
-                    <input type="number" id="cfg-taxa" placeholder="Taxa de Entrega" class="w-full bg-slate-50 p-4 rounded-2xl outline-none font-bold">
-                    <div class="p-4 bg-amber-50 border border-amber-100 rounded-2xl">
-                        <p class="text-[10px] font-black text-amber-600 uppercase mb-2">Fechamento Forçado</p>
-                        <select id="cfg-fechado" class="w-full bg-white p-2 rounded-lg font-bold text-xs">
-                            <option value="false">Seguir Horários Automáticos</option>
-                            <option value="true">FECHAR LOJA AGORA</option>
-                        </select>
-                    </div>
-                    <button onclick="salvarConfig()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px]">Salvar Configurações</button>
+        <section id="tab-github" class="tab-content hidden space-y-6">
+            <h2 class="text-xl font-bold">Conexão Segura GitHub</h2>
+            <div class="bg-white p-6 rounded-lg shadow-sm border max-w-md">
+                <div class="space-y-4">
+                    <div><label class="text-xs font-bold text-gray-500">Token de Acesso</label><input type="password" id="gh-token" class="w-full border p-2 rounded mt-1 text-sm"></div>
+                    <div><label class="text-xs font-bold text-gray-500">Repositório (usuario/repo)</label><input type="text" id="gh-repo" class="w-full border p-2 rounded mt-1 text-sm"></div>
+                    <button onclick="salvarCredenciais()" class="w-full bg-blue-600 text-white py-2 rounded font-bold text-sm">Salvar Credenciais no Navegador</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <script>
-        let DATA = {}; let myChart = null;
-        const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+    <div id="modal-edit" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 class="font-bold text-lg mb-4" id="mdl-title">Produto</h3>
+            <div class="space-y-3">
+                <input type="hidden" id="p-id">
+                <div><label class="text-xs font-bold text-gray-500">Nome</label><input type="text" id="p-nome" class="w-full border p-2 rounded text-sm"></div>
+                <div><label class="text-xs font-bold text-gray-500">Preço (R$)</label><input type="number" step="0.01" id="p-preco" class="w-full border p-2 rounded text-sm"></div>
+                <div><label class="text-xs font-bold text-gray-500">Categoria</label><select id="p-cat" class="w-full border p-2 rounded text-sm"></select></div>
+                <div><label class="text-xs font-bold text-gray-500">Descrição</label><textarea id="p-desc" class="w-full border p-2 rounded text-sm"></textarea></div>
+                <div><label class="text-xs font-bold text-gray-500">Link da Foto (URL)</label><input type="text" id="p-img" class="w-full border p-2 rounded text-sm"></div>
+                <div class="flex items-center gap-2 mt-2"><input type="checkbox" id="p-ativo"><label class="text-sm font-bold">Produto Ativo (Visível)</label></div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="document.getElementById('modal-edit').classList.add('hidden')" class="px-4 py-2 bg-gray-200 rounded font-bold text-sm">Cancelar</button>
+                <button onclick="salvarProduto()" class="px-4 py-2 bg-blue-600 text-white rounded font-bold text-sm">Salvar</button>
+            </div>
+        </div>
+    </div>
 
-        window.onload = () => {
+    <script>
+        let DATA = { config: { categorias: [], horarios: {} }, items: [] };
+        const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+        window.onload = async () => {
             document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
             document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
-            carregar();
+            try {
+                const res = await fetch('produtos.json', { cache: 'no-store' });
+                DATA = await res.json();
+                renderAll();
+            } catch(e) { alert("Não foi possível carregar o JSON. Verifique se o arquivo existe e é válido."); }
         };
 
-        async function carregar() {
-            const res = await fetch('produtos.json', { cache: 'no-store' });
-            DATA = await res.json();
-            renderTudo();
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + id).classList.remove('hidden');
         }
 
-        function renderTudo() {
-            renderDashboard();
-            renderCategorias();
-            renderProdutos();
-            renderHorarios();
-            preencherCampos();
-            checkStatusAtual();
+        function renderAll() { renderCats(); renderProdutos(); preencherConfig(); }
+
+        // --- CATEGORIAS ---
+        function renderCats() {
+            const selectCat = document.getElementById('p-cat'); selectCat.innerHTML = '';
+            document.getElementById('lista-cats').innerHTML = (DATA.config.categorias || []).map((c, i) => {
+                selectCat.innerHTML += `<option value="${c}">${c}</option>`;
+                return `<span class="bg-gray-200 text-sm px-3 py-1 rounded flex items-center gap-2">${c} <i onclick="delCat(${i})" class="fa-solid fa-xmark text-red-500 cursor-pointer"></i></span>`;
+            }).join('');
         }
+        function addCat() { const v = document.getElementById('nova-cat').value; if(v){ DATA.config.categorias.push(v); document.getElementById('nova-cat').value = ''; renderCats(); } }
+        function delCat(i) { DATA.config.categorias.splice(i, 1); renderCats(); }
 
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
-            document.getElementById('btn-'+t).classList.add('tab-active');
-        }
-
-        // --- GESTÃO DE CATEGORIAS (ORDEM) ---
-        function renderCategorias() {
-            const cats = DATA.config.categorias.sort((a,b) => (a.ordem || 0) - (b.ordem || 0));
-            document.getElementById('cats-box').innerHTML = cats.map((c, i) => `
-                <div class="bg-slate-100 px-4 py-3 rounded-2xl flex items-center gap-3 border border-slate-200">
-                    <span class="text-[10px] font-black uppercase text-slate-600">${c.nome}</span>
-                    <div class="flex gap-1 border-l pl-3 ml-2">
-                        <button onclick="moverCat(${i}, -1)" class="text-blue-600 hover:scale-125"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button onclick="moverCat(${i}, 1)" class="text-blue-600 hover:scale-125"><i class="fa-solid fa-chevron-right"></i></button>
-                        <button onclick="deleteCat(${i})" class="text-red-400 ml-2"><i class="fa-solid fa-trash-can"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function moverCat(idx, direcao) {
-            const novaPos = idx + direcao;
-            if (novaPos < 0 || novaPos >= DATA.config.categorias.length) return;
-            const temp = DATA.config.categorias[idx];
-            DATA.config.categorias[idx] = DATA.config.categorias[novaPos];
-            DATA.config.categorias[novaPos] = temp;
-            DATA.config.categorias.forEach((c, i) => c.ordem = i);
-            renderCategorias();
-        }
-
-        function addCat() {
-            const v = document.getElementById('nova-cat').value;
-            if(!v) return;
-            DATA.config.categorias.push({ nome: v, ordem: DATA.config.categorias.length });
-            document.getElementById('nova-cat').value = "";
-            renderCategorias();
-        }
-
-        function deleteCat(i) { DATA.config.categorias.splice(i,1); renderCategorias(); }
-
-        // --- FILTROS E PRODUTOS ---
+        // --- PRODUTOS ---
         function renderProdutos() {
-            const nomeF = document.getElementById('filtro-nome').value.toLowerCase();
-            const precoF = parseFloat(document.getElementById('filtro-preco').value) || 9999;
-            const statusF = document.getElementById('filtro-status').value;
-
-            const filtrados = DATA.items.filter(p => {
-                const bateNome = p.nome.toLowerCase().includes(nomeF);
-                const batePreco = p.preco <= precoF;
-                const bateStatus = statusF === 'todos' ? true : (statusF === 'ativo' ? p.ativo : !p.ativo);
-                return bateNome && batePreco && bateStatus;
-            });
-
-            document.getElementById('grid-produtos').innerHTML = filtrados.map((p, i) => `
-                <div class="bg-white rounded-3xl p-4 border shadow-sm space-y-3">
-                    <img src="${p.imagem}" class="w-full h-32 object-cover rounded-2xl">
-                    <h4 class="font-black text-sm">${p.nome}</h4>
-                    <p class="text-blue-600 font-black text-xs">R$ ${p.preco.toFixed(2)}</p>
-                    <div class="flex justify-between pt-2 border-t">
-                        <button onclick="toggleP(${p.id}, 'ativo')" class="text-[9px] font-black uppercase ${p.ativo ? 'text-emerald-500' : 'text-red-400'}">
-                            <i class="fa-solid fa-circle"></i> ${p.ativo ? 'Ativo' : 'Pausado'}
-                        </button>
-                        <button onclick="toggleP(${p.id}, 'permiteObs')" class="text-[9px] font-black uppercase ${p.permiteObs !== false ? 'text-blue-600' : 'text-slate-300'}">
-                            Obs: ${p.permiteObs !== false ? 'Sim' : 'Não'}
-                        </button>
+            document.getElementById('grid-produtos').innerHTML = DATA.items.map(p => `
+                <div class="border p-4 rounded-lg flex items-center gap-4 ${p.ativo ? 'bg-white' : 'bg-gray-50 opacity-60'}">
+                    <img src="${p.imagem}" class="w-16 h-16 object-cover rounded bg-gray-200">
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${p.nome}</p>
+                        <p class="text-green-600 text-xs font-bold">R$ ${p.preco.toFixed(2)}</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="editarProd(${p.id})" class="text-blue-500 hover:text-blue-700"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="excluirProd(${p.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
         }
-
-        function toggleP(id, campo) {
-            const idx = DATA.items.findIndex(x => x.id === id);
-            if(campo === 'permiteObs') DATA.items[idx].permiteObs = DATA.items[idx].permiteObs === false ? true : false;
-            else DATA.items[idx][campo] = !DATA.items[idx][campo];
-            renderProdutos();
+        
+        function abrirModalProd() { document.getElementById('p-id').value = ''; document.getElementById('p-nome').value = ''; document.getElementById('p-preco').value = ''; document.getElementById('p-desc').value = ''; document.getElementById('p-img').value = ''; document.getElementById('p-ativo').checked = true; document.getElementById('modal-edit').classList.remove('hidden'); }
+        function editarProd(id) { const p = DATA.items.find(x => x.id === id); document.getElementById('p-id').value = p.id; document.getElementById('p-nome').value = p.nome; document.getElementById('p-preco').value = p.preco; document.getElementById('p-desc').value = p.descricao; document.getElementById('p-img').value = p.imagem; document.getElementById('p-cat').value = p.categoria; document.getElementById('p-ativo').checked = p.ativo; document.getElementById('modal-edit').classList.remove('hidden'); }
+        function excluirProd(id) { if(confirm("Excluir produto?")) { DATA.items = DATA.items.filter(x => x.id !== id); renderProdutos(); } }
+        
+        function salvarProduto() {
+            const id = document.getElementById('p-id').value;
+            const prod = {
+                id: id ? parseInt(id) : Date.now(), nome: document.getElementById('p-nome').value, preco: parseFloat(document.getElementById('p-preco').value), descricao: document.getElementById('p-desc').value, imagem: document.getElementById('p-img').value, categoria: document.getElementById('p-cat').value, ativo: document.getElementById('p-ativo').checked
+            };
+            if(id) { const idx = DATA.items.findIndex(x => x.id === parseInt(id)); DATA.items[idx] = prod; } else { DATA.items.push(prod); }
+            document.getElementById('modal-edit').classList.add('hidden'); renderProdutos();
         }
 
-        // --- HORÁRIOS ---
-        function renderHorarios() {
+        // --- CONFIGURAÇÕES & HORÁRIOS ---
+        function preencherConfig() {
+            document.getElementById('cfg-nome').value = DATA.config.nomeLoja || '';
+            document.getElementById('cfg-zap').value = DATA.config.whatsapp || '';
+            document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega || 0;
+            
             if(!DATA.config.horarios) DATA.config.horarios = {};
-            document.getElementById('lista-horarios').innerHTML = diasSemana.map((dia, i) => {
+            document.getElementById('lista-horarios').innerHTML = dias.map((d, i) => {
                 const h = DATA.config.horarios[i] || { aberto: false, inicio: "00:00", fim: "00:00" };
                 return `
-                <div class="flex items-center gap-4 bg-slate-50 p-3 rounded-2xl">
-                    <span class="w-20 text-[10px] font-black uppercase text-slate-500">${dia}</span>
-                    <input type="checkbox" onchange="updateH(${i}, 'aberto', this.checked)" ${h.aberto ? 'checked' : ''} class="w-4 h-4">
-                    <div class="flex-1 flex gap-2 items-center">
-                        <input type="time" onchange="updateH(${i}, 'inicio', this.value)" value="${h.inicio}" class="bg-white border rounded p-1 text-xs outline-none">
-                        <span class="text-[10px] font-bold">às</span>
-                        <input type="time" onchange="updateH(${i}, 'fim', this.value)" value="${h.fim}" class="bg-white border rounded p-1 text-xs outline-none">
-                    </div>
+                <div class="flex items-center gap-2 bg-gray-50 p-2 rounded text-sm">
+                    <span class="w-20 font-bold">${d}</span>
+                    <input type="checkbox" id="h-aberto-${i}" ${h.aberto ? 'checked' : ''}> <label>Abre?</label>
+                    <input type="time" id="h-ini-${i}" value="${h.inicio}" class="border rounded px-1 ml-2"> às 
+                    <input type="time" id="h-fim-${i}" value="${h.fim}" class="border rounded px-1">
                 </div>`;
             }).join('');
         }
 
-        function updateH(diaIdx, campo, val) { DATA.config.horarios[diaIdx][campo] = val; checkStatusAtual(); }
-
-        function checkStatusAtual() {
-            const agora = new Date();
-            const diaS = agora.getDay();
-            const horaM = agora.getHours().toString().padStart(2, '0') + ":" + agora.getMinutes().toString().padStart(2, '0');
-            const h = DATA.config.horarios[diaS];
-            const el = document.getElementById('status-loja-agora');
-
-            if(DATA.config.fechadoManual) {
-                el.innerText = "FECHADA MANUALMENTE"; el.className = "text-red-500 font-black"; return;
-            }
-            if(h && h.aberto && horaM >= h.inicio && horaM <= h.fim) {
-                el.innerText = "ABERTA AGORA"; el.className = "text-emerald-500 font-black";
-            } else {
-                el.innerText = "FECHADA PELO HORÁRIO"; el.className = "text-amber-500 font-black";
-            }
-        }
-
-        function salvarConfig() {
+        function salvarConfigLocal() {
             DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
             DATA.config.whatsapp = document.getElementById('cfg-zap').value;
             DATA.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value);
-            DATA.config.fechadoManual = document.getElementById('cfg-fechado').value === "true";
-            alert("Configurações atualizadas!");
-            checkStatusAtual();
+            for(let i=0; i<7; i++) {
+                DATA.config.horarios[i] = { aberto: document.getElementById(`h-aberto-${i}`).checked, inicio: document.getElementById(`h-ini-${i}`).value, fim: document.getElementById(`h-fim-${i}`).value };
+            }
+            alert("Aplicado! Lembre-se de clicar em 'Salvar Alterações' no menu para enviar ao GitHub.");
         }
 
-        // --- DASHBOARD E GITHUB ---
-        function renderDashboard() {
-            const vendas = DATA.vendas || [];
-            const tMes = vendas.reduce((a,b) => a+b.valor, 0);
-            document.getElementById('venda-mes').innerText = `R$ ${tMes.toFixed(2)}`;
-            
-            const ctx = document.getElementById('chartVendas').getContext('2d');
-            if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: ['S','T','Q','Q','S','S','D'], datasets: [{ data: [10,20,15,30,45,60,50], backgroundColor: '#2563eb', borderRadius: 10 }] },
-                options: { plugins: { legend: { display: false } } }
-            });
-        }
+        // --- GITHUB SYNC ---
+        function salvarCredenciais() { localStorage.setItem('gh_token', document.getElementById('gh-token').value); localStorage.setItem('gh_repo', document.getElementById('gh-repo').value); alert("Salvo no navegador!"); }
 
-        function preencherCampos() {
-            document.getElementById('cfg-nome').value = DATA.config.nomeLoja;
-            document.getElementById('cfg-zap').value = DATA.config.whatsapp;
-            document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega;
-            document.getElementById('cfg-fechado').value = DATA.config.fechadoManual.toString();
-        }
-
-        function salvarCredenciais() {
-            localStorage.setItem('gh_token', document.getElementById('gh-token').value);
-            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value);
-            alert("Acesso salvo!");
-        }
-
-        async function enviarParaGitHub() {
-            const token = localStorage.getItem('gh_token');
-            const repo = localStorage.getItem('gh_repo');
-            const url = `https://api.github.com/repos/${repo}/contents/produtos.json`;
-            const g = await fetch(url, { headers: { 'Authorization': `token ${token}` }, cache: 'no-store' });
-            const j = await g.json();
-            const res = await fetch(url, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: "Update Admin", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: j.sha })
-            });
-            if(res.ok) alert("🚀 TUDO SALVO E PUBLICADO!");
+        async function salvarNoGitHub() {
+            const token = localStorage.getItem('gh_token'); const repo = localStorage.getItem('gh_repo');
+            if(!token || !repo) return alert("Vá na aba Sincronização e preencha Token e Repositório primeiro.");
+            try {
+                const url = `https://api.github.com/repos/${repo}/contents/produtos.json`;
+                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` }, cache: 'no-store' });
+                const getJson = await getRes.json();
+                
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Update Admin - " + new Date().toLocaleString(), content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: getJson.sha })
+                });
+                if(putRes.ok) alert("✅ Sucesso! Cardápio atualizado na internet."); else alert("❌ Erro ao salvar. Verifique o Token.");
+            } catch (e) { alert("Erro de conexão com o GitHub."); }
         }
     </script>
 </body>
