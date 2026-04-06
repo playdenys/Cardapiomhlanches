@@ -124,3 +124,22 @@
     }
   ]
 }
+{
+  "id": 100,
+  "nome": "Pastel Super 5",
+  "preco": 25.00,
+  "categoria": "Pastéis",
+  "permiteObs": false,
+  "gruposAdicionais": [
+    {
+      "nome": "Escolha até 5 Sabores",
+      "limite": 5,
+      "itens": ["Carne", "Queijo", "Frango", "Calabresa", "Palmito", "Pizza", "Bacon", "Ovo", "Milho", "Azeitona"]
+    },
+    {
+      "nome": "Molhos e Saladas (Máx 3)",
+      "limite": 3,
+      "itens": ["Maionese Caseira", "Ketchup", "Mostarda", "Salada", "Dueto"]
+    }
+  ]
+}
