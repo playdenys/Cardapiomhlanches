@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio Digital Pro</title>
+    <title>Cardápio Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; --brand: #2563eb; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
         .modal-slide { animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
-<body class="pb-32">
+<body class="pb-24">
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b p-4">
+    <header class="bg-white border-b p-4 sticky top-0 z-50">
         <div class="max-w-2xl mx-auto flex items-center gap-4">
-            <img id="ui-logo" src="" class="w-14 h-14 rounded-2xl object-cover border hidden shadow-sm">
             <div class="flex-1">
-                <h1 id="ui-nome" class="font-black text-xl italic text-slate-800 uppercase tracking-tighter italic">Carregando...</h1>
-                <div class="flex items-center gap-2">
-                    <span id="status-cor" class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span id="status-txt" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Loja Aberta</span>
-                </div>
+                <h1 id="ui-nome" class="font-black text-xl italic uppercase text-slate-800">Carregando...</h1>
+                <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">• Loja Aberta</span>
             </div>
         </div>
     </header>
@@ -31,89 +27,70 @@
     <main id="menu" class="max-w-2xl mx-auto p-4 space-y-10 mt-4"></main>
 
     <div id="bar-carrinho" class="fixed bottom-6 left-0 right-0 z-40 hidden px-4">
-        <div class="max-w-md mx-auto bg-slate-900 rounded-[2.5rem] p-2 shadow-2xl flex items-center justify-between border border-white/10">
-            <div class="pl-6 flex items-center gap-4 text-white">
-                <div class="relative">
-                    <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">0</span>
-                </div>
-                <div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Subtotal</p>
-                    <p id="cart-total" class="font-black text-lg text-white">R$ 0,00</p>
-                </div>
+        <div onclick="abrirCheckout()" class="max-w-md mx-auto bg-slate-900 rounded-3xl p-4 shadow-2xl flex items-center justify-between text-white cursor-pointer">
+            <div class="flex items-center gap-4">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-total" class="font-black">R$ 0,00</span>
             </div>
-            <button onclick="abrirCheckout()" class="bg-white text-slate-900 h-14 px-10 rounded-[2.2rem] font-black uppercase text-[10px]">Finalizar</button>
+            <span class="text-[10px] font-black uppercase">Finalizar Pedido</span>
         </div>
     </div>
 
-    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end justify-center backdrop-blur-sm">
-        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide max-h-[95vh] flex flex-col">
-            <div class="relative h-56 w-full">
-                <img id="m-img" src="" class="w-full h-full object-cover">
-                <button onclick="fecharModal('modal-produto')" class="absolute top-6 right-6 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-8 overflow-y-auto flex-1 space-y-6">
-                <div>
+    <div id="modal-produto" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end justify-center">
+        <div class="bg-white w-full max-w-xl rounded-t-[2.5rem] overflow-hidden modal-slide max-h-[90vh] flex flex-col">
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="flex justify-between items-start mb-4">
                     <h2 id="m-nome" class="text-2xl font-black text-slate-800"></h2>
-                    <p id="m-desc" class="text-slate-400 text-sm mt-2"></p>
+                    <button onclick="fecharModal('modal-produto')" class="text-slate-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
                 </div>
+                <p id="m-desc" class="text-slate-500 text-sm mb-6"></p>
 
                 <div id="m-lista-ads" class="space-y-6"></div>
 
-                <div id="m-box-obs">
-                    <p class="text-[10px] font-black uppercase text-slate-400 mb-2">Observações</p>
-                    <textarea id="m-obs" placeholder="Ex: Sem cebola, ponto da carne..." class="w-full bg-slate-100 p-5 rounded-3xl h-24 outline-none text-sm font-medium"></textarea>
+                <div id="m-box-obs" class="mt-6">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Alguma observação?</p>
+                    <textarea id="m-obs" class="w-full bg-slate-100 p-4 rounded-2xl h-20 outline-none text-sm font-medium"></textarea>
                 </div>
             </div>
-            <div class="p-8 border-t bg-white flex items-center gap-4">
-                <div class="flex items-center bg-slate-100 rounded-2xl p-1">
-                    <button onclick="updateQtd(-1)" class="w-10 h-10 font-bold text-xl">-</button>
-                    <span id="m-qtd" class="w-10 text-center font-black">1</span>
-                    <button onclick="updateQtd(1)" class="w-10 h-10 font-bold text-xl">+</button>
+
+            <div class="p-6 border-t bg-white flex items-center gap-4">
+                <div class="flex items-center bg-slate-100 rounded-xl">
+                    <button onclick="updateQtd(-1)" class="px-4 py-2 font-bold">-</button>
+                    <span id="m-qtd" class="font-black w-6 text-center">1</span>
+                    <button onclick="updateQtd(1)" class="px-4 py-2 font-bold">+</button>
                 </div>
-                <button onclick="adicionarAoCarrinho()" id="m-btn-add" class="flex-1 h-14 rounded-2xl bg-blue-600 text-white font-black uppercase text-[10px] tracking-widest shadow-lg">Adicionar</button>
+                <button onclick="adicionarAoCarrinho()" id="m-btn-add" class="flex-1 bg-blue-600 text-white h-12 rounded-xl font-black uppercase text-xs">Adicionar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-checkout" class="fixed inset-0 bg-black/70 z-[120] hidden flex items-end justify-center backdrop-blur-sm">
-        <div class="bg-white w-full max-w-xl rounded-t-[3rem] overflow-hidden modal-slide h-[90vh] flex flex-col">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="font-black italic uppercase text-slate-800">Finalizar Pedido</h2>
-                <button onclick="fecharModal('modal-checkout')" class="w-10 h-10 bg-white rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-8 overflow-y-auto flex-1 space-y-6">
-                <input type="text" id="c-nome" placeholder="Seu Nome" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
-                <div class="flex gap-2">
-                    <button onclick="setEntrega('entrega')" id="b-entrega" class="flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm">Entrega</button>
-                    <button onclick="setEntrega('retirada')" id="b-retirada" class="flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm">Retirada</button>
-                </div>
-                <div id="box-endereco" class="space-y-3">
-                    <input type="text" id="c-end" placeholder="Endereço Completo" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
-                    <input type="text" id="c-ref" placeholder="Ponto de Referência" class="w-full bg-slate-100 p-5 rounded-3xl outline-none">
-                </div>
-                <select id="c-pagto" onchange="toggleTroco()" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
+    <div id="modal-checkout" class="fixed inset-0 bg-black/70 z-[110] hidden flex items-end justify-center">
+        <div class="bg-white w-full max-w-xl rounded-t-[2.5rem] p-8 modal-slide h-[85vh] overflow-y-auto">
+            <h2 class="text-xl font-black mb-6 uppercase italic">Dados do Pedido</h2>
+            <div class="space-y-4">
+                <input type="text" id="c-nome" placeholder="Seu Nome" class="w-full bg-slate-100 p-4 rounded-xl outline-none font-bold">
+                <input type="text" id="c-end" placeholder="Endereço (Rua, Nº, Bairro)" class="w-full bg-slate-100 p-4 rounded-xl outline-none font-bold">
+                <select id="c-pagto" class="w-full bg-slate-100 p-4 rounded-xl font-bold">
                     <option value="Pix">Pix</option>
-                    <option value="Dinheiro">Dinheiro</option>
                     <option value="Cartão">Cartão</option>
+                    <option value="Dinheiro">Dinheiro</option>
                 </select>
-                <input type="text" id="c-troco" placeholder="Troco para quanto?" class="hidden w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold">
-            </div>
-            <div class="p-8 border-t bg-white">
-                <button onclick="enviarWhatsApp()" class="w-full py-6 rounded-[2.5rem] bg-emerald-600 text-white font-black uppercase text-xs tracking-widest shadow-xl">Enviar Pedido <i class="fa-brands fa-whatsapp ml-2"></i></button>
+                <button onclick="enviarZap()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase mt-4">Pedir pelo WhatsApp</button>
+                <button onclick="fecharModal('modal-checkout')" class="w-full text-slate-400 font-bold text-sm py-2">Voltar ao Cardápio</button>
             </div>
         </div>
     </div>
 
     <script>
-        let DATA = {}; let carrinho = []; let itemAtual = null; let qtd = 1; let tipoEntrega = 'entrega';
+        let DATA = {}; let carrinho = []; let itemAtual = null; let qtd = 1;
 
         async function init() {
-            const res = await fetch('produtos.json', { cache: 'no-store' });
-            DATA = await res.json();
-            document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
-            if(DATA.config.linkLogo) { document.getElementById('ui-logo').src = DATA.config.linkLogo; document.getElementById('ui-logo').classList.remove('hidden'); }
-            renderMenu();
+            try {
+                const res = await fetch('produtos.json', { cache: 'no-store' });
+                DATA = await res.json();
+                document.getElementById('ui-nome').innerText = DATA.config.nomeLoja;
+                renderMenu();
+            } catch(e) { console.error("Erro ao carregar JSON"); }
         }
 
         function renderMenu() {
@@ -122,155 +99,180 @@
                 const itens = DATA.items.filter(i => i.categoria === cat.nome && i.ativo);
                 if(!itens.length) return '';
                 return `
-                <section>
-                    <h2 class="text-2xl font-black italic uppercase text-slate-800 mb-6 px-2">${cat.nome}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${itens.map(p => `
-                        <div onclick="abrirProduto(${p.id})" class="bg-white p-4 rounded-[2.5rem] flex items-center border border-slate-100 shadow-sm active:scale-95 cursor-pointer transition-all">
-                            <img src="${p.imagem}" class="w-20 h-20 object-cover rounded-3xl shadow-sm">
-                            <div class="ml-4 flex-1">
-                                <h3 class="font-bold text-slate-800 text-sm">${p.nome}</h3>
-                                <p class="text-emerald-600 font-black text-xs mt-1">R$ ${p.preco.toFixed(2)}</p>
-                            </div>
-                        </div>`).join('')}
-                    </div>
-                </section>`;
+                    <section>
+                        <h2 class="text-xl font-black italic uppercase text-slate-800 mb-4">${cat.nome}</h2>
+                        <div class="grid gap-3">
+                            ${itens.map(p => `
+                                <div onclick="abrirProduto(${p.id})" class="bg-white p-4 rounded-3xl flex items-center border border-slate-100 shadow-sm cursor-pointer active:scale-95 transition-all">
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-slate-800 text-sm">${p.nome}</h3>
+                                        <p class="text-blue-600 font-black text-xs">R$ ${p.preco.toFixed(2)}</p>
+                                    </div>
+                                    <img src="${p.imagem}" class="w-16 h-16 object-cover rounded-2xl">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
             }).join('');
         }
 
         function abrirProduto(id) {
             itemAtual = JSON.parse(JSON.stringify(DATA.items.find(x => x.id === id)));
             qtd = 1;
-            document.getElementById('m-img').src = itemAtual.imagem;
             document.getElementById('m-nome').innerText = itemAtual.nome;
             document.getElementById('m-desc').innerText = itemAtual.descricao || '';
             document.getElementById('m-qtd').innerText = qtd;
             document.getElementById('m-obs').value = "";
-
-            // Lógica de Ocultar/Mostrar Observação
-            document.getElementById('m-box-obs').classList.toggle('hidden', itemAtual.permiteObs === false);
+            
+            // Lógica: Mostrar ou Esconder Observação
+            document.getElementById('m-box-obs').style.display = (itemAtual.permiteObs === false) ? 'none' : 'block';
 
             const adsBox = document.getElementById('m-lista-ads');
-            adsBox.innerHTML = (itemAtual.gruposAdicionais || []).map((grupo, gIdx) => `
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="text-[10px] font-black uppercase text-blue-600 tracking-widest">${grupo.nome}</h4>
-                        <span class="text-[9px] font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-lg">Máx: ${grupo.limite}</span>
-                    </div>
-                    <div class="space-y-2">
-                        ${grupo.itens.map((ad, iIdx) => `
-                            <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
-                                <span class="text-xs font-bold text-slate-700">${ad.nome || ad} ${ad.preco > 0 ? '+ R$'+ad.preco.toFixed(2) : ''}</span>
-                                <div class="flex items-center gap-3">
-                                    <button onclick="updateAd(${gIdx}, ${iIdx}, -1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">-</button>
-                                    <span id="ad-qtd-${gIdx}-${iIdx}" class="font-black text-xs">0</span>
-                                    <button onclick="updateAd(${gIdx}, ${iIdx}, 1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">+</button>
+            adsBox.innerHTML = "";
+
+            // SE TIVER GRUPOS (Pastel de 5 sabores)
+            if (itemAtual.gruposAdicionais && itemAtual.gruposAdicionais.length > 0) {
+                adsBox.innerHTML = itemAtual.gruposAdicionais.map((grupo, gIdx) => `
+                    <div>
+                        <p class="text-[10px] font-black uppercase text-blue-600 mb-3">${grupo.nome} (Máx: ${grupo.limite})</p>
+                        <div class="space-y-2">
+                            ${grupo.itens.map((ad, iIdx) => `
+                                <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                                    <span class="text-xs font-bold text-slate-600">${ad.nome || ad}</span>
+                                    <div class="flex items-center gap-3">
+                                        <button onclick="updateAd(${gIdx}, ${iIdx}, -1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">-</button>
+                                        <span id="ad-qtd-${gIdx}-${iIdx}" class="text-xs font-black">0</span>
+                                        <button onclick="updateAd(${gIdx}, ${iIdx}, 1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">+</button>
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('')}
+                            `).join('')}
+                        </div>
                     </div>
-                </div>
-            `).join('');
-            
+                `).join('');
+            } 
+            // SE TIVER ADICIONAIS ANTIGOS (Simples)
+            else if (itemAtual.adicionais) {
+                adsBox.innerHTML = `<p class="text-[10px] font-black uppercase text-slate-400 mb-3">Adicionais</p>` + 
+                itemAtual.adicionais.map((ad, i) => `
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl mb-2">
+                        <span class="text-xs font-bold">${ad.nome} (+R$ ${ad.preco.toFixed(2)})</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="updateAdSimples(${i}, -1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">-</button>
+                            <span id="ad-simples-${i}" class="text-xs font-black">0</span>
+                            <button onclick="updateAdSimples(${i}, 1)" class="w-8 h-8 bg-white rounded-full shadow-sm font-bold">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
             updateTotalModal();
             document.getElementById('modal-produto').classList.remove('hidden');
         }
 
+        // Lógica de Trava (O SEGREDO!)
         function updateAd(gIdx, iIdx, delta) {
             const grupo = itemAtual.gruposAdicionais[gIdx];
             const item = grupo.itens[iIdx];
-            if(!item.qtd) item.qtd = 0;
+            if (!item.qtd) item.qtd = 0;
 
             const totalNoGrupo = grupo.itens.reduce((acc, cur) => acc + (cur.qtd || 0), 0);
 
-            if(delta > 0 && totalNoGrupo >= grupo.limite) {
-                return alert(`Limite atingido! Máximo de ${grupo.limite} itens neste grupo.`);
+            if (delta > 0 && totalNoGrupo >= grupo.limite) {
+                return alert("Você já atingiu o limite de " + grupo.limite + " opções!");
             }
 
-            if(item.qtd + delta >= 0) {
+            if (item.qtd + delta >= 0) {
                 item.qtd += delta;
                 document.getElementById(`ad-qtd-${gIdx}-${iIdx}`).innerText = item.qtd;
                 updateTotalModal();
             }
         }
 
+        function updateAdSimples(idx, delta) {
+            const ad = itemAtual.adicionais[idx];
+            if (!ad.qtd) ad.qtd = 0;
+            if (ad.qtd + delta >= 0) {
+                ad.qtd += delta;
+                document.getElementById(`ad-simples-${idx}`).innerText = ad.qtd;
+                updateTotalModal();
+            }
+        }
+
         function updateTotalModal() {
             let totalUnitario = itemAtual.preco;
-            (itemAtual.gruposAdicionais || []).forEach(g => {
-                g.itens.forEach(i => { if(i.qtd) totalUnitario += ((i.preco || 0) * i.qtd); });
-            });
-            document.getElementById('m-btn-add').innerText = `Adicionar R$ ${(totalUnitario * qtd).toFixed(2)}`;
+            if(itemAtual.adicionais) itemAtual.adicionais.forEach(a => totalUnitario += (a.preco * (a.qtd || 0)));
+            if(itemAtual.gruposAdicionais) {
+                itemAtual.gruposAdicionais.forEach(g => {
+                    g.itens.forEach(i => { if(i.qtd) totalUnitario += ((i.preco || 0) * i.qtd); });
+                });
+            }
+            document.getElementById('m-btn-add').innerText = `ADICIONAR R$ ${(totalUnitario * qtd).toFixed(2)}`;
         }
 
         function updateQtd(d) { qtd = Math.max(1, qtd + d); document.getElementById('m-qtd').innerText = qtd; updateTotalModal(); }
 
         function adicionarAoCarrinho() {
-            let descFinal = "";
-            let precoComAds = itemAtual.preco;
+            let infoAds = "";
+            let precoFinal = itemAtual.preco;
 
-            (itemAtual.gruposAdicionais || []).forEach(g => {
-                g.itens.filter(i => i.qtd > 0).forEach(i => {
-                    descFinal += `\n- ${i.qtd}x ${i.nome || i}`;
-                    precoComAds += ((i.preco || 0) * i.qtd);
+            if(itemAtual.adicionais) {
+                itemAtual.adicionais.filter(a => a.qtd > 0).forEach(a => {
+                    infoAds += `\n- ${a.qtd}x ${a.nome}`;
+                    precoFinal += (a.preco * a.qtd);
                 });
+            }
+            if(itemAtual.gruposAdicionais) {
+                itemAtual.gruposAdicionais.forEach(g => {
+                    g.itens.filter(i => i.qtd > 0).forEach(i => {
+                        infoAds += `\n- ${i.qtd}x ${i.nome || i}`;
+                        precoFinal += ((i.preco || 0) * i.qtd);
+                    });
+                });
+            }
+
+            carrinho.push({ 
+                nome: itemAtual.nome + infoAds, 
+                preco: precoFinal * qtd,
+                qtd: qtd,
+                obs: document.getElementById('m-obs').value 
             });
 
-            for(let i=0; i<qtd; i++) {
-                carrinho.push({ nome: itemAtual.nome + descFinal, preco: precoComAds, obs: document.getElementById('m-obs').value });
-            }
             fecharModal('modal-produto');
             updateBar();
         }
 
-        function abrirCheckout() {
-            const nS = localStorage.getItem('c_nome');
-            const eS = localStorage.getItem('c_end');
-            if (nS) document.getElementById('c-nome').value = nS;
-            if (eS) document.getElementById('c-end').value = eS;
-            document.getElementById('modal-checkout').classList.remove('hidden');
-        }
-
-        function setEntrega(t) {
-            tipoEntrega = t;
-            document.getElementById('box-endereco').classList.toggle('hidden', t === 'retirada');
-            document.getElementById('b-entrega').className = t === 'entrega' ? "flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
-            document.getElementById('b-retirada').className = t === 'retirada' ? "flex-1 py-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-600 font-bold text-sm" : "flex-1 py-4 rounded-2xl border-2 border-transparent bg-slate-100 text-slate-500 font-bold text-sm";
-        }
-
-        function toggleTroco() { document.getElementById('c-troco').classList.toggle('hidden', document.getElementById('c-pagto').value !== 'Dinheiro'); }
-
         function updateBar() {
-            const t = carrinho.reduce((a,b) => a+b.preco, 0);
+            const t = carrinho.reduce((a,b) => a + b.preco, 0);
             document.getElementById('cart-total').innerText = "R$ " + t.toFixed(2);
-            document.getElementById('cart-count').innerText = carrinho.length;
             document.getElementById('bar-carrinho').classList.toggle('hidden', carrinho.length === 0);
         }
 
-        function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function abrirCheckout() {
+            document.getElementById('c-nome').value = localStorage.getItem('c_nome') || '';
+            document.getElementById('c-end').value = localStorage.getItem('c_end') || '';
+            document.getElementById('modal-checkout').classList.remove('hidden');
+        }
 
-        function enviarWhatsApp() {
+        function enviarZap() {
             const nome = document.getElementById('c-nome').value;
             const end = document.getElementById('c-end').value;
-            const pagto = document.getElementById('c-pagto').value;
-            if(!nome) return alert("Informe seu nome!");
+            if(!nome || !end) return alert("Preencha nome e endereço!");
 
             localStorage.setItem('c_nome', nome);
             localStorage.setItem('c_end', end);
 
-            let msg = `*🚀 NOVO PEDIDO*\n*CLIENTE:* ${nome}\n*TIPO:* ${tipoEntrega.toUpperCase()}\n`;
-            if(tipoEntrega === 'entrega') msg += `*ENDEREÇO:* ${end}\n`;
-            msg += `\n`;
-
+            let msg = `*🚀 NOVO PEDIDO*\n*Cliente:* ${nome}\n*Endereço:* ${end}\n\n`;
             carrinho.forEach(i => {
-                msg += `✅ *1x ${i.nome}*\n${i.obs ? '_Obs: '+i.obs+'_\n' : ''}R$ ${i.preco.toFixed(2)}\n\n`;
+                msg += `✅ *${i.qtd}x ${i.nome}*\n${i.obs ? '_Obs: '+i.obs+'_\n' : ''}\n`;
             });
-
-            const total = carrinho.reduce((a,b) => a+b.preco, 0) + (tipoEntrega === 'entrega' ? (DATA.config.taxaEntrega || 0) : 0);
-            msg += `*TOTAL:* R$ ${total.toFixed(2)}\n*PAGAMENTO:* ${pagto}`;
+            const total = carrinho.reduce((a,b) => a + b.preco, 0);
+            msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
 
             window.open(`https://wa.me/${DATA.config.whatsapp}?text=${encodeURIComponent(msg)}`);
         }
 
+        function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
         init();
     </script>
 </body>
