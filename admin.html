@@ -8,151 +8,68 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f7fe; }
-        .tab-active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 800; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-blur: 10px; border: 1px solid rgba(255,255,255,0.2); }
-        .sidebar-item:hover { background: #eff6ff; color: #2563eb; }
-    </style>
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f7fe; }</style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
     <aside class="w-full md:w-64 bg-white border-r p-6 flex flex-col gap-8">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                <i class="fa-solid fa-rocket"></i>
-            </div>
-            <h2 class="font-black italic uppercase text-slate-800 tracking-tighter">Gestor Pro</h2>
-        </div>
-
+        <h2 class="font-black italic uppercase text-slate-800">Admin Delivery</h2>
         <nav class="flex flex-col gap-2">
-            <button onclick="showTab('dash')" class="sidebar-item flex items-center gap-3 p-4 rounded-2xl text-slate-500 transition-all font-bold text-sm">
-                <i class="fa-solid fa-chart-pie"></i> Dashboard
-            </button>
-            <button onclick="showTab('cardapio')" class="sidebar-item flex items-center gap-3 p-4 rounded-2xl text-slate-500 transition-all font-bold text-sm">
-                <i class="fa-solid fa-utensils"></i> Cardápio
-            </button>
-            <button onclick="showTab('config')" class="sidebar-item flex items-center gap-3 p-4 rounded-2xl text-slate-500 transition-all font-bold text-sm">
-                <i class="fa-solid fa-gears"></i> Loja & Acesso
-            </button>
+            <button onclick="showTab('dash')" class="p-4 rounded-2xl text-slate-500 font-bold text-sm text-left hover:bg-blue-50 hover:text-blue-600">Dashboard</button>
+            <button onclick="showTab('cardapio')" class="p-4 rounded-2xl text-slate-500 font-bold text-sm text-left hover:bg-blue-50 hover:text-blue-600">Cardápio</button>
+            <button onclick="showTab('config')" class="p-4 rounded-2xl text-slate-500 font-bold text-sm text-left hover:bg-blue-50 hover:text-blue-600">Configurações</button>
         </nav>
-
-        <div class="mt-auto p-4 bg-blue-50 rounded-3xl">
-            <p class="text-[10px] font-black text-blue-600 uppercase">Suporte Ativo</p>
-            <p class="text-[9px] text-blue-400 font-medium">Sua loja está online e recebendo pedidos via GitHub.</p>
+        <div class="mt-auto p-4 bg-slate-900 rounded-3xl text-white">
+            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full bg-slate-800 p-2 rounded text-[10px] outline-none mb-2">
+            <input type="text" id="gh-repo" placeholder="usuario/repo" class="w-full bg-slate-800 p-2 rounded text-[10px] outline-none mb-2">
+            <button onclick="salvarAcesso()" class="w-full bg-blue-600 py-2 rounded text-[10px] font-black uppercase">Salvar Token</button>
         </div>
     </aside>
 
-    <main class="flex-1 p-4 md:p-10 overflow-y-auto">
-
-        <section id="tab-dash" class="tab-content space-y-8">
-            <header>
-                <h1 class="text-3xl font-black text-slate-800 italic uppercase">Visão Geral</h1>
-                <p class="text-slate-400 text-sm">Acompanhe o desempenho das suas vendas hoje.</p>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Faturamento Hoje</p>
-                    <h2 id="venda-hoje" class="text-4xl font-black text-slate-800">R$ 0,00</h2>
+    <main class="flex-1 p-8 overflow-y-auto">
+        <section id="tab-dash" class="tab-content">
+            <h1 class="text-2xl font-black mb-8 uppercase italic">Visão Geral</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border-l-4 border-blue-600">
+                    <p class="text-[10px] font-black text-slate-400 uppercase">Faturamento Mês</p>
+                    <h2 id="venda-mes" class="text-3xl font-black">R$ 0,00</h2>
                 </div>
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pedidos Realizados</p>
-                    <h2 id="total-pedidos" class="text-4xl font-black text-slate-800">0</h2>
-                </div>
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Faturamento Mês</p>
-                    <h2 id="venda-mes" class="text-4xl font-black text-emerald-600">R$ 0,00</h2>
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase">Pedidos Totais</p>
+                    <h2 id="total-pedidos" class="text-3xl font-black">0</h2>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
-                    <h3 class="font-black text-slate-800 mb-6 uppercase text-xs italic tracking-widest">Fluxo de Vendas (7 dias)</h3>
-                    <canvas id="chartVendas"></canvas>
-                </div>
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border">
-                    <h3 class="font-black text-slate-800 mb-6 uppercase text-xs italic tracking-widest">Top Saída</h3>
-                    <div id="ranking-produtos" class="space-y-3"></div>
-                </div>
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm">
+                <h3 class="font-black text-xs uppercase mb-6 italic">Fluxo de Vendas</h3>
+                <canvas id="chartVendas"></canvas>
             </div>
         </section>
 
-        <section id="tab-cardapio" class="tab-content hidden space-y-8">
-            <header class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-3xl font-black text-slate-800 italic uppercase">Cardápio</h1>
-                    <p class="text-slate-400 text-sm">Gerencie itens e categorias.</p>
-                </div>
-                <button onclick="salvarAlteracoes()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-xl shadow-blue-100 hover:scale-105 transition-all">
-                    Publicar no GitHub
-                </button>
-            </header>
-
-            <div class="bg-slate-800 p-6 rounded-[2rem] text-white">
-                <h3 class="text-xs font-black uppercase mb-4 opacity-50">Gestor de Categorias</h3>
-                <div class="flex flex-wrap gap-3 items-center" id="lista-cats">
-                    </div>
-                <div class="mt-4 flex gap-2">
-                    <input type="text" id="nova-cat" placeholder="Nova categoria..." class="bg-slate-700 p-3 rounded-xl outline-none text-xs flex-1">
-                    <button onclick="addCategoria()" class="bg-white text-slate-900 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Criar</button>
-                </div>
+        <section id="tab-cardapio" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-black uppercase italic">Meus Itens</h1>
+                <button onclick="salvarAlteracoes()" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px]">Publicar no GitHub</button>
             </div>
-
-            <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                </div>
+            <div id="grid-produtos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
-        <section id="tab-config" class="tab-content hidden space-y-8">
-            <header>
-                <h1 class="text-3xl font-black text-slate-800 italic uppercase">Configurações</h1>
-                <p class="text-slate-400 text-sm">Dados da loja e chaves de acesso.</p>
-            </header>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-4">
-                    <h3 class="font-black text-slate-800 uppercase text-xs italic tracking-widest">Acesso ao GitHub</h3>
-                    <input type="password" id="gh-token" placeholder="Seu Token (GitHub)" class="w-full bg-slate-100 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 font-bold">
-                    <input type="text" id="gh-repo" placeholder="usuario/repositorio" class="w-full bg-slate-100 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 font-bold">
-                    <button onclick="salvarAcesso()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px]">Salvar Acesso Local</button>
-                </div>
-
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-4">
-                    <h3 class="font-black text-slate-800 uppercase text-xs italic tracking-widest">Informações da Loja</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[9px] font-black uppercase text-slate-400">Nome da Loja</label>
-                            <input type="text" id="cfg-nome" class="w-full bg-slate-100 p-3 rounded-xl outline-none font-bold">
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-black uppercase text-slate-400">WhatsApp (DDD)</label>
-                            <input type="text" id="cfg-zap" class="w-full bg-slate-100 p-3 rounded-xl outline-none font-bold">
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-black uppercase text-slate-400">Taxa Entrega (R$)</label>
-                            <input type="number" step="0.01" id="cfg-taxa" class="w-full bg-slate-100 p-3 rounded-xl outline-none font-bold">
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-black uppercase text-slate-400">Cor Principal</label>
-                            <input type="color" id="cfg-cor" class="w-full h-12 bg-slate-100 p-2 rounded-xl outline-none">
-                        </div>
-                    </div>
-                    <div class="pt-4">
-                        <label class="text-[9px] font-black uppercase text-slate-400">Status da Loja</label>
-                        <select id="cfg-status" class="w-full bg-slate-100 p-3 rounded-xl outline-none font-bold">
-                            <option value="false">Aberta (Automático)</option>
-                            <option value="true">Fechada (Manual)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+        <section id="tab-config" class="tab-content hidden">
+             <h1 class="text-2xl font-black mb-8 uppercase italic">Configurar Loja</h1>
+             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm max-w-md space-y-4">
+                 <input type="text" id="cfg-nome" placeholder="Nome da Loja" class="w-full p-4 bg-slate-100 rounded-2xl outline-none font-bold">
+                 <input type="text" id="cfg-zap" placeholder="WhatsApp (Somente números)" class="w-full p-4 bg-slate-100 rounded-2xl outline-none font-bold">
+                 <input type="number" id="cfg-taxa" placeholder="Taxa Entrega" class="w-full p-4 bg-slate-100 rounded-2xl outline-none font-bold">
+                 <p class="text-[10px] font-black uppercase text-slate-400 px-2 mt-4">Status da Loja</p>
+                 <select id="cfg-fechado" class="w-full p-4 bg-slate-100 rounded-2xl font-bold">
+                     <option value="false">ABERTA</option>
+                     <option value="true">FECHADA MANUALMENTE</option>
+                 </select>
+             </div>
         </section>
     </main>
 
     <script>
-        let DATA = {};
-        let myChart = null;
-
+        let DATA = {}; let myChart = null;
         window.onload = () => {
             document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
             document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
@@ -162,96 +79,34 @@
         async function loadData() {
             const res = await fetch('produtos.json', { cache: 'no-store' });
             DATA = await res.json();
-            processarStats();
             renderCardapio();
             preencherConfig();
+            renderStats();
         }
 
-        // NAVEGAÇÃO
-        function showTab(tab) {
+        function showTab(t) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + t).classList.remove('hidden');
         }
 
-        // --- DASHBOARD ---
-        function processarStats() {
-            const hoje = new Date().toLocaleDateString('pt-BR');
-            const vendas = DATA.vendas || [];
-            
-            let totalHoje = 0, totalMes = 0;
-            let ranking = {};
-
-            vendas.forEach(v => {
-                if(v.data === hoje) totalHoje += v.valor;
-                totalMes += v.valor;
-                v.itens.forEach(item => ranking[item] = (ranking[item] || 0) + 1);
-            });
-
-            document.getElementById('venda-hoje').innerText = `R$ ${totalHoje.toFixed(2)}`;
-            document.getElementById('venda-mes').innerText = `R$ ${totalMes.toFixed(2)}`;
-            document.getElementById('total-pedidos').innerText = vendas.length;
-
-            // Ranking
-            const sortRanking = Object.entries(ranking).sort((a,b) => b[1] - a[1]).slice(0, 5);
-            document.getElementById('ranking-produtos').innerHTML = sortRanking.map(([nome, qtd], i) => `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
-                    <span class="text-xs font-bold text-slate-700">${i+1}º ${nome}</span>
-                    <span class="text-[10px] font-black text-blue-600 uppercase">${qtd} pedidos</span>
-                </div>
-            `).join('');
-
-            renderGrafico(vendas);
-        }
-
-        function renderGrafico(vendas) {
-            const dias = [...Array(7)].map((_, i) => {
-                const d = new Date(); d.setDate(d.getDate() - i); return d.toLocaleDateString('pt-BR');
-            }).reverse();
-            const valores = dias.map(d => vendas.filter(v => v.data === d).reduce((acc, c) => acc + c.valor, 0));
-
-            const ctx = document.getElementById('chartVendas').getContext('2d');
-            if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dias.map(d => d.split('/')[0]+'/'+d.split('/')[1]),
-                    datasets: [{
-                        data: valores,
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37,99,235,0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 6,
-                        pointRadius: 0
-                    }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
-            });
-        }
-
-        // --- CARDÁPIO ---
         function renderCardapio() {
-            // Categorias
-            document.getElementById('lista-cats').innerHTML = DATA.config.categorias.map((c, i) => `
-                <div class="bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-3">
-                    <span class="text-[10px] font-bold uppercase">${c.nome}</span>
-                    <button onclick="delCategoria(${i})" class="text-red-400 text-xs"><i class="fa-solid fa-circle-xmark"></i></button>
-                </div>
-            `).join('');
-
-            // Produtos
             document.getElementById('grid-produtos').innerHTML = DATA.items.map((p, i) => `
-                <div class="bg-white rounded-[2.5rem] overflow-hidden border shadow-sm group">
-                    <img src="${p.imagem}" class="w-full h-40 object-cover">
-                    <div class="p-6 space-y-4">
-                        <div>
-                            <h4 class="font-black text-slate-800 text-sm">${p.nome}</h4>
-                            <p class="text-emerald-600 font-black text-xs">R$ ${p.preco.toFixed(2)}</p>
+                <div class="bg-white rounded-[2rem] p-5 shadow-sm border">
+                    <img src="${p.imagem}" class="w-full h-32 object-cover rounded-2xl mb-4">
+                    <h4 class="font-black text-sm mb-1">${p.nome}</h4>
+                    <p class="text-blue-600 font-bold text-xs mb-4">R$ ${p.preco.toFixed(2)}</p>
+                    
+                    <div class="space-y-3 pt-3 border-t">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Item Ativo</span>
+                            <button onclick="toggleP(${i}, 'ativo')" class="w-10 h-5 rounded-full ${p.ativo ? 'bg-emerald-500' : 'bg-slate-200'} relative">
+                                <div class="absolute w-3 h-3 bg-white rounded-full top-1 left-1 transition-all ${p.ativo ? 'translate-x-5' : ''}"></div>
+                            </button>
                         </div>
-                        <div class="flex items-center justify-between pt-4 border-t">
-                            <span class="text-[9px] uppercase font-black text-slate-400">${p.categoria}</span>
-                            <button onclick="toggleItem(${i})" class="w-12 h-6 rounded-full relative transition-all ${p.ativo ? 'bg-emerald-500' : 'bg-slate-200'}">
-                                <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-all ${p.ativo ? 'translate-x-6' : ''}"></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Permitir Obs?</span>
+                            <button onclick="toggleP(${i}, 'permiteObs')" class="w-10 h-5 rounded-full ${p.permiteObs !== false ? 'bg-blue-600' : 'bg-slate-200'} relative">
+                                <div class="absolute w-3 h-3 bg-white rounded-full top-1 left-1 transition-all ${p.permiteObs !== false ? 'translate-x-5' : ''}"></div>
                             </button>
                         </div>
                     </div>
@@ -259,28 +114,35 @@
             `).join('');
         }
 
-        function toggleItem(idx) { DATA.items[idx].ativo = !DATA.items[idx].ativo; renderCardapio(); }
-
-        function addCategoria() {
-            const nome = document.getElementById('nova-cat').value;
-            if(!nome) return;
-            DATA.config.categorias.push({ nome: nome.toLowerCase(), meioAMeio: false });
-            document.getElementById('nova-cat').value = "";
+        function toggleP(idx, campo) {
+            if(campo === 'permiteObs') DATA.items[idx].permiteObs = DATA.items[idx].permiteObs === false ? true : false;
+            else DATA.items[idx][campo] = !DATA.items[idx][campo];
             renderCardapio();
         }
 
-        function delCategoria(idx) {
-            DATA.config.categorias.splice(idx, 1);
-            renderCardapio();
-        }
-
-        // --- CONFIGURAÇÕES ---
         function preencherConfig() {
             document.getElementById('cfg-nome').value = DATA.config.nomeLoja;
             document.getElementById('cfg-zap').value = DATA.config.whatsapp;
             document.getElementById('cfg-taxa').value = DATA.config.taxaEntrega;
-            document.getElementById('cfg-cor').value = DATA.config.corPrincipal;
-            document.getElementById('cfg-status').value = DATA.config.fechadoManual.toString();
+            document.getElementById('cfg-fechado').value = DATA.config.fechadoManual.toString();
+        }
+
+        function renderStats() {
+            const vendas = DATA.vendas || [];
+            const total = vendas.reduce((a,b) => a + b.valor, 0);
+            document.getElementById('venda-mes').innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('total-pedidos').innerText = vendas.length;
+
+            const ctx = document.getElementById('chartVendas').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: vendas.slice(-7).map(v => v.data),
+                    datasets: [{ data: vendas.slice(-7).map(v => v.valor), borderColor: '#2563eb', tension: 0.4, fill: true, backgroundColor: 'rgba(37,99,235,0.1)' }]
+                },
+                options: { plugins: { legend: { display: false } } }
+            });
         }
 
         function salvarAcesso() {
@@ -290,33 +152,23 @@
         }
 
         async function salvarAlteracoes() {
-            // Atualiza Objeto DATA com as configs da tela antes de enviar
             DATA.config.nomeLoja = document.getElementById('cfg-nome').value;
             DATA.config.whatsapp = document.getElementById('cfg-zap').value;
             DATA.config.taxaEntrega = parseFloat(document.getElementById('cfg-taxa').value);
-            DATA.config.corPrincipal = document.getElementById('cfg-cor').value;
-            DATA.config.fechadoManual = document.getElementById('cfg-status').value === "true";
+            DATA.config.fechadoManual = document.getElementById('cfg-fechado').value === "true";
 
             const token = localStorage.getItem('gh_token');
             const repo = localStorage.getItem('gh_repo');
-            if(!token || !repo) return alert("Configure o acesso primeiro!");
-
             const url = `https://api.github.com/repos/${repo}/contents/produtos.json`;
-            const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
-            const getJson = await getRes.json();
+            const get = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+            const j = await get.json();
 
-            const putRes = await fetch(url, {
+            await fetch(url, {
                 method: 'PUT',
                 headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: "Update via Painel Gestor",
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))),
-                    sha: getJson.sha
-                })
+                body: JSON.stringify({ message: "Update", content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2)))), sha: j.sha })
             });
-
-            if(putRes.ok) alert("🎉 Alterações publicadas com sucesso!");
-            else alert("Erro ao publicar.");
+            alert("Salvo no GitHub!");
         }
     </script>
 </body>
