@@ -2,23 +2,54 @@
   "config": {
     "nomeLoja": "Delivery Pro",
     "whatsapp": "5511999999999",
-    "taxaEntrega": 5.00,
-    "categorias": ["Lanches", "Bebidas"],
+    "taxaEntrega": 5,
+    "categorias": [
+      "Lanches",
+      "Bebidas"
+    ],
     "horarios": {
-      "0": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
-      "1": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
-      "2": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
-      "3": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
-      "4": {"aberto": true, "inicio": "18:00", "fim": "23:00"},
-      "5": {"aberto": true, "inicio": "18:00", "fim": "23:59"},
-      "6": {"aberto": true, "inicio": "18:00", "fim": "23:59"}
+      "0": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:00"
+      },
+      "1": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:00"
+      },
+      "2": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:00"
+      },
+      "3": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:00"
+      },
+      "4": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:00"
+      },
+      "5": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      },
+      "6": {
+        "aberto": true,
+        "inicio": "18:00",
+        "fim": "23:59"
+      }
     }
   },
   "items": [
     {
       "id": 1,
       "nome": "Hambúrguer Clássico",
-      "preco": 25.00,
+      "preco": 25,
       "descricao": "Pão, carne artesanal 160g, queijo, alface e tomate.",
       "imagem": "https://via.placeholder.com/300",
       "categoria": "Lanches",
